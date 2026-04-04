@@ -1,45 +1,54 @@
 ---
 name: agentic-troubleshoot-alertmanager
-description: Alertmanager ready endpoint, routing ve sessiz uyarılar için ingress ve ilişki kontrolleri verirken kullan.
+description: Alertmanager erişim, route görünürlüğü ve alarm teslim akışı sorunlarını teşhis ederken kullan.
 ---
 
 ## Amaç
 
-**Ready endpoint**: pod IP + path örneği Faz 1 `../../skills/cos-ingress-config/SKILL.md` (ör. `/-/ready` ingress path ile birlikte). **Ingress path örnekleri**: `http://<LB>/cos-alertmanager/...` yapısı tutorial ile uyumlu kabul; kesin path için `show-proxied-endpoints` ve doküman. **Routing / sessiz uyarı**: Prometheus → Alertmanager ilişkisi ve notification channel Faz 1 `cos-deploy-alertmanager` ve ilişki skill’lerinde.
+Bu skill, Alertmanager tarafında UI erişimi, Juju application sağlığı ve alarm akışının beklenmediği gibi davranması durumlarında temel teşhis sırasını verir.
 
 ## Kapsam
 
-### Dahil
+- Dahil:
+- Alertmanager application durumu, endpoint görünürlüğü ve relation kaynaklı blokajların ilk teşhisi.
+- Ingress, unit ve pod semptomlarını ayırma.
+- Hariç:
+- Yeni alert route tasarımı, alıcı entegrasyonu veya özel bildirim politikası yazımı.
 
-- Charm `blocked` / `error` özet teşhisi.
-- Traefik / Catalogue URL keşfi yönlendirmesi.
+## Adımlar
 
-### Hariç
-
-- PagerDuty entegrasyon kurulumu (operasyonel karar).
-
-## Kurallar
-
-- Faz 1 skill komutlarıyla çelişme yok.
-- Uyarı “sessiz” ise önce Alertmanager UI/endpoint, sonra Prometheus rule yükleme (yüksek seviye).
-- TLS sorunları `../agentic-troubleshoot-traefik-ingress/SKILL.md` ile örtüşebilir.
+1. Önce şunu doğrula: sorun Alertmanager UI erişimi mi, alarm oluşmaması mı, yoksa alarmın teslim edilmemesi mi.
+2. Juju görünürlüğünü kontrol et:
+   - `juju status --model cos alertmanager`
+   - `juju show-unit alertmanager/0 --model cos`
+3. Endpoint görünürlüğü için Traefik veya Catalogue bilgisini doğrula.
+4. Application `blocked` veya `waiting` ise relation veya config mesajını incele; otomatik varsayım üretme.
+5. Pod veya servis düzeyinde sorun şüphesi varsa MicroK8s kontrollerine dön.
+6. Alarm akışı şikayetinde önce veri kaynağı ve kural üretim zincirinin ayrı bir konu olabileceğini belirt; Alertmanager'ı suçlamadan önce upstream doğrula.
 
 ## Kontrol listesi
 
-- [ ] `alertmanager-k8s` aktif mi?
-- [ ] Ingress’ten ready yanıt alınıyor mu?
-- [ ] Prometheus alerting ilişkisi kurulu mu?
+- [ ] Alertmanager application ve unit durumu doğrulandı mı?
+- [ ] URL veya ingress görünürlüğü kontrol edildi mi?
+- [ ] Juju durum mesajı relation veya config eksikliğine işaret ediyor mu?
+- [ ] Pod ve servis kontrolleri gerektiğinde yapıldı mı?
+- [ ] Alarmın hiç üretilmemesi ile teslim edilememesi ayrıştırıldı mı?
 
 ## Hata ve geri dönüş
 
-| Tipik sorun | Kontrol | Sonraki adım |
-|-------------|---------|--------------|
-| 502 ingress | Traefik / backend | `../../skills/cos-deploy-traefik` |
-| No alerts | Rule yok | Prometheus skill zinciri |
+| Tipik sorun | Ne kontrol et | Sonraki adım |
+|-------------|---------------|--------------|
+| UI açılmıyor | Traefik/Catalogue endpoint | `../agentic-troubleshoot-traefik-ingress/SKILL.md` |
+| Application `blocked` | Juju status mesajı | `../../skills/cos-deploy-alertmanager/SKILL.md` |
+| Pod çalışmıyor | `microk8s kubectl get pods -A` ve olaylar | `../agentic-microk8s-ops-reference/SKILL.md` |
+| Alarm gelmiyor | Upstream kural veya veri akışı | İlgili Prometheus ve no data zinciri |
+| Yetki veya action sorunu | Model bağlamı ve Juju erişimi | `../agentic-juju-ops-reference/SKILL.md` |
 
 ## İlgili belgeler ve skill'ler
 
 - `../../skills/cos-deploy-alertmanager/SKILL.md`
 - `../../skills/cos-ingress-config/SKILL.md`
 - `../agentic-troubleshoot-prometheus/SKILL.md`
+- `../agentic-microk8s-ops-reference/SKILL.md`
+- `../agentic-juju-ops-reference/SKILL.md`
 - `../agentic-troubleshoot-traefik-ingress/SKILL.md`

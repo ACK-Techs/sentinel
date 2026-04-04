@@ -1,45 +1,55 @@
 ---
 name: agentic-cos-catalogue-endpoints
-description: Catalogue ve proxied uçların keşfi ile kullanıcıya doğru URL iletimi için Juju komut sırası verirken kullan.
+description: COS Catalogue ve proxied endpoint görünürlüğünü doğrularken kullan.
 ---
 
 ## Amaç
 
-**Catalogue birimi**: `juju show-unit catalogue/0` (veya uygun unit) çıktısındaki **`url`** listelerini okuma rehberi — Faz 1 tutorial notlarıyla uyumlu. **Traefik**: `show-proxied-endpoints` ile birlikte değerlendir; bazı uçlar yalnız Catalogue’da görünebilir (`../../skills/cos-deploy-grafana/SKILL.md` notu). Kullanıcıya yalnız doğrulanmış URL’leri ilet; tahmin etme.
+Bu skill, COS bileşenlerinin kullanıcıya sunulan URL'lerini Catalogue ve Traefik bilgileri üzerinden doğrulamak için kullanılır. Amaç, “hangi endpoint doğru” belirsizliğini azaltmak ve yanlış URL nedeniyle açılmayan servisleri ayırmaktır.
 
 ## Kapsam
 
-### Dahil
+- Dahil:
+- Catalogue içindeki URL alanları ve Traefik proxied endpoint çıktıları.
+- Bileşenlerin beklenen erişim adreslerini karşılaştırma.
+- Hariç:
+- DNS, sertifika veya dış load balancer mimarisi tasarımı.
 
-- URL çıkarımı adımları (komut → alan → anlam).
-- HTTP vs HTTPS dikkat notu.
+## Adımlar
 
-### Hariç
-
-- Özel branding / vanity domain.
-
-## Kurallar
-
-- Komut örnekleri Faz 1 skill’lerle aynı charm/unit isimlerini kullanır.
-- Çıktı çok uzunsa ilgili bölümü grep ile (araç politikasına uygun).
-- Yanlış model uyarısı: `juju switch cos`.
+1. Önce şunu doğrula: kullanıcı hangi bileşene erişmeye çalışıyor ve mevcut kullandığı URL nedir.
+2. Catalogue görünürlüğünü incele:
+   - `juju show-unit catalogue/0 --model cos`
+3. Traefik tarafından yayımlanan endpoint'leri incele:
+   - `juju run traefik/0 show-proxied-endpoints --model cos`
+4. Gerekirse uygulama durumunu karşılaştır:
+   - `juju status --model cos`
+5. Catalogue ile Traefik çıktısı uyuşmuyorsa önce relation ve ingress tarafını doğrula; rastgele URL verme.
+6. Bir URL görünmüyor ama uygulama `active` ise ilgili bileşenin ingress veya relation gereksinimini Faz 1 skill ile karşılaştır.
 
 ## Kontrol listesi
 
-- [ ] Catalogue unit sağlıklı mı?
-- [ ] URL’ler tarayıcıda açılıyor mu (kullanıcı doğrulaması)?
-- [ ] Traefik ile çakışan bilgi var mı (ikisini karşılaştır)?
+- [ ] Hangi bileşen için endpoint arandığı net mi?
+- [ ] Catalogue çıktısı alındı mı?
+- [ ] Traefik proxied endpoint çıktısı alındı mı?
+- [ ] Uygulama durumu `juju status` ile karşılaştırıldı mı?
+- [ ] Son önerilen URL Faz 1 deploy veya ingress akışıyla çelişmiyor mu?
 
 ## Hata ve geri dönüş
 
-| Tipik sorun | Kontrol | Sonraki adım |
-|-------------|---------|--------------|
-| show-unit boş | Model / unit adı | `juju status` |
-| URL 404 | Path / ingress | `../agentic-troubleshoot-traefik-ingress` |
+| Tipik sorun | Ne kontrol et | Sonraki adım |
+|-------------|---------------|--------------|
+| URL hiç görünmüyor | Traefik proxied endpoints ve app durumu | `../agentic-troubleshoot-traefik-ingress/SKILL.md` |
+| Catalogue boş veya eksik | `catalogue/0` unit durumu | İlgili deploy ve Juju ops skill |
+| Yanlış URL ile erişim denenmiş | Kullanıcının kullandığı adres ile gerçek endpoint'i karşılaştır | Doğru endpoint'i paylaş, gerekirse ingress skill'e dön |
+| Tek bileşen eksik | İlgili app relation veya deploy durumu | İlgili troubleshoot skill |
 
 ## İlgili belgeler ve skill'ler
 
-- `../../skills/cos-deploy-grafana/SKILL.md`
 - `../../skills/cos-ingress-config/SKILL.md`
+- `../../skills/cos-deploy-grafana/SKILL.md`
+- `../../skills/cos-deploy-prometheus/SKILL.md`
+- `../../skills/cos-deploy-loki/SKILL.md`
+- `../../skills/cos-deploy-alertmanager/SKILL.md`
 - `../agentic-troubleshoot-traefik-ingress/SKILL.md`
 - `../agentic-juju-ops-reference/SKILL.md`
