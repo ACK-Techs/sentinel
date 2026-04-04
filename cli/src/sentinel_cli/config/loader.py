@@ -118,6 +118,35 @@ def _env_overlay(env: dict[str, str]) -> dict[str, Any]:
     if context_strategy:
         assign(("context_window", "strategy"), context_strategy)
 
+    log_level = env.get("SENTINEL_LOG_LEVEL")
+    if log_level:
+        assign(("logging", "level"), log_level.upper())
+
+    max_turns = env.get("SENTINEL_MAX_TURNS")
+    if max_turns:
+        assign(("agent", "max_turns"), int(max_turns))
+
+    auto_approve = env.get("SENTINEL_AUTO_APPROVE")
+    if auto_approve:
+        normalized = auto_approve.lower() in {"1", "true", "yes", "on"}
+        assign(("tools", "auto_approve"), normalized)
+        assign(("tools", "approval_mode"), "auto" if normalized else "interactive")
+
+    session_dir = env.get("SENTINEL_SESSION_DIR")
+    if session_dir:
+        assign(("session", "directory"), session_dir)
+
+    trajectory_dir = env.get("SENTINEL_TRAJECTORY_DIR")
+    if trajectory_dir:
+        assign(("session", "trajectory_directory"), trajectory_dir)
+
+    trajectory_enabled = env.get("SENTINEL_TRAJECTORY_ENABLED")
+    if trajectory_enabled:
+        assign(
+            ("session", "trajectory_enabled"),
+            trajectory_enabled.lower() in {"1", "true", "yes", "on"},
+        )
+
     return overlay
 
 
@@ -134,6 +163,17 @@ def _cli_overlay(overrides: CliOverrides | None) -> dict[str, Any]:
         overlay.setdefault("http", {})["connect_timeout_sec"] = overrides.connect_timeout_sec
     if overrides.read_timeout_sec is not None:
         overlay.setdefault("http", {})["read_timeout_sec"] = overrides.read_timeout_sec
+    if overrides.log_level is not None:
+        overlay.setdefault("logging", {})["level"] = overrides.log_level
+    if overrides.max_turns is not None:
+        overlay.setdefault("agent", {})["max_turns"] = overrides.max_turns
+    if overrides.auto_approve is not None:
+        overlay.setdefault("tools", {})["auto_approve"] = overrides.auto_approve
+        overlay.setdefault("tools", {})["approval_mode"] = (
+            "auto" if overrides.auto_approve else "interactive"
+        )
+    if overrides.trajectory_enabled is not None:
+        overlay.setdefault("session", {})["trajectory_enabled"] = overrides.trajectory_enabled
 
     active_profile = overrides.profile
     if active_profile:

@@ -12,7 +12,8 @@ from sentinel_cli.llm.types import ChatMessage, ChatRequest, MessageRole
 
 def test_openai_complete_mock_roundtrip() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
-        assert request.url.path == "/chat/completions"
+        # base_url .../v1 + post("/chat/completions") -> path /v1/chat/completions (httpx)
+        assert request.url.path.endswith("/chat/completions")
         payload = json.loads(request.content.decode("utf-8"))
         assert payload["model"] == "mock-model"
         return httpx.Response(
@@ -45,16 +46,37 @@ def test_openai_complete_mock_roundtrip() -> None:
 
 
 def test_openai_stream_assembles_text_and_tool_calls() -> None:
-    stream_body = "\n\n".join(
-        [
-            'data: {"choices":[{"delta":{"content":"Mer"}}]}',
-            'data: {"choices":[{"delta":{"content":"haba"}}]}',
-            'data: {"choices":[{"delta":{"tool_calls":[{"index":0,"id":"call_1","function":{"name":"inspect","arguments":"{\\"target\\":"}}]}}]}',
-            'data: {"choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"\\"grafana\\"}"}}]}}',
-            "data: [DONE]",
-            "",
-        ]
-    )
+    chunks = [
+        {"choices": [{"delta": {"content": "Mer"}}]},
+        {"choices": [{"delta": {"content": "haba"}}]},
+        {
+            "choices": [
+                {
+                    "delta": {
+                        "tool_calls": [
+                            {
+                                "index": 0,
+                                "id": "call_1",
+                                "function": {"name": "inspect", "arguments": '{"target":'},
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "choices": [
+                {
+                    "delta": {
+                        "tool_calls": [
+                            {"index": 0, "function": {"arguments": '"grafana"}'}}
+                        ]
+                    }
+                }
+            ]
+        },
+    ]
+    stream_body = "\n\n".join(f"data: {json.dumps(c)}" for c in chunks) + "\n\ndata: [DONE]\n\n"
 
     def handler(_: httpx.Request) -> httpx.Response:
         return httpx.Response(200, text=stream_body)

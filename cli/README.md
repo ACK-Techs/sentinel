@@ -25,16 +25,26 @@ Faz 2, Faz 1'in yerine geçmez. CLI, Faz 1 belgeleri ve skill'leriyle tutarlı k
 - Workspace altındaki `agentic/Pywen-dev`, `agentic/codex-main` ve `agentic/claude` yalnızca referans tasarım kaynağıdır; Sentinel CLI içine alt modül veya vendor kopya olarak eklenmez.
 - Lisans ve uyarlama notları için [DEPENDENCY_LICENSES.md](documantations/DEPENDENCY_LICENSES.md) dosyasına bakılmalıdır.
 
-## İskelet çalıştırma
+## CLI modları
 
-Giriş noktası tam uygulanmadan önce bile modül iskeleti aşağıdaki gibi açılabilir:
+Faz 2.C ile birlikte CLI aşağıdaki temel akışları destekleyecek şekilde genişletildi:
+
+- `sentinel-cli run "prompt"`: tek seferlik çalıştırma
+- `echo "prompt" | sentinel-cli`: pipe / non-interactive once modu
+- `sentinel-cli repl`: etkileşimli REPL
+- `sentinel-cli config`: efektif config özeti
+- `sentinel-cli doctor`: profil ve MCP/bağımlılık durumu özeti
+
+Örnek:
 
 ```bash
 cd sentinel-coming/cli
 PYTHONPATH=src python -m sentinel_cli --help
+PYTHONPATH=src python -m sentinel_cli run "Grafana durumunu ozetle"
+PYTHONPATH=src python -m sentinel_cli repl
 ```
 
-`uv` kullanan akışlar için `pyproject.toml` hazırdır; ileride gerçek CLI entrypoint'i eklendiğinde `uv run python -m sentinel_cli` veya script entrypoint'i ile genişletilecektir.
+`uv` kullanan akışlar için `pyproject.toml` hazırdır. MCP istemcisi denemek istenirse opsiyonel extra tanımlandi: `sentinel-cli[mcp]`. Extra kurulmadan MCP runtime devreye girmez; CLI bunu `doctor` ciktisinda acikca belirtir.
 
 ## Faz 2.A çıktıları
 

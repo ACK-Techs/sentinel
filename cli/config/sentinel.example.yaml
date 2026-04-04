@@ -33,3 +33,33 @@ context_window:
   warn_ratio: 0.85
   strategy: truncate
   preserve_recent_messages: 8
+
+logging:
+  level: INFO
+  json: true
+
+agent:
+  max_turns: 6
+  repeat_tool_call_limit: 2
+
+tools:
+  approval_mode: interactive
+  auto_approve: false
+  shell_timeout_sec: 20
+  file_write_timeout_sec: 10
+  max_output_chars: 8000
+
+hooks:
+  enabled: false
+  commands: []
+
+mcp:
+  enabled: false
+  startup_timeout_sec: 5
+  servers: []
+
+session:
+  directory: ./.sentinel/sessions
+  trajectory_directory: ./.sentinel/trajectories
+  trajectory_enabled: false
+  max_history_messages: 24

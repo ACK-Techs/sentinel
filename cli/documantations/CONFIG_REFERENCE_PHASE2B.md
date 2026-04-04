@@ -35,6 +35,12 @@ Liste alanlarinda strateji `replace` olarak secildi. Ornek: `http.retry.retryabl
 | `SENTINEL_CONTEXT_WINDOW_TOKENS` | Heuristik context limiti | `32000` | Hayir | |
 | `SENTINEL_CONTEXT_WARN_AT` | Uyari esigi | `0.85` | Hayir | 0-1 arasi |
 | `SENTINEL_CONTEXT_STRATEGY` | Context stratejisi | `truncate` | Hayir | `warn` veya `truncate` |
+| `SENTINEL_LOG_LEVEL` | JSON log seviyesi | `INFO` | Hayir | `DEBUG`, `INFO`, `WARNING`, `ERROR` |
+| `SENTINEL_MAX_TURNS` | Ajan maksimum tur sayisi | `6` | Hayir | Faz 2.C ajan dongusu |
+| `SENTINEL_AUTO_APPROVE` | Riskli tool'lar icin auto onay | `false` | Hayir | `true` ise mutating aksiyonlar sorulmadan gider |
+| `SENTINEL_SESSION_DIR` | Oturum dosya dizini | `./.sentinel/sessions` | Hayir | JSON session dosyalari |
+| `SENTINEL_TRAJECTORY_DIR` | Trajectory dizini | `./.sentinel/trajectories` | Hayir | JSONL trajectory |
+| `SENTINEL_TRAJECTORY_ENABLED` | Trajectory kaydi | `false` | Hayir | Varsayilan kapali |
 
 ## Profil notu
 
