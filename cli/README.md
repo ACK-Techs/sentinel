@@ -46,6 +46,81 @@ PYTHONPATH=src python -m sentinel_cli repl
 
 `uv` kullanan akışlar için `pyproject.toml` hazırdır. MCP özelliğini açmak için opsiyonel extra: `pip install -e ".[mcp]"`. Extra yokken MCP çalışmaz; `doctor` bunu açık yazar.
 
+## Kurulum
+
+`pyproject.toml` içindeki paket adı `sentinel-cli`, mevcut sürüm `0.1.0` ve konsol script adı `sentinel-cli` olarak kalır. En sade yerel geliştirme akışı:
+
+```bash
+cd sentinel-coming/cli
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+python -m sentinel_cli --help
+```
+
+MCP ekstra bağımlılığı ile:
+
+```bash
+cd sentinel-coming/cli
+source .venv/bin/activate
+python -m pip install -e ".[dev,mcp]"
+python -m sentinel_cli doctor --profile local
+```
+
+`uv` tercih ediyorsanız:
+
+```bash
+cd sentinel-coming/cli
+uv sync --extra dev
+uv run python -m sentinel_cli doctor --profile local
+uv run python -m pytest -q
+```
+
+Kurulum sonrası günlük geliştirme komutları:
+
+```bash
+cd sentinel-coming/cli
+source .venv/bin/activate
+python -m pytest -q
+python -m ruff check .
+```
+
+Hızlı başlangıç için ayrıntılı bloklar: [USER_QUICKSTART_PHASE2E.md](documantations/USER_QUICKSTART_PHASE2E.md)
+
+## Hızlı başlangıç
+
+Cloud profil örneği:
+
+```bash
+cd sentinel-coming/cli
+source .venv/bin/activate
+
+export SENTINEL_PROFILE=cloud
+export SENTINEL_OPENAI_BASE_URL=https://api.example.com/v1
+export SENTINEL_API_KEY=sentinel_api_key_placeholder
+export SENTINEL_MODEL=provider-model-placeholder
+
+python -m sentinel_cli doctor --profile cloud
+python -m sentinel_cli run --profile cloud "Grafana durumunu ozetle"
+```
+
+Local profil örneği:
+
+```bash
+cd sentinel-coming/cli
+source .venv/bin/activate
+
+export SENTINEL_PROFILE=local
+export SENTINEL_LOCAL_BASE_URL=http://127.0.0.1:11434/v1
+export SENTINEL_LOCAL_MODEL=local_model_placeholder
+
+python -m sentinel_cli doctor --profile local
+python -m sentinel_cli run --profile local "Prometheus sagligini kontrol et"
+```
+
+Env adlari `LLM_PROVIDERS.md` ile hizalidir; gerçek secret değerleri repoya yazılmamalıdır.
+
 ## MCP
 
 Faz 2.C için desteklenen transport yalnızca **`stdio`**. Kurulum ve örnek:
@@ -65,6 +140,12 @@ PYTHONPATH=src python -m sentinel_cli doctor --profile local
 - **Stdout varsayımı:** Yanıtlar **satır başına tek JSON** olarak okunur; sunucu stdout’a ek log yazarsa veya karışık çıktı verirse ayrıştırma kırılabilir.
 
 Yapılandırmada log çıktısı için `logging.json_format: true|false` kullanılır (`json` anahtarı eski dosyalar için alias olarak hâlâ kabul edilir).
+
+## Faz 2.E notları
+
+- Skill yazım standardı için kısa uyum özeti: [SKILL_AUTHORING_PHASE2E.md](documantations/SKILL_AUTHORING_PHASE2E.md)
+- Telemetri politikası: varsayılan kapalı ve yalnız opt-in olacak şekilde [TELEMETRY_POLICY_PHASE2E.md](documantations/TELEMETRY_POLICY_PHASE2E.md)
+- Deneysel bayrak iskelesi: `SENTINEL_EXPERIMENTAL_MCP=false` varsayılanı eklidir; bu turda yalnız config/env rezervasyonu olarak tutulur, yeni çalışma zamanı davranışı açmaz.
 
 ## Faz 2.A çıktıları
 

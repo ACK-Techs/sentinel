@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import math
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 
 from sentinel_cli.config.models import ContextWindowSettings
 from sentinel_cli.llm.types import ChatMessage

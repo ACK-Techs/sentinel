@@ -147,6 +147,13 @@ def _env_overlay(env: dict[str, str]) -> dict[str, Any]:
             trajectory_enabled.lower() in {"1", "true", "yes", "on"},
         )
 
+    experimental_mcp = env.get("SENTINEL_EXPERIMENTAL_MCP")
+    if experimental_mcp:
+        assign(
+            ("experimental", "mcp_stdio_client"),
+            experimental_mcp.lower() in {"1", "true", "yes", "on"},
+        )
+
     return overlay
 
 

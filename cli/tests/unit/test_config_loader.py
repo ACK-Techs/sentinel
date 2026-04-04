@@ -59,3 +59,11 @@ def test_project_openai_base_url_wins_over_fallback() -> None:
 
     profile = resolve_profile(config, env={})
     assert profile.base_url == "https://project.example/v1"
+
+
+def test_experimental_mcp_flag_defaults_off_and_can_be_enabled() -> None:
+    default_config = load_config(env={})
+    enabled_config = load_config(env={"SENTINEL_EXPERIMENTAL_MCP": "true"})
+
+    assert default_config.experimental.mcp_stdio_client is False
+    assert enabled_config.experimental.mcp_stdio_client is True

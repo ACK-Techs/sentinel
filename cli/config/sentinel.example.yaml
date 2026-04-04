@@ -69,3 +69,6 @@ session:
   trajectory_directory: ./.sentinel/trajectories
   trajectory_enabled: false
   max_history_messages: 24
+
+experimental:
+  mcp_stdio_client: false

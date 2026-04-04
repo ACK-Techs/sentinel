@@ -10,7 +10,7 @@ from sentinel_cli.config import AppConfig, ResolvedProfile
 from sentinel_cli.hooks import HookManager
 from sentinel_cli.llm.errors import LLMError
 from sentinel_cli.llm.types import ChatMessage, ChatRequest, CompletionResult, MessageRole, ToolCall
-from sentinel_cli.session import SessionState, SessionStore, TrajectoryRecorder
+from sentinel_cli.session import SessionStore, TrajectoryRecorder
 from sentinel_cli.tools import ToolRegistry
 
 from sentinel_cli.agent.compaction import HistoryCompactor
@@ -116,7 +116,7 @@ class AgentLoop:
                     session_id=session.session_id,
                     warnings=warnings,
                 )
-            except LLMError as exc:
+            except LLMError:
                 raise
 
             if result.text:

@@ -16,6 +16,14 @@ HookPhase = Literal["pre_tool", "post_tool"]
 HookErrorMode = Literal["warn", "block"]
 
 
+class ExperimentalSettings(BaseModel):
+    """Reserved feature flags kept disabled by default."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    mcp_stdio_client: bool = False
+
+
 class RetryPolicySettings(BaseModel):
     """Retry policy for outbound LLM HTTP calls."""
 
@@ -192,6 +200,7 @@ class AppConfig(BaseModel):
     hooks: HooksSettings = Field(default_factory=HooksSettings)
     mcp: MCPSettings = Field(default_factory=MCPSettings)
     session: SessionSettings = Field(default_factory=SessionSettings)
+    experimental: ExperimentalSettings = Field(default_factory=ExperimentalSettings)
 
     def sanitized_summary(self) -> dict[str, object]:
         """Return a secret-safe summary for debug output."""
@@ -218,6 +227,7 @@ class AppConfig(BaseModel):
             "hooks": self.hooks.model_dump(),
             "mcp": self.mcp.model_dump(mode="json"),
             "session": self.session.model_dump(mode="json"),
+            "experimental": self.experimental.model_dump(),
             "list_merge_strategy": "replace",
         }
 
