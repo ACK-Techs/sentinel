@@ -44,7 +44,27 @@ PYTHONPATH=src python -m sentinel_cli run "Grafana durumunu ozetle"
 PYTHONPATH=src python -m sentinel_cli repl
 ```
 
-`uv` kullanan akışlar için `pyproject.toml` hazırdır. MCP istemcisi denemek istenirse opsiyonel extra tanımlandi: `sentinel-cli[mcp]`. Extra kurulmadan MCP runtime devreye girmez; CLI bunu `doctor` ciktisinda acikca belirtir.
+`uv` kullanan akışlar için `pyproject.toml` hazırdır. MCP özelliğini açmak için opsiyonel extra: `pip install -e ".[mcp]"`. Extra yokken MCP çalışmaz; `doctor` bunu açık yazar.
+
+## MCP
+
+Faz 2.C için desteklenen transport yalnızca **`stdio`**. Kurulum ve örnek:
+
+```bash
+cd sentinel-coming/cli
+python3 -m pip install -e ".[mcp]"
+PYTHONPATH=src python -m sentinel_cli doctor --profile local
+```
+
+`config/sentinel.example.yaml` içindeki `mcp.servers` bölümü stdio komutu ile güncellenebilir. MCP araçları modele `mcp_<server>_<tool>` isim alanıyla girer; çağrıda mevcut **approval** politikası geçerlidir.
+
+**Notlar (sınırlar ve beklentiler):**
+
+- **`[mcp]` extra’sı:** PyPI’daki `mcp` paketi özelliği **açmak için kapı** olarak kullanılır; stdio üzerindeki JSON-RPC akışı istemci tarafında bu repoda uygulanır (resmi SDK transport’u zorunlu değildir).
+- **Protokol sürümü:** İstemci `initialize` içinde sabit bir `protocolVersion` kullanır; sunucu farklı bir sürüm bekliyorsa ileride el sıkışma (negotiation) gerekebilir.
+- **Stdout varsayımı:** Yanıtlar **satır başına tek JSON** olarak okunur; sunucu stdout’a ek log yazarsa veya karışık çıktı verirse ayrıştırma kırılabilir.
+
+Yapılandırmada log çıktısı için `logging.json_format: true|false` kullanılır (`json` anahtarı eski dosyalar için alias olarak hâlâ kabul edilir).
 
 ## Faz 2.A çıktıları
 

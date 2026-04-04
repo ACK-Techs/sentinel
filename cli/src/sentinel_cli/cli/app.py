@@ -91,7 +91,10 @@ def _cli_overrides(args: argparse.Namespace) -> CliOverrides:
 def _load_runtime(args: argparse.Namespace):
     config = load_config(config_path=args.config, cli_overrides=_cli_overrides(args))
     profile = resolve_profile(config)
-    logger = configure_logging("DEBUG" if args.verbose else config.logging.level)
+    logger = configure_logging(
+        "DEBUG" if args.verbose else config.logging.level,
+        json_format=config.logging.json_format,
+    )
     return config, profile, logger
 
 
@@ -119,7 +122,18 @@ def _doctor(config, profile) -> int:
         "base_url": profile.base_url,
         "api_key_present": bool(profile.api_key),
         "trajectory_enabled": config.session.trajectory_enabled,
-        "mcp": {"available": mcp.available, "message": mcp.message, "tools": mcp.tools},
+        "mcp": {
+            "available": mcp.available,
+            "message": mcp.message,
+            "tools": [
+                {
+                    "server": tool.server_name,
+                    "name": tool.namespaced_name,
+                    "description": tool.description,
+                }
+                for tool in mcp.tools
+            ],
+        },
     }
     print(json.dumps(payload, indent=2, ensure_ascii=True))
     return EXIT_OK

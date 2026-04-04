@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
 
 ProviderKind = Literal["openai", "anthropic"]
@@ -68,7 +68,8 @@ class LoggingSettings(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     level: LogLevel = "INFO"
-    json: bool = True
+    # Prefer yaml key `json_format`. `json` still accepted (alias) for older configs.
+    json_format: bool = Field(default=True, validation_alias=AliasChoices("json_format", "json"))
 
 
 class AgentSettings(BaseModel):

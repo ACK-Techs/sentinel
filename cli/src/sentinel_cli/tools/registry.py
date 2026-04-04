@@ -15,6 +15,7 @@ from sentinel_cli.tools.approval import ApprovalPolicy
 from sentinel_cli.tools.base import SentinelTool, ToolContext, ToolResult
 from sentinel_cli.tools.bash import BashTool
 from sentinel_cli.tools.filesystem import ReadFileTool, WriteFileTool
+from sentinel_cli.tools.mcp import MCPClientManager
 
 
 @dataclass(slots=True)
@@ -37,6 +38,7 @@ class ToolRegistry:
         self._hook_manager = hook_manager or HookManager(config.hooks)
         self._approval = ApprovalPolicy(config.tools)
         self._prompt_input = prompt_input
+        self._mcp = MCPClientManager(config.mcp)
         self._tools: dict[str, SentinelTool] = {
             "bash": BashTool(
                 default_timeout_sec=config.tools.shell_timeout_sec,
@@ -45,6 +47,8 @@ class ToolRegistry:
             "read_file": ReadFileTool(),
             "write_file": WriteFileTool(),
         }
+        for tool in self._mcp.dynamic_tools():
+            self._tools.setdefault(tool.name, tool)
 
     def definitions(self) -> list[ToolDefinition]:
         return [tool.definition() for tool in self._tools.values()]
@@ -79,7 +83,7 @@ class ToolRegistry:
             prompt=prompt,
             input_fn=self._prompt_input,
         )
-        if not decision.approved and parsed.tool.name in {"bash", "write_file"}:
+        if not decision.approved and parsed.tool.risk_level in {"shell", "write-controlled", "mcp"}:
             return ToolResult(False, "APPROVAL_DENIED", decision.reason)
 
         hook_payload = {

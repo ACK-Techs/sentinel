@@ -36,7 +36,7 @@ context_window:
 
 logging:
   level: INFO
-  json: true
+  json_format: true
 
 agent:
   max_turns: 6
@@ -56,7 +56,13 @@ hooks:
 mcp:
   enabled: false
   startup_timeout_sec: 5
-  servers: []
+  servers:
+    - name: sample
+      transport: stdio
+      command:
+        - python3
+        - path/to/mcp_server.py
+      tool_prefix: mcp_sample
 
 session:
   directory: ./.sentinel/sessions

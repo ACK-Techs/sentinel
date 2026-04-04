@@ -40,12 +40,15 @@ class JsonLogFormatter(logging.Formatter):
         return redact_secrets(json.dumps(payload, ensure_ascii=True))
 
 
-def configure_logging(level: str) -> logging.Logger:
+def configure_logging(level: str, *, json_format: bool = True) -> logging.Logger:
     logger = logging.getLogger("sentinel_cli")
     logger.handlers.clear()
     logger.setLevel(getattr(logging, level.upper(), logging.INFO))
     handler = logging.StreamHandler(sys.stderr)
-    handler.setFormatter(JsonLogFormatter())
+    if json_format:
+        handler.setFormatter(JsonLogFormatter())
+    else:
+        handler.setFormatter(logging.Formatter("%(levelname)s %(name)s %(message)s"))
     logger.addHandler(handler)
     logger.propagate = False
     return logger
