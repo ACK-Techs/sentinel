@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MODEL_NAME="cos"
+MODEL_NAME="${MODEL_NAME:-cos}"
 TRAEFIK_UNIT="traefik/0"
 GRAFANA_UNIT="grafana/0"
 
 ok() { printf '[OK] %s\n' "$1"; }
+warn() { printf '[WARN] %s\n' "$1" >&2; }
 fail() { printf '[DUR] %s\n' "$1" >&2; exit 1; }
 
-echo "== Faz 4 + Faz 5 | Entegrasyon ve dogrulama =="
+echo "== Faz 4 + Faz 5 | Sentinel Telemetry Gateway Entegrasyon ve Dogrulama =="
 
 echo "[CHECK] Model durumu"
 juju status --model "$MODEL_NAME" >/dev/null
-ok "Juju modeli erisilebilir"
+ok "Juju modeli erisilebilir: $MODEL_NAME"
 
 echo
 echo "[CHECK] Traefik proxied endpoint'leri"
@@ -20,7 +21,7 @@ PROXIED_OUTPUT="$(juju run "$TRAEFIK_UNIT" show-proxied-endpoints --model "$MODE
   || fail "show-proxied-endpoints basarisiz. Protokol geregi dur ve bekle."
 
 printf '%s\n' "$PROXIED_OUTPUT"
-ok "Traefik proxied endpoint'leri alindi"
+ok "Traefik proxied endpoint'leri alindi (Tempo dahil)"
 
 echo
 echo "[CHECK] Grafana admin parolasi"
@@ -35,6 +36,15 @@ echo "Grafana parola  : ${GRAFANA_PASSWORD}"
 ok "Grafana admin parolasi alindi"
 
 echo
+echo "[CHECK] OTLP Gateway IP Adresi (OpenTelemetry)"
+OTEL_SVC=$(sudo microk8s kubectl get svc -n "$MODEL_NAME" | grep -E 'otel-collector' | head -n 1 | awk '{print $4}' | grep -v "<none>" || echo "Bulunamadi")
+if [ "$OTEL_SVC" != "Bulunamadi" ] && [ -n "$OTEL_SVC" ]; then
+    ok "OTLP Gateway (MetalLB IP): $OTEL_SVC (Port: 4317/4318)"
+else
+    warn "OTLP IP adresi dogrudan bulunamadi, K8s NodePort kullaniliyor olabilir."
+fi
+
+echo
 echo "== Tarayicida acilacak URL'ler =="
 echo "Asagidaki URL'leri Traefik cikisindan kullan:"
 echo "$PROXIED_OUTPUT" | sed 's/^/  /'
@@ -43,4 +53,4 @@ echo "Grafana icin gereken parola   : ${GRAFANA_PASSWORD}"
 
 echo
 echo "== Son durum =="
-juju status --model "$MODEL_NAME" --relations
+juju status --model "$MODEL_NAME"

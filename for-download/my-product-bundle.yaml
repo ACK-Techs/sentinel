@@ -73,6 +73,19 @@ applications:
     storage:
       configurations: kubernetes,1,1024M
     trust: true
+  tempo:
+    charm: tempo-k8s
+    channel: latest/stable
+    scale: 1
+    constraints: arch=amd64
+    trust: true
+  otel-collector:
+    charm: opentelemetry-collector-k8s
+    channel: dev/edge
+    scale: 1
+    constraints: arch=amd64
+    trust: true
+
 relations:
 - - traefik:ingress-per-unit
   - prometheus:ingress
@@ -114,3 +127,14 @@ relations:
   - prometheus:catalogue
 - - catalogue:catalogue
   - alertmanager:catalogue
+# --- YENI EKLENEN SENTINEL TELEMETRY KABLOLARI ---
+- - otel-collector:send-remote-write
+  - prometheus:receive-remote-write
+- - otel-collector:send-loki-logs
+  - loki:logging
+- - otel-collector:send-traces
+  - tempo:tracing
+- - grafana:grafana-source
+  - tempo:grafana-source
+- - traefik:traefik-route
+  - tempo:ingress
