@@ -1,0 +1,116 @@
+bundle: kubernetes
+applications:
+  alertmanager:
+    charm: alertmanager-k8s
+    channel: 1/stable
+    revision: 180
+    resources:
+      alertmanager-image: 100
+    scale: 1
+    constraints: arch=amd64
+    storage:
+      data: kubernetes,1,1024M
+    trust: true
+  catalogue:
+    charm: catalogue-k8s
+    channel: 1/stable
+    revision: 87
+    resources:
+      catalogue-image: 35
+    scale: 1
+    options:
+      description: |
+        Canonical Observability Stack Lite, or COS Lite, is a light-weight, highly-integrated,
+        Juju-based observability suite running on Kubernetes.
+      tagline: Model-driven Observability Stack deployed with a single command.
+      title: Canonical Observability Stack
+    constraints: arch=amd64
+    trust: true
+  grafana:
+    charm: grafana-k8s
+    channel: 1/stable
+    revision: 160
+    resources:
+      grafana-image: 75
+      litestream-image: 46
+    scale: 1
+    constraints: arch=amd64
+    storage:
+      database: kubernetes,1,1024M
+    trust: true
+  loki:
+    charm: loki-k8s
+    channel: 1/stable
+    revision: 199
+    resources:
+      loki-image: 101
+      node-exporter-image: 4
+    scale: 1
+    constraints: arch=amd64
+    storage:
+      active-index-directory: kubernetes,1,1024M
+      loki-chunks: kubernetes,1,1024M
+    trust: true
+  prometheus:
+    charm: prometheus-k8s
+    channel: 1/stable
+    revision: 247
+    resources:
+      prometheus-image: 151
+    scale: 1
+    constraints: arch=amd64
+    storage:
+      database: kubernetes,1,1024M
+    trust: true
+  traefik:
+    charm: traefik-k8s
+    channel: latest/stable
+    revision: 281
+    resources:
+      traefik-image: 162
+    scale: 1
+    constraints: arch=amd64
+    storage:
+      configurations: kubernetes,1,1024M
+    trust: true
+relations:
+- - traefik:ingress-per-unit
+  - prometheus:ingress
+- - traefik:ingress-per-unit
+  - loki:ingress
+- - traefik:traefik-route
+  - grafana:ingress
+- - traefik:ingress
+  - alertmanager:ingress
+- - prometheus:alertmanager
+  - alertmanager:alerting
+- - grafana:grafana-source
+  - prometheus:grafana-source
+- - grafana:grafana-source
+  - loki:grafana-source
+- - grafana:grafana-source
+  - alertmanager:grafana-source
+- - loki:alertmanager
+  - alertmanager:alerting
+- - prometheus:metrics-endpoint
+  - traefik:metrics-endpoint
+- - prometheus:metrics-endpoint
+  - alertmanager:self-metrics-endpoint
+- - prometheus:metrics-endpoint
+  - loki:metrics-endpoint
+- - prometheus:metrics-endpoint
+  - grafana:metrics-endpoint
+- - grafana:grafana-dashboard
+  - loki:grafana-dashboard
+- - grafana:grafana-dashboard
+  - prometheus:grafana-dashboard
+- - grafana:grafana-dashboard
+  - alertmanager:grafana-dashboard
+- - catalogue:ingress
+  - traefik:ingress
+- - catalogue:catalogue
+  - grafana:catalogue
+- - catalogue:catalogue
+  - prometheus:catalogue
+- - catalogue:catalogue
+  - alertmanager:catalogue
