@@ -59,6 +59,8 @@ Workspace kökünde **`agentic/`** altında üç ayrı proje, Faz 2 CLI için **
 
 **Depo köküne göre tam yol** (`sentinel-coming/`): `documantations/PROJECT_ROOT.md` (Faz 1); Faz 2 için `cli/documantations/*` ve `cli/skills/agentic-*`.
 
+**Arşiv:** Faz 2.A–E sırasında üretilen teslim notları (tehdit modeli, onay politikası, CONFIG_REFERENCE, runtime, quickstart vb.) `archive/` altında tutulur; günlük okuma için zorunlu değildir. Güncel env sözleşmesi için `LLM_PROVIDERS.md` esas alınır.
+
 ## Dış referanslar
 
 - [Ubuntu Observability](https://documentation.ubuntu.com/observability/)

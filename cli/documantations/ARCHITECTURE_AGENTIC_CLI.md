@@ -94,5 +94,6 @@ Bu dosya ile **aynı klasörde** (`cli/documantations/`):
 - `IMPLEMENTATION_PLAN_PHASE2.md` — fazlı teslimat  
 - `SKILL_CATALOG_PHASE2.md` — skill → katman eşlemesi  
 - `PROJECT_ROOT_PHASE2.md` — Faz 2 proje özeti  
+- `archive/` — Faz 2.A–E teslim notları (tarihsel; günlük okuma zorunlu değil)
 
 Faz 1: `../../documantations/PROJECT_ROOT.md`, `../../documantations/ARCHITECTURE_COS.md`

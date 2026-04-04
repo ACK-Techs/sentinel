@@ -85,6 +85,10 @@ Bu plan, **bu klasördeki** `SKILL_CATALOG_PHASE2.md` içindeki `cli/skills/agen
 
 ---
 
+**Faz 2 kapanışı:** A–E tamamlandıktan sonra teslim notları `cli/documantations/archive/` altına taşınabilir. Sonraki fazlar: `ROADMAP_PHASE3_5.md`, `IMPLEMENTATION_PLAN_PHASE3.md`, `IMPLEMENTATION_PLAN_PHASE4.md`.
+
+---
+
 ## Dış kaynak
 
 - `cli/documantations/ARCHITECTURE_AGENTIC_CLI.md`

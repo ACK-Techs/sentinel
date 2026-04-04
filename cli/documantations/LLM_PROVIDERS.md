@@ -1,6 +1,6 @@
 # LLM Sağlayıcıları: API ve Lokal Modlar (Faz 2)
 
-Bu belge, Sentinel CLI’nin **aynı uygulama içinde** hem **uzak API** hem **lokal inference** kullanabilmesi için **yapılandırma sözleşmesini** tanımlar. Faz 2.B itibariyla env adlari `cli/.env.example` ve `CONFIG_REFERENCE_PHASE2B.md` ile hizalanmistir.
+Bu belge, Sentinel CLI’nin **aynı uygulama içinde** hem **uzak API** hem **lokal inference** kullanabilmesi için **yapılandırma sözleşmesini** tanımlar. Faz 2.B itibariyla env adlari `cli/.env.example` ve `archive/CONFIG_REFERENCE_PHASE2B.md` ile hizalanmistir.
 
 ## Hedef
 
@@ -62,7 +62,7 @@ Aşağıdaki değişkenler Faz 2.B koduyla hizali public sozlesmedir.
 - API anahtarlarını **commit etmeyin**; `.env` örnek dosyasında placeholder kullanın.
 - Lokal modda bile **ağa açık** sunucular (0.0.0.0) risk oluşturur; skill’de uyarı metni bulunmalıdır.
 
-Tam tablo icin `CONFIG_REFERENCE_PHASE2B.md` dosyasina bakin.
+Tam tablo icin `archive/CONFIG_REFERENCE_PHASE2B.md` dosyasina bakin.
 
 ## İlgili skill’ler
 

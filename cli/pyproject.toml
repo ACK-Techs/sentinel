@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "sentinel-cli"
 version = "0.1.0"
-description = "Sentinel Faz 2 agentic CLI package skeleton"
+description = "Sentinel agentic CLI for internal observability workflows"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
@@ -31,6 +31,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+  "build>=1.2,<2.0",
   "pytest>=8.3,<9.0",
   "ruff>=0.11,<0.12",
 ]

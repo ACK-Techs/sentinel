@@ -1,6 +1,8 @@
-# Sentinel CLI (Faz 2)
+# Sentinel CLI (Faz 3)
 
-Bu dizin, `sentinel-coming` deposundaki **Faz 2 Agentic CLI** paketidir. Faz 1 içeriği depo kökündeki `documantations/` ve `skills/` altında kalır; Faz 2 için Python tabanlı terminal ajanı, ilgili belgeler ve `agentic-*` skill şartnameleri ise bu `cli/` ağacı içinde tutulur.
+Bu dizin, `sentinel-coming` deposundaki **Sentinel CLI** paketidir. Faz 1 içeriği depo kökündeki `documantations/` ve `skills/` altında kalır; Faz 2 ile kurulan Python tabanlı terminal ajanı Faz 3’te iç kullanım için sertleştirilir.
+
+İlk okuma için: [ARCHITECTURE_AGENTIC_CLI.md](documantations/ARCHITECTURE_AGENTIC_CLI.md), [LLM_PROVIDERS.md](documantations/LLM_PROVIDERS.md), [PHASE3_SKILL_AND_DOC_INDEX.md](documantations/PHASE3_SKILL_AND_DOC_INDEX.md), [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md).
 
 ## Faz 1 ve Faz 2 ayrımı
 
@@ -9,7 +11,7 @@ Bu dizin, `sentinel-coming` deposundaki **Faz 2 Agentic CLI** paketidir. Faz 1 i
 | Faz 1 | `sentinel-coming/documantations/`, `sentinel-coming/skills/` | COS Lite kurulumu, Juju/MicroK8s/COS operasyon bilgisi |
 | Faz 2 | `sentinel-coming/cli/` | Bu yığına danışan, iyileştirme öneren ve arıza anında yönlendiren agentic CLI |
 
-Faz 2, Faz 1'in yerine geçmez. CLI, Faz 1 belgeleri ve skill'leriyle tutarlı kalacak şekilde çalışır.
+Faz 2, Faz 1'in yerine geçmez. CLI, Faz 1 belgeleri ve skill'leriyle tutarlı kalacak şekilde çalışır. Faz 2 teslim notlarının tarihsel özeti için [documantations/archive/README.md](documantations/archive/README.md) dosyasına bakılabilir.
 
 ## Paket yolu
 
@@ -23,7 +25,7 @@ Faz 2, Faz 1'in yerine geçmez. CLI, Faz 1 belgeleri ve skill'leriyle tutarlı k
 
 - Bu klasör, ana deponun içinde bağımsız dağıtılabilir bir Python paketi olarak hazırlanır.
 - Workspace altındaki `agentic/Pywen-dev`, `agentic/codex-main` ve `agentic/claude` yalnızca referans tasarım kaynağıdır; Sentinel CLI içine alt modül veya vendor kopya olarak eklenmez.
-- Lisans ve uyarlama notları için [DEPENDENCY_LICENSES.md](documantations/DEPENDENCY_LICENSES.md) dosyasına bakılmalıdır.
+- Lisans ve uyarlama notları için [DEPENDENCY_LICENSES.md](documantations/archive/DEPENDENCY_LICENSES.md) (arşiv) dosyasına bakılmalıdır.
 
 ## CLI modları
 
@@ -86,7 +88,22 @@ python -m pytest -q
 python -m ruff check .
 ```
 
-Hızlı başlangıç için ayrıntılı bloklar: [USER_QUICKSTART_PHASE2E.md](documantations/USER_QUICKSTART_PHASE2E.md)
+Hızlı başlangıç için ayrıntılı bloklar (arşiv): [USER_QUICKSTART_PHASE2E.md](documantations/archive/USER_QUICKSTART_PHASE2E.md)
+
+## Wheel ile kurulum (iç kullanım)
+
+Wheel kurulumu, geliştirme modundan farklı olarak paketi editable olmadan doğrular. İç kullanım için önerilen akış:
+
+```bash
+cd sentinel-coming/cli
+source .venv/bin/activate
+python -m build
+python -m pip install dist/sentinel_cli-*.whl
+sentinel-cli --help
+sentinel-cli version
+```
+
+`pip install -e ".[dev]"` geliştirme sırasında kaynak ağacını doğrudan kullanır; `dist/sentinel_cli-*.whl` ile kurulum ise üretilen paketin temiz bir ortamda gerçekten açıldığını doğrulamak içindir. Tek komutla smoke almak istersen `scripts/smoke_wheel.sh` kullanılabilir.
 
 ## Hızlı başlangıç
 
@@ -133,6 +150,8 @@ PYTHONPATH=src python -m sentinel_cli doctor --profile local
 
 `config/sentinel.example.yaml` içindeki `mcp.servers` bölümü stdio komutu ile güncellenebilir. MCP araçları modele `mcp_<server>_<tool>` isim alanıyla girer; çağrıda mevcut **approval** politikası geçerlidir.
 
+Yerleşik `bash`, `write_file` ve MCP araçları sessiz “yolo” modunda çalışmaz; approval kapısı mimaride tarif edilen risk sınıflarına göre devrededir.
+
 **Notlar (sınırlar ve beklentiler):**
 
 - **`[mcp]` extra’sı:** PyPI’daki `mcp` paketi özelliği **açmak için kapı** olarak kullanılır; stdio üzerindeki JSON-RPC akışı istemci tarafında bu repoda uygulanır (resmi SDK transport’u zorunlu değildir).
@@ -143,9 +162,13 @@ Yapılandırmada log çıktısı için `logging.json_format: true|false` kullan�
 
 ## Faz 2.E notları
 
-- Skill yazım standardı için kısa uyum özeti: [SKILL_AUTHORING_PHASE2E.md](documantations/SKILL_AUTHORING_PHASE2E.md)
-- Telemetri politikası: varsayılan kapalı ve yalnız opt-in olacak şekilde [TELEMETRY_POLICY_PHASE2E.md](documantations/TELEMETRY_POLICY_PHASE2E.md)
+- Skill yazım standardı için kısa uyum özeti (arşiv): [SKILL_AUTHORING_PHASE2E.md](documantations/archive/SKILL_AUTHORING_PHASE2E.md)
+- Telemetri politikası (arşiv): [TELEMETRY_POLICY_PHASE2E.md](documantations/archive/TELEMETRY_POLICY_PHASE2E.md)
 - Deneysel bayrak iskelesi: `SENTINEL_EXPERIMENTAL_MCP=false` varsayılanı eklidir; bu turda yalnız config/env rezervasyonu olarak tutulur, yeni çalışma zamanı davranışı açmaz.
+
+**Faz 3 (iç kullanım):** Uygulama şu an uzaktan kullanım analitiği veya ürün telemetrisi göndermez; yapılandırdığın LLM API çağrıları ve yerel loglar buna dahil değildir. Ayrıntı: `skills/agentic-faz3-no-remote-telemetry/SKILL.md`.
+
+Bağımlılık güncellerken küçük ve geri döndürülebilir artışları tercih et. `pyproject.toml` içindeki major sürüm üst sınırlarını gevşetmek veya yeni ağır bağımlılık eklemek, Faz 3 kapsamında otomatik yapılacak bir iş değil; önce test, CI ve wheel smoke etkisiyle birlikte bilinçli karar olarak ele alınmalıdır.
 
 ## Faz 2.A çıktıları
 
@@ -154,4 +177,8 @@ Yapılandırmada log çıktısı için `logging.json_format: true|false` kullan�
 - Tehdit modeli ve sır yönetimi belgeleri
 - Onay politikası ve prompt injection guardrail özeti
 
-Detaylı faz planı için [IMPLEMENTATION_PLAN_PHASE2.md](documantations/IMPLEMENTATION_PLAN_PHASE2.md) dosyasına bakılmalıdır.
+Detaylı faz planları: [Faz 2](documantations/IMPLEMENTATION_PLAN_PHASE2.md), [Faz 3](documantations/IMPLEMENTATION_PLAN_PHASE3.md), [Faz 4](documantations/IMPLEMENTATION_PLAN_PHASE4.md). Yol haritası özeti: [ROADMAP_PHASE3_5.md](documantations/ROADMAP_PHASE3_5.md).
+
+Geliştirici: [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md). Faz 3 env ve indeks: [ENV_FLAGS_PHASE3.md](documantations/ENV_FLAGS_PHASE3.md), [PHASE3_SKILL_AND_DOC_INDEX.md](documantations/PHASE3_SKILL_AND_DOC_INDEX.md). Faz 3’ü ajanla tek oturumda işlemek için: [CODEX_EXECUTION_PROMPT_PHASE3.md](documantations/CODEX_EXECUTION_PROMPT_PHASE3.md).
+
+Faz 4 (Grafana / observability bağlantısı): [PHASE4_SKILL_AND_DOC_INDEX.md](documantations/PHASE4_SKILL_AND_DOC_INDEX.md), [GRAFANA_HTTP_PHASE4.md](documantations/GRAFANA_HTTP_PHASE4.md), canlı stack doğrulama notu: [PHASE4_REAL_STACK_VERIFY.md](documantations/PHASE4_REAL_STACK_VERIFY.md). Tek oturum prompt: [CODEX_EXECUTION_PROMPT_PHASE4.md](documantations/CODEX_EXECUTION_PROMPT_PHASE4.md).
