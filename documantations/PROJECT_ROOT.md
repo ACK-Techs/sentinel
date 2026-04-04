@@ -69,3 +69,5 @@ Bu depo, **Canonical Observability Stack (COS) Lite**’ı **MicroK8s** üzerind
 - [Juju — universal operators / OLM](https://juju.is/universal-operators)
 
 **`documantations/ARCHITECTURE_COS.md`** bileşen iletişimini şematik olarak özetler; adım adım kurulum için **`documantations/IMPLEMENTATION_PLAN.md`** kullanılır.
+
+**Agentic CLI (ayrı iz):** Gözlemlenebilirlik yığınına danışman terminal ajanı (Faz 2) için dokümantasyon ve `agentic-*` skill şartnamesi **`cli/documantations/`** altında başlar; giriş belgesi **`cli/documantations/PROJECT_ROOT_PHASE2.md`**.
