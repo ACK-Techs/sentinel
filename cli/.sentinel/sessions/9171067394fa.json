@@ -1,0 +1,20 @@
+{
+  "session_id": "9171067394fa",
+  "profile": "cloud",
+  "provider": "openai",
+  "created_at": "2026-04-04T23:47:41.504834+00:00",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Grafana durumunu kisa ozetle",
+      "name": null,
+      "tool_call_id": null
+    },
+    {
+      "role": "assistant",
+      "content": "Grafana, sistemlerin, uygulamalar\u0131n ve altyap\u0131n\u0131n sa\u011fl\u0131k ve performans durumunu izlemek ve g\u00f6rselle\u015ftirmek i\u00e7in kullan\u0131lan a\u00e7\u0131k kaynakl\u0131 bir platformdur. \u00c7e\u015fitli veri kaynaklar\u0131ndan (Prometheus, InfluxDB, Elasticsearch vb.) metrikleri, loglar\u0131 ve trace'leri toplay\u0131p interaktif panolar arac\u0131l\u0131\u011f\u0131yla sunarak, ger\u00e7ek zamanl\u0131 durumu anlaman\u0131za ve olas\u0131 sorunlar\u0131 h\u0131zl\u0131ca tespit etmenize yard\u0131mc\u0131 olur. Temel i\u015flevi, izlenen bile\u015fenlerin g\u00f6rselle\u015ftirilmi\u015f, g\u00fcncel ve anla\u015f\u0131l\u0131r bir genel bak\u0131\u015f\u0131n\u0131 sa\u011flamakt\u0131r.",
+      "name": null,
+      "tool_call_id": null
+    }
+  ]
+}

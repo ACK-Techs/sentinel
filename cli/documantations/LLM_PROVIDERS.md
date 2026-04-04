@@ -23,6 +23,21 @@ Aşağıdaki değişkenler Faz 2.B koduyla hizali public sozlesmedir.
 
 **Streaming:** Sunucu SSE veya chunk stream destekliyorsa CLI tek bir iç olay modeline (`text_delta`, `tool_call_delta`, `done`, `error`) map etmelidir.
 
+## Gemini (OpenAI uyumlu köprü)
+
+Gemini, bu repoda ayrı bir `ProviderKind` olmadan mevcut `cloud`/`openai` yolu üzerinden kullanılmalıdır. Google'ın resmi OpenAI compatibility dokümanında örnek `base_url` olarak `https://generativelanguage.googleapis.com/v1beta/openai/` verilir; güncel URL ve desteklenen yollar için Google dokümantasyonuna bakın.
+
+Örnek env kombinasyonu:
+
+- `SENTINEL_PROFILE=cloud`
+- `SENTINEL_OPENAI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/`
+- `SENTINEL_API_KEY=<Google AI Studio / Gemini API key>`
+- `SENTINEL_MODEL=gemini-...`
+
+`SENTINEL_OPENAI_BASE_URL` ayarlanmazsa kod `OPENAI_BASE_URL` fallback'ini de okur, ancak Gemini için proje içinde açık ve öncelikli ayar olarak `SENTINEL_OPENAI_BASE_URL` kullanılması önerilir.
+
+Kapsam notu: Bu entegrasyon yalnız OpenAI-compatible köprü içindir. Native Gemini `generateContent` JSON şeması ve ayrı Google adapter yolu bu görevin kapsamı dışındadır.
+
 ## Lokal sunucu (OpenAI uyumlu `/v1/chat/completions`)
 
 - `SENTINEL_LOCAL_BASE_URL` — örn. `http://127.0.0.1:11434/v1` (Ollama) veya LM Studio portu

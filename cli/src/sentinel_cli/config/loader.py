@@ -74,6 +74,13 @@ def _env_overlay(env: dict[str, str]) -> dict[str, Any]:
     if cloud_model:
         assign(("profiles", "cloud", "model"), cloud_model)
 
+    cloud_supports_tools = env.get("SENTINEL_CLOUD_SUPPORTS_TOOLS")
+    if cloud_supports_tools is not None:
+        assign(
+            ("profiles", "cloud", "supports_tools"),
+            cloud_supports_tools.lower() in {"1", "true", "yes", "on"},
+        )
+
     local_base = env.get("SENTINEL_LOCAL_BASE_URL")
     if local_base:
         assign(("profiles", "local", "base_url"), local_base)

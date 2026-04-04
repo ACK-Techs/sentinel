@@ -67,3 +67,20 @@ def test_experimental_mcp_flag_defaults_off_and_can_be_enabled() -> None:
 
     assert default_config.experimental.mcp_stdio_client is False
     assert enabled_config.experimental.mcp_stdio_client is True
+
+
+def test_cloud_supports_tools_env_overrides_profile() -> None:
+    off = load_config(
+        env={
+            "SENTINEL_PROFILE": "cloud",
+            "SENTINEL_CLOUD_SUPPORTS_TOOLS": "false",
+        }
+    )
+    on = load_config(
+        env={
+            "SENTINEL_PROFILE": "cloud",
+            "SENTINEL_CLOUD_SUPPORTS_TOOLS": "true",
+        }
+    )
+    assert off.profiles["cloud"].supports_tools is False
+    assert on.profiles["cloud"].supports_tools is True

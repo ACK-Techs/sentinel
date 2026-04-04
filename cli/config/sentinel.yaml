@@ -1,0 +1,82 @@
+# Yerel çalışma dosyası (repoda yok; .gitignore). Şablon: sentinel.example.yaml
+profile: local
+profiles:
+  cloud:
+    provider: openai
+    model: provider-model-placeholder
+    base_url: https://api.example.com/v1
+    api_key_env: SENTINEL_API_KEY
+    # Agent araçları (bash, dosya): OpenAI ile true; Gemini OpenAI-compat cogu kurulumda HTTP 400 verir — .env ile SENTINEL_CLOUD_SUPPORTS_TOOLS=false kullan veya burayi false yap.
+    supports_tools: true
+    # Gemini OpenAI-compat bridge example:
+    # model: gemini-2.5-flash
+    # base_url: https://generativelanguage.googleapis.com/v1beta/openai/
+    # api_key_env: SENTINEL_API_KEY
+    # supports_tools: false
+  local:
+    provider: openai
+    model: local_model_placeholder
+    base_url: http://127.0.0.1:11434/v1
+    timeout_sec: 120
+  anthropic:
+    provider: anthropic
+    model: anthropic_model_placeholder
+    base_url: https://api.anthropic.com/v1/messages
+    api_key_env: ANTHROPIC_API_KEY
+
+http:
+  connect_timeout_sec: 10
+  read_timeout_sec: 120
+  retry:
+    max_attempts: 3
+    retryable_status_codes:
+      - 429
+      - 500
+      - 502
+      - 503
+      - 504
+
+context_window:
+  max_input_tokens: 32000
+  warn_ratio: 0.85
+  strategy: truncate
+  preserve_recent_messages: 8
+
+logging:
+  level: INFO
+  json_format: true
+
+agent:
+  max_turns: 6
+  repeat_tool_call_limit: 2
+
+tools:
+  approval_mode: interactive
+  auto_approve: false
+  shell_timeout_sec: 20
+  file_write_timeout_sec: 10
+  max_output_chars: 8000
+
+hooks:
+  enabled: false
+  commands: []
+
+mcp:
+  enabled: false
+  startup_timeout_sec: 5
+  servers:
+    - name: sample
+      transport: stdio
+      command:
+        - python3
+        - path/to/mcp_server.py
+      tool_prefix: mcp_sample
+
+session:
+  directory: ./.sentinel/sessions
+  trajectory_directory: ./.sentinel/trajectories
+  trajectory_enabled: false
+  max_history_messages: 24
+
+experimental:
+  mcp_stdio_client: false

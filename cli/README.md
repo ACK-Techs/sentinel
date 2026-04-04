@@ -90,6 +90,41 @@ python -m ruff check .
 
 Hızlı başlangıç için ayrıntılı bloklar (arşiv): [USER_QUICKSTART_PHASE2E.md](documantations/archive/USER_QUICKSTART_PHASE2E.md)
 
+## Yapılandırma
+
+Repoda yalnızca **şablonlar** tutulur; gerçek değerler yerel dosyalarda kalır (commitlenmez).
+
+| Dosya | Amaç |
+|-------|------|
+| `config/sentinel.example.yaml`, `.env.example` | Başkalarına / yeni klonlara tanıtım; placeholder değerler |
+| `config/sentinel.yaml`, `.env` | Günlük kullanım; `.gitignore` içindedir |
+
+İlk kurulum:
+
+```bash
+cd sentinel-coming/cli
+cp config/sentinel.example.yaml config/sentinel.yaml
+cp .env.example .env
+# .env içinde API anahtarlarını ve SENTINEL_PROFILE vb. doldurun
+```
+
+`SENTINEL_CONFIG` için önerilen yol `./config/sentinel.yaml`dır (`.env.example` ile uyumludur).
+
+Komutları **her zaman `sentinel-coming/cli` içinden** çalıştırın; CLI başlarken bu dizindeki `.env` dosyası otomatik okunur (`source .env` gerekmez). Önce doğrulama:
+
+```bash
+cd sentinel-coming/cli
+source .venv/bin/activate
+python -m pip install -e ".[dev]"   # bir kez / güncelleme sonrası
+python -m sentinel_cli doctor --profile cloud
+```
+
+Cloud + Google Gemini (OpenAI uyumlu köprü) kullanıyorsanız, araç şeması yüzünden sık görülen HTTP 400 için `.env` içinde `SENTINEL_CLOUD_SUPPORTS_TOOLS=false` bırakın.
+
+```bash
+python -m sentinel_cli run --profile cloud "Grafana durumunu kisa ozetle"
+```
+
 ## Wheel ile kurulum (iç kullanım)
 
 Wheel kurulumu, geliştirme modundan farklı olarak paketi editable olmadan doğrular. İç kullanım için önerilen akış:
@@ -122,6 +157,23 @@ python -m sentinel_cli doctor --profile cloud
 python -m sentinel_cli run --profile cloud "Grafana durumunu ozetle"
 ```
 
+Gemini'yi mevcut OpenAI-uyumlu `cloud` yolu üzerinden denemek için kısa örnek:
+
+```bash
+cd sentinel-coming/cli
+source .venv/bin/activate
+
+export SENTINEL_PROFILE=cloud
+export SENTINEL_OPENAI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+export SENTINEL_API_KEY=gemini_api_key_placeholder
+export SENTINEL_MODEL=gemini-2.5-flash
+
+python -m sentinel_cli doctor --profile cloud
+python -m sentinel_cli run --profile cloud "Grafana durumunu kisa ozetle"
+```
+
+Bu yol yalnız Google'ın OpenAI-compatible köprüsünü hedefler; native Gemini JSON API bu repo akışında kullanılmaz. Güncel URL ve model adları için [LLM_PROVIDERS.md](documantations/LLM_PROVIDERS.md) ve resmi Google dokümantasyonunu kontrol et.
+
 Local profil örneği:
 
 ```bash
@@ -148,7 +200,7 @@ python3 -m pip install -e ".[mcp]"
 PYTHONPATH=src python -m sentinel_cli doctor --profile local
 ```
 
-`config/sentinel.example.yaml` içindeki `mcp.servers` bölümü stdio komutu ile güncellenebilir. MCP araçları modele `mcp_<server>_<tool>` isim alanıyla girer; çağrıda mevcut **approval** politikası geçerlidir.
+`config/sentinel.yaml` (şablondan oluşturduğunuz dosya) içindeki `mcp.servers` bölümü stdio komutu ile güncellenebilir; şablon için `sentinel.example.yaml`a bakın. MCP araçları modele `mcp_<server>_<tool>` isim alanıyla girer; çağrıda mevcut **approval** politikası geçerlidir.
 
 Yerleşik `bash`, `write_file` ve MCP araçları sessiz “yolo” modunda çalışmaz; approval kapısı mimaride tarif edilen risk sınıflarına göre devrededir.
 

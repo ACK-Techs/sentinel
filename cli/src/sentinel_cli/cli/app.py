@@ -8,6 +8,8 @@ import os
 import sys
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 from sentinel_cli import __version__
 from sentinel_cli.agent import AgentLoop
 from sentinel_cli.cli.errors import (
@@ -232,6 +234,9 @@ def _repl(args: argparse.Namespace) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Calisma dizinindeki .env → os.environ (mevcut export'lari ezmez)
+    load_dotenv()
+
     parser = build_parser()
     args = parser.parse_args(argv)
 

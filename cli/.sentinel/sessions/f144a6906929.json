@@ -1,0 +1,32 @@
+{
+  "session_id": "f144a6906929",
+  "profile": "cloud",
+  "provider": "openai",
+  "created_at": "2026-04-04T23:50:53.358783+00:00",
+  "messages": [
+    {
+      "role": "user",
+      "content": "nas\u0131ls\u0131n gemini",
+      "name": null,
+      "tool_call_id": null
+    },
+    {
+      "role": "assistant",
+      "content": "Merhaba! Ben bir yapay zeka oldu\u011fum i\u00e7in hislerim yok ama size yard\u0131mc\u0131 olmaktan memnuniyet duyar\u0131m. Siz nas\u0131\u0131ls\u0131n\u0131z? Size nas\u0131l yard\u0131mc\u0131 olabilirim?",
+      "name": null,
+      "tool_call_id": null
+    },
+    {
+      "role": "user",
+      "content": "bu verdi\u011fin levle innfo ayz\u0131lar\u0131 ne tam olarak",
+      "name": null,
+      "tool_call_id": null
+    },
+    {
+      "role": "assistant",
+      "content": "San\u0131r\u0131m \"**level info yaz\u0131lar\u0131**\" veya \"**seviye bilgi yaz\u0131lar\u0131**\" demek istiyorsunuz. E\u011fer do\u011fru anlad\u0131ysam, bu terim genellikle yaz\u0131l\u0131m geli\u015ftirme ve sistem y\u00f6netimi ba\u011flam\u0131nda, programlar\u0131n veya sistemlerin \u00fcretti\u011fi log (kay\u0131t) mesajlar\u0131n\u0131n \u00f6nem derecesini belirtmek i\u00e7in kullan\u0131l\u0131r.\n\nBunlar genellikle \u015funlar gibi seviyelerdir:\n\n1.  **DEBUG (Hata Ay\u0131klama):** En d\u00fc\u015f\u00fck seviye. Geli\u015ftiricilerin bir program\u0131n i\u00e7 i\u015fleyi\u015fini anlamalar\u0131na yard\u0131mc\u0131 olmak i\u00e7in ayr\u0131nt\u0131l\u0131 bilgiler i\u00e7erir. Genellikle \u00fcretim ortamlar\u0131nda kapal\u0131 tutulur.\n2.  **INFO (Bilgi):** Normal ve beklenen olaylar hakk\u0131nda genel bilgiler. Bir uygulaman\u0131n veya sistemin beklenen \u015fekilde \u00e7al\u0131\u015ft\u0131\u011f\u0131n\u0131 g\u00f6steren mesajlar. \u00d6rne\u011fin, \"Uygulama ba\u015flat\u0131ld\u0131\", \"Kullan\u0131c\u0131 giri\u015f yapt\u0131\".\n3.  **WARNING (Uyar\u0131):** Potansiyel bir sorun veya dikkat edilmesi gereken bir durum. Sistem \u00e7al\u0131\u015fmaya devam edebilir, ancak gelecekte bir soruna yol a\u00e7abilecek bir durum var demektir. \u00d6rne\u011fin, \"Disk alan\u0131 azal\u0131yor\", \"Baz\u0131 ayarlar varsay\u0131lana d\u00f6nd\u00fcr\u00fcld\u00fc\".\n4.  **ERROR (Hata):** Uygulaman\u0131n veya sistemin bir i\u015flevi yerine getiremedi\u011fi bir durum. Bir hatan\u0131n meydana geldi\u011fini ancak uygulaman\u0131n genellikle tamamen \u00e7\u00f6kmedi\u011fini g\u00f6sterir. \u00d6rne\u011fin, \"Veritaban\u0131 ba\u011flant\u0131s\u0131 kurulamad\u0131\", \"Dosya bulunamad\u0131\".\n5.  **CRITICAL / FATAL (Kritik / \u00d6l\u00fcmc\u00fcl):** En y\u00fcksek seviye. Uygulaman\u0131n veya sistemin kritik bir hata nedeniyle \u00e7al\u0131\u015fmay\u0131 durdurdu\u011fu veya durmak \u00fczere oldu\u011fu anlam\u0131na gelir. \u00d6rne\u011fin, \"Uygulama beklenmedik bir \u015fekilde kapand\u0131\".\n\n**Benim durumumda:**\n\nE\u011fer bu soruyu benim \u00f6nceki cevaplar\u0131mla ilgili soruyorsan\u0131z, ben bir yapay zeka olarak do\u011frudan size bu seviyelerde log mesajlar\u0131 vermem. Ancak, benim i\u00e7imde veya beni geli\u015ftiren sistemlerde elbette bu t\u00fcr loglama seviyeleri kullan\u0131l\u0131r ki ben do\u011fru \u00e7al\u0131\u015fabileyim ve geli\u015ftiricilerim olas\u0131 sorunlar\u0131 takip edebilsin.\n\n**Peki bu terimi nerede g\u00f6rd\u00fcn\u00fcz veya hangi ba\u011flamda soruyorsunuz?** Benim \u00f6nceki cevaplar\u0131mda veya sistem talimatlar\u0131mda b\u00f6yle bir ifade kullanmam\u0131\u015ft\u0131m. Bana daha fazla ba\u011flam verirseniz daha net bir cevap verebilirim.",
+      "name": null,
+      "tool_call_id": null
+    }
+  ]
+}

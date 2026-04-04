@@ -8,13 +8,14 @@ Kaynak: `src/sentinel_cli/config/loader.py`, `config/models.py`. Sağlayıcı od
 |----------|------------|----------|------------|
 | `SENTINEL_PROFILE` | `local` | `cloud` / `local` / `anthropic` seçimi | Profil uyumsuzsa bağlantı hatası |
 | `SENTINEL_CONFIG` | yok | YAML config dosya yolu | Dosya yolu hassas değil; içerik sır içerebilir |
-| `SENTINEL_OPENAI_BASE_URL` | `https://api.openai.com/v1` | Cloud profil OpenAI uyumlu taban URL | `OPENAI_BASE_URL` fallback olarak okunur |
-| `SENTINEL_MODEL` | `provider-model-placeholder` | Cloud profil model adı | Ayrıntı `LLM_PROVIDERS.md` |
+| `SENTINEL_OPENAI_BASE_URL` | `https://api.openai.com/v1` | Cloud profil OpenAI uyumlu taban URL | `OPENAI_BASE_URL` fallback olarak okunur; Gemini OpenAI-compat için `LLM_PROVIDERS.md` içindeki köprü URL örneğine bak |
+| `SENTINEL_MODEL` | `provider-model-placeholder` | Cloud profil model adı | Ayrıntı `LLM_PROVIDERS.md`; Gemini için `gemini-...` modeli aynı kombinasyonla kullanılabilir |
+| `SENTINEL_CLOUD_SUPPORTS_TOOLS` | (YAML varsayilan) | `cloud` profilinde `supports_tools` | `false` / `true`; Gemini OpenAI-compat ile **400** alıyorsan `false` dene |
 | `SENTINEL_LOCAL_BASE_URL` | `http://127.0.0.1:11434/v1` | Local profil taban URL | Lokal servis ayakta olmalı |
 | `SENTINEL_LOCAL_MODEL` | `local_model_placeholder` | Local model adı | — |
 | `SENTINEL_LOCAL_TIMEOUT_SEC` | `120` | Local HTTP süre aşımı (saniye) | — |
 | `SENTINEL_ANTHROPIC_MODEL` | `anthropic_model_placeholder` | Anthropic profil model adı | — |
-| `SENTINEL_API_KEY` | yok | Cloud/OpenAI uyumlu API anahtarı (env adı) | **Sır**; loglama kodu maskelemeli |
+| `SENTINEL_API_KEY` | yok | Cloud/OpenAI uyumlu API anahtarı (env adı) | **Sır**; loglama kodu maskelemeli. Gemini OpenAI-compat köprüsünde de bu env kullanılır |
 | `ANTHROPIC_API_KEY` | yok | Anthropic anahtarı (env adı) | **Sır** |
 | `SENTINEL_HTTP_CONNECT_TIMEOUT_SEC` | `10` | Bağlantı timeout | — |
 | `SENTINEL_HTTP_TIMEOUT_SEC` | `120` | Okuma timeout | — |
