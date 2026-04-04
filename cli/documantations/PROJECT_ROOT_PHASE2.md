@@ -17,7 +17,19 @@ Aşağıdaki **Yapay Zeka Otonomi ve Hata Yönetim Protokolü**, Faz 2 dokümant
 | **Faz 1** | Canonical COS Lite’ı MicroK8s + Juju ile kurmak | `../documantations/` + `../skills/*` (COS/MicroK8s/Juju) |
 | **Faz 2** | Bu yığına **danışan**, **iyileştirme öneren** ve **arıza durumunda çözüm öneren** bir **terminal (CLI) ajanı** | `cli/` paketi; model **API** veya **lokal inference** |
 
-Faz 2 kod tabanı, workspace’te `agentic/` altındaki referans yapılar ile **desen paylaşımı** yapar; uygulama bu belge ve aynı klasördeki `SKILL_CATALOG_PHASE2.md` ile yönetilir.
+Faz 2 uygulaması bu belge ve aynı klasördeki `SKILL_CATALOG_PHASE2.md` ile yönetilir.
+
+## Referans kod tabanları (`agentic/`) — yardımcı kaynak
+
+Workspace kökünde **`agentic/`** altında üç ayrı proje, Faz 2 CLI için **yardımcı tasarım ve kaynak referansı** olarak kullanılır. Bunlar Sentinel ürününün parçası değildir; **doğrudan vendor edilmez**, ihtiyaç halinde desen, API şekli veya davranış **uyarlanarak** `sentinel-coming/cli/` içine taşınır.
+
+| Dizin | Rol |
+|-------|-----|
+| `agentic/Pywen-dev/` | Python tabanlı ajan, araçlar, LLM adapter, hook, config — **birincil teknik hizalama** (hedef dil Python ise). |
+| `agentic/codex-main/` | TypeScript / SDK ve araç tarafı — stream, MCP, üretim kalıpları için **desen kaynağı**. |
+| `agentic/claude/` | TypeScript — CLI komut yüzeyi, izinler, oturum/MCP UX için **desen kaynağı**. |
+
+**Kurallar:** Telif ve lisans farkındalığı `agentic-dependency-licensing` ve `agentic-reference-agentic-folder` skill şartnameleri ile uyumlu tutulur; kopyalanan veya uyarlanan parçalar dokümante edilir. Belirsiz seçeneklerde **Sıfır Varsayım Kuralı** geçerlidir (kullanıcıya sor, tek başına genişletme).
 
 ## Vizyon (Faz 2)
 
@@ -39,14 +51,15 @@ Faz 2 kod tabanı, workspace’te `agentic/` altındaki referans yapılar ile **
 1. `../../documantations/PROJECT_ROOT.md` — Faz 1 bağlamı  
 2. `PROJECT_ROOT_PHASE2.md` — bu dosya  
 3. `ARCHITECTURE_AGENTIC_CLI.md`  
-4. `LLM_PROVIDERS.md`  
-5. `IMPLEMENTATION_PLAN_PHASE2.md`  
-6. `SKILL_CATALOG_PHASE2.md` — **58** Faz 2 skill şartnamesi  
-7. `../skills/agentic-*` — Faz 2 skill gövdeleri
+4. `REPO_LAYOUT_RECOMMENDED.md` — **önerilen** `cli/` dizin ağacı (kodlamadan önce okunmalı)  
+5. `LLM_PROVIDERS.md`  
+6. `IMPLEMENTATION_PLAN_PHASE2.md`  
+7. `SKILL_CATALOG_PHASE2.md` — **58** Faz 2 skill şartnamesi  
+8. `../skills/agentic-*` — Faz 2 skill gövdeleri
 
 **Depo köküne göre tam yol** (`sentinel-coming/`): `documantations/PROJECT_ROOT.md` (Faz 1); Faz 2 için `cli/documantations/*` ve `cli/skills/agentic-*`.
 
 ## Dış referanslar
 
 - [Ubuntu Observability](https://documentation.ubuntu.com/observability/)
-- Workspace: `agentic/` (referans mimariler)
+- Workspace `agentic/`: Pywen-dev, codex-main, claude — **yardımcı kaynak** (ayrıntı yukarıdaki bölüm)

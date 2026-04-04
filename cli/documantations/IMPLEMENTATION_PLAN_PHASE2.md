@@ -88,5 +88,7 @@ Bu plan, **bu klasördeki** `SKILL_CATALOG_PHASE2.md` içindeki `cli/skills/agen
 ## Dış kaynak
 
 - `cli/documantations/ARCHITECTURE_AGENTIC_CLI.md`
+- `cli/documantations/REPO_LAYOUT_RECOMMENDED.md` — önerilen `cli/` dizin ağacı
 - `cli/documantations/LLM_PROVIDERS.md`
 - `cli/documantations/SKILL_CATALOG_PHASE2.md`
+- Workspace `agentic/`: **Pywen-dev**, **codex-main**, **claude** — Faz 2 için yardımcı tasarım/kaynak referansı (Sentinel paketine vendor edilmez; `PROJECT_ROOT_PHASE2.md` «Referans kod tabanları»)

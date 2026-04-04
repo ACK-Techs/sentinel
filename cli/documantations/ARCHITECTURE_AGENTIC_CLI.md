@@ -2,6 +2,10 @@
 
 Bu belge, **Sentinel Faz 2** terminal ajanının mantıksal katmanlarını özetler. Uygulama dili ve çerçeve `IMPLEMENTATION_PLAN_PHASE2.md` ile sabitlenir; buradaki diyagram **davranış sözleşmesidir**.
 
+## Referans implementasyonlar (yardımcı kaynak)
+
+Aşağıdaki katmanların gerçek dünyada nasıl kurgulandığına dair **yardımcı kaynak**, workspace `agentic/` altındaki üç dizindedir (`Pywen-dev`, `codex-main`, `claude`). Sentinel CLI bu kodları **alt modül olarak bağlamaz**; mimari burada tanımlı kalır, uygulama ise `sentinel-coming/cli/` içinde üretilir ve gerektiğinde referanslardan **uyarlama** yapılır. Ayrıntılı kurallar ve lisans farkındalığı: `PROJECT_ROOT_PHASE2.md` («Referans kod tabanları») ve `SKILL_CATALOG_PHASE2.md` içindeki `agentic-reference-agentic-folder`.
+
 ## Katman özeti
 
 ```mermaid
@@ -85,6 +89,7 @@ CLI içi **yapılandırılmış log** (seviye, olay türü, session id) ve iste�
 
 Bu dosya ile **aynı klasörde** (`cli/documantations/`):
 
+- `REPO_LAYOUT_RECOMMENDED.md` — mantıksal katmanlara karşılık **önerilen** kaynak dizin yapısı  
 - `LLM_PROVIDERS.md` — ortam değişkenleri ve mod matrisi  
 - `IMPLEMENTATION_PLAN_PHASE2.md` — fazlı teslimat  
 - `SKILL_CATALOG_PHASE2.md` — skill → katman eşlemesi  

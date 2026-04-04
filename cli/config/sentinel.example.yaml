@@ -1,0 +1,9 @@
+profile: local
+model: provider-model-placeholder
+
+approval:
+  mode: interactive
+
+paths:
+  sessions_dir: ./sessions
+  trajectories_dir: ./trajectories

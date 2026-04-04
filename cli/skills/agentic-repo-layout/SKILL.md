@@ -39,6 +39,7 @@ description: Sentinel-coming içinde Faz 2 CLI paketinin dizin ağacını ve Faz
 
 ## İlgili belgeler ve skill'ler
 
+- `../documantations/REPO_LAYOUT_RECOMMENDED.md` — önerilen dizin ağacı (zorunlu değil; sapma gerekçelendirilmeli)
 - `../documantations/ARCHITECTURE_AGENTIC_CLI.md`
 - `../documantations/IMPLEMENTATION_PLAN_PHASE2.md`
 - `../agentic-packaging-pypi/SKILL.md`

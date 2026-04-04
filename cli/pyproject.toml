@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sentinel-cli"
+version = "0.1.0"
+description = "Sentinel Faz 2 agentic CLI package skeleton"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "Ali Caglar Kocer" }
+]
+keywords = ["sentinel", "cli", "agentic", "observability"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Environment :: Console",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: System :: Monitoring",
+]
+dependencies = [
+  "httpx>=0.28,<1.0",
+  "pydantic>=2.11,<3.0",
+  "PyYAML>=6.0,<7.0",
+  "rich>=14.0,<15.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3,<9.0",
+  "ruff>=0.11,<0.12",
+]
+
+[project.scripts]
+sentinel-cli = "sentinel_cli.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sentinel_cli"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

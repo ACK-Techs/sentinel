@@ -1,0 +1,28 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+~/gorilla/
+sb-cli-reports/
+
+# Virtual environments
+.venv
+.memory/*
+pywen/logs/*
+logs/*
+pywen_config.json
+.env
+pywen/trajectories/*
+trajectories/*
+!.gitkeep
+
+# evaluation
+evaluation/*/results/
+evaluation/swebench/claude_workspace/
+evaluation/swebench/pywen_workspace/
+evaluation/bfcl/gorilla/
+sb-cli-reports/
