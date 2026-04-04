@@ -23,7 +23,7 @@ Faz 2, Faz 1'in yerine geçmez. CLI, Faz 1 belgeleri ve skill'leriyle tutarlı k
 
 - Bu klasör, ana deponun içinde bağımsız dağıtılabilir bir Python paketi olarak hazırlanır.
 - Workspace altındaki `agentic/Pywen-dev`, `agentic/codex-main` ve `agentic/claude` yalnızca referans tasarım kaynağıdır; Sentinel CLI içine alt modül veya vendor kopya olarak eklenmez.
-- Lisans ve uyarlama notları için [DEPENDENCY_LICENSES.md](/home/caglarkc/Desktop/sentinel/sentinel-coming/cli/documantations/DEPENDENCY_LICENSES.md) dosyasına bakılmalıdır.
+- Lisans ve uyarlama notları için [DEPENDENCY_LICENSES.md](documantations/DEPENDENCY_LICENSES.md) dosyasına bakılmalıdır.
 
 ## İskelet çalıştırma
 
@@ -43,4 +43,4 @@ PYTHONPATH=src python -m sentinel_cli --help
 - Tehdit modeli ve sır yönetimi belgeleri
 - Onay politikası ve prompt injection guardrail özeti
 
-Detaylı faz planı için [IMPLEMENTATION_PLAN_PHASE2.md](/home/caglarkc/Desktop/sentinel/sentinel-coming/cli/documantations/IMPLEMENTATION_PLAN_PHASE2.md) dosyasına bakılmalıdır.
+Detaylı faz planı için [IMPLEMENTATION_PLAN_PHASE2.md](documantations/IMPLEMENTATION_PLAN_PHASE2.md) dosyasına bakılmalıdır.

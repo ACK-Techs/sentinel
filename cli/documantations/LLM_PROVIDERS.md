@@ -1,6 +1,6 @@
 # LLM Sağlayıcıları: API ve Lokal Modlar (Faz 2)
 
-Bu belge, Sentinel CLI’nin **aynı uygulama içinde** hem **uzak API** hem **lokal inference** kullanabilmesi için **yapılandırma sözleşmesini** tanımlar. Gerçek env anahtar adları uygulama kodu ile birebir eşleşmelidir; burada **mantıksal isimler** verilmiştir.
+Bu belge, Sentinel CLI’nin **aynı uygulama içinde** hem **uzak API** hem **lokal inference** kullanabilmesi için **yapılandırma sözleşmesini** tanımlar. Faz 2.B itibariyla env adlari `cli/.env.example` ve `CONFIG_REFERENCE_PHASE2B.md` ile hizalanmistir.
 
 ## Hedef
 
@@ -11,13 +11,13 @@ Bu belge, Sentinel CLI’nin **aynı uygulama içinde** hem **uzak API** hem **l
 
 ## Profil kavramı
 
-Önerilen model: **`SENTINEL_PROFILE`** veya `--profile` değeri `cloud`, `local`, `anthropic`, vb. Profil, hangi env blokunun okunacağını seçer; ayrıntılar ilgili skill’de (ör. `agentic-config-profiles`).
+Önerilen model: **`SENTINEL_PROFILE`** veya `--profile` değeri `cloud`, `local`, `anthropic`, vb. Profil, hangi env blokunun okunacağını seçer. Merge sirasi: **defaults < dosya < env < CLI**.
 
 ## Uzak API (OpenAI uyumlu örnek)
 
-Aşağıdaki değişkenler **örnek sözleşmedir**; uygulama README’sinde kesin liste sabitlenmelidir.
+Aşağıdaki değişkenler Faz 2.B koduyla hizali public sozlesmedir.
 
-- Taban URL: `SENTINEL_OPENAI_BASE_URL` veya `OPENAI_BASE_URL` (çakışmada proje önceliği skill’de yazılır)
+- Taban URL: `SENTINEL_OPENAI_BASE_URL` veya `OPENAI_BASE_URL` (çakışmada `SENTINEL_OPENAI_BASE_URL` kazanır)
 - API key: `SENTINEL_API_KEY` veya sağlayıcıya özel `ANTHROPIC_API_KEY` vb.
 - Model adı: `SENTINEL_MODEL` veya profil içi `model`
 
@@ -36,6 +36,17 @@ Aşağıdaki değişkenler **örnek sözleşmedir**; uygulama README’sinde kes
 - `ANTHROPIC_API_KEY`, `SENTINEL_ANTHROPIC_MODEL`
 - Mesaj ve tool şeması OpenAI’dan farklıdır; mimaride **adapter katmanı** zorunludur (`ARCHITECTURE_AGENTIC_CLI.md`).
 
+## Diger ortak env'ler
+
+- `SENTINEL_CONFIG` — YAML config yolu
+- `SENTINEL_HTTP_CONNECT_TIMEOUT_SEC`
+- `SENTINEL_HTTP_TIMEOUT_SEC`
+- `SENTINEL_HTTP_MAX_RETRIES`
+- `SENTINEL_HTTP_RETRY_STATUSES`
+- `SENTINEL_CONTEXT_WINDOW_TOKENS`
+- `SENTINEL_CONTEXT_WARN_AT`
+- `SENTINEL_CONTEXT_STRATEGY`
+
 ## Hata sınıfları (kullanıcıya yansıtma)
 
 Önerilen ayrım:
@@ -50,6 +61,8 @@ Aşağıdaki değişkenler **örnek sözleşmedir**; uygulama README’sinde kes
 
 - API anahtarlarını **commit etmeyin**; `.env` örnek dosyasında placeholder kullanın.
 - Lokal modda bile **ağa açık** sunucular (0.0.0.0) risk oluşturur; skill’de uyarı metni bulunmalıdır.
+
+Tam tablo icin `CONFIG_REFERENCE_PHASE2B.md` dosyasina bakin.
 
 ## İlgili skill’ler
 

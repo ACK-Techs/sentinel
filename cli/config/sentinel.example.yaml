@@ -1,9 +1,35 @@
 profile: local
-model: provider-model-placeholder
+profiles:
+  cloud:
+    provider: openai
+    model: provider-model-placeholder
+    base_url: https://api.example.com/v1
+    api_key_env: SENTINEL_API_KEY
+  local:
+    provider: openai
+    model: local_model_placeholder
+    base_url: http://127.0.0.1:11434/v1
+    timeout_sec: 120
+  anthropic:
+    provider: anthropic
+    model: anthropic_model_placeholder
+    base_url: https://api.anthropic.com/v1/messages
+    api_key_env: ANTHROPIC_API_KEY
 
-approval:
-  mode: interactive
+http:
+  connect_timeout_sec: 10
+  read_timeout_sec: 120
+  retry:
+    max_attempts: 3
+    retryable_status_codes:
+      - 429
+      - 500
+      - 502
+      - 503
+      - 504
 
-paths:
-  sessions_dir: ./sessions
-  trajectories_dir: ./trajectories
+context_window:
+  max_input_tokens: 32000
+  warn_ratio: 0.85
+  strategy: truncate
+  preserve_recent_messages: 8
