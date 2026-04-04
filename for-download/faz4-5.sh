@@ -2,6 +2,8 @@
 set -euo pipefail
 
 MODEL_NAME="${MODEL_NAME:-cos}"
+# Juju uygulama adi; K8s Service adi genelde bununla aynidir (bundle'daki otel-collector).
+OTEL_APP="${OTEL_APP:-otel-collector}"
 TRAEFIK_UNIT="traefik/0"
 GRAFANA_UNIT="grafana/0"
 
@@ -36,8 +38,16 @@ echo "Grafana parola  : ${GRAFANA_PASSWORD}"
 ok "Grafana admin parolasi alindi"
 
 echo
-echo "[CHECK] OTLP Gateway IP Adresi (OpenTelemetry)"
-OTEL_SVC=$(sudo microk8s kubectl get svc -n "$MODEL_NAME" | grep -E 'otel-collector' | head -n 1 | awk '{print $4}' | grep -v "<none>" || echo "Bulunamadi")
+echo "[CHECK] OTLP Gateway IP Adresi (OpenTelemetry) [OTEL_APP=${OTEL_APP}]"
+OTEL_EXT_IP="$(
+  sudo microk8s kubectl get svc -n "$MODEL_NAME" --no-headers \
+    | awk -v app="$OTEL_APP" '$1 == app { print $4; exit }'
+)"
+if [ -n "${OTEL_EXT_IP:-}" ] && [ "$OTEL_EXT_IP" != "<none>" ]; then
+  OTEL_SVC="$OTEL_EXT_IP"
+else
+  OTEL_SVC="Bulunamadi"
+fi
 if [ "$OTEL_SVC" != "Bulunamadi" ] && [ -n "$OTEL_SVC" ]; then
     ok "OTLP Gateway (MetalLB IP): $OTEL_SVC (Port: 4317/4318)"
 else
