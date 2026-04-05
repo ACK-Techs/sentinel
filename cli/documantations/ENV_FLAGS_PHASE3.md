@@ -26,6 +26,7 @@ Kaynak: `src/sentinel_cli/config/loader.py`, `config/models.py`. Sağlayıcı od
 | `SENTINEL_CONTEXT_STRATEGY` | `truncate` | Bağlam stratejisi | — |
 | `SENTINEL_LOG_LEVEL` | `INFO` | Log seviyesi | Yerel log; uzaktan telemetri değil |
 | `SENTINEL_MAX_TURNS` | `6` | Ajan tur üst sınırı | Düşük değer erken keser |
+| `SENTINEL_GRAFANA_CONTEXT_IN_REPL` | `true` | REPL/run için secret-safe Grafana operasyonel özetini system prompt'a ekler | Canlı panel verisi değildir; `false` ile kapatılabilir |
 | `SENTINEL_AUTO_APPROVE` | `false` | Araç onayı otomatik (true/false) | **Yüksek risk** — mutating işlemler |
 | `SENTINEL_SESSION_DIR` | `./.sentinel/sessions` | Oturum dizini | Dosya sistemi |
 | `SENTINEL_TRAJECTORY_DIR` | `./.sentinel/trajectories` | Trajectory dizini | Dosya sistemi |

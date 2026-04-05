@@ -21,6 +21,7 @@
 | **3** | CLI’yi kendi kullanımına “tam” sayılacak hale getirmek | Kendi makinede kurulum, paketleme, sertleştirme, tek okunabilir dokümantasyon — **hepsi bireysel/dev kullanımı için**. |
 | **4** | Observability + Grafana LLM kolaylığı | Kendi stack’inde Grafana; **bağlantı testi** (mock CI + **istenen gerçek yığın** doğrulaması). Stack çalışırken canlı HTTP ile doğrula; ayrıntı: `IMPLEMENTATION_PLAN_PHASE4.md`. |
 | **5** | (Sonra) | İleride planlanır. |
+| **Bireysel kapanış** | REPL ↔ Grafana operasyonel özet | `doctor` sonucunun ajan bağlamına secret-safe taşınması; plan: `IMPLEMENTATION_PLAN_INDIVIDUAL_CLOSE.md` |
 
 ---
 
@@ -49,7 +50,8 @@
 - Faz 2 teslim notları: `archive/README.md`  
 - Uygulama planları: [IMPLEMENTATION_PLAN_PHASE3.md](IMPLEMENTATION_PLAN_PHASE3.md), [IMPLEMENTATION_PLAN_PHASE4.md](IMPLEMENTATION_PLAN_PHASE4.md) (iç kullanım dilinde)  
 - Faz 3’ü otomasyonla tek seferde yürütmek için: [CODEX_EXECUTION_PROMPT_PHASE3.md](CODEX_EXECUTION_PROMPT_PHASE3.md) — indeks: [PHASE3_SKILL_AND_DOC_INDEX.md](PHASE3_SKILL_AND_DOC_INDEX.md)  
-- Faz 4: [CODEX_EXECUTION_PROMPT_PHASE4.md](CODEX_EXECUTION_PROMPT_PHASE4.md) — indeks: [PHASE4_SKILL_AND_DOC_INDEX.md](PHASE4_SKILL_AND_DOC_INDEX.md)
+- Faz 4: [CODEX_EXECUTION_PROMPT_PHASE4.md](CODEX_EXECUTION_PROMPT_PHASE4.md) — indeks: [PHASE4_SKILL_AND_DOC_INDEX.md](PHASE4_SKILL_AND_DOC_INDEX.md)  
+- Bireysel kapanış: [CODEX_EXECUTION_PROMPT_INDIVIDUAL_CLOSE.md](CODEX_EXECUTION_PROMPT_INDIVIDUAL_CLOSE.md) — indeks: [INDIVIDUAL_CLOSE_SKILL_AND_DOC_INDEX.md](INDIVIDUAL_CLOSE_SKILL_AND_DOC_INDEX.md)
 
 ---
 
@@ -57,4 +59,5 @@
 
 1. Faz 3 görevlerini `IMPLEMENTATION_PLAN_PHASE3.md` üzerinden yürüt.  
 2. Ardından Faz 4: `IMPLEMENTATION_PLAN_PHASE4.md`.  
-3. Dışa dönük ürün ve telemetri — **ayrı faz / ayrı karar**.
+3. Bireysel kullanım için REPL–Grafana bağlamı: `IMPLEMENTATION_PLAN_INDIVIDUAL_CLOSE.md` — indeks: `INDIVIDUAL_CLOSE_SKILL_AND_DOC_INDEX.md`.  
+4. Dışa dönük ürün ve telemetri — **ayrı faz / ayrı karar**.

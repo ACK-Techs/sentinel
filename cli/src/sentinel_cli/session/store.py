@@ -19,6 +19,7 @@ class SessionState:
     provider: str
     messages: list[ChatMessage]
     created_at: str
+    grafana_context_snapshot: str | None = None
 
 
 class SessionStore:
@@ -36,6 +37,7 @@ class SessionStore:
             provider=provider,
             messages=[],
             created_at=datetime.now(UTC).isoformat(),
+            grafana_context_snapshot=None,
         )
         self.save(session)
         return session
@@ -50,6 +52,7 @@ class SessionStore:
             "profile": session.profile,
             "provider": session.provider,
             "created_at": session.created_at,
+            "grafana_context_snapshot": session.grafana_context_snapshot,
             "messages": [message.model_dump(mode="json") for message in session.messages],
         }
         path.write_text(json.dumps(payload, ensure_ascii=True, indent=2), encoding="utf-8")
@@ -62,5 +65,6 @@ class SessionStore:
             profile=payload["profile"],
             provider=payload["provider"],
             created_at=payload["created_at"],
+            grafana_context_snapshot=payload.get("grafana_context_snapshot", None),
             messages=[ChatMessage.model_validate(item) for item in payload.get("messages", [])],
         )

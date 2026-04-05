@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass
 from typing import Any
 
@@ -10,6 +11,7 @@ from sentinel_cli.config import AppConfig, ResolvedProfile
 from sentinel_cli.hooks import HookManager
 from sentinel_cli.llm.errors import LLMError
 from sentinel_cli.llm.types import ChatMessage, ChatRequest, CompletionResult, MessageRole, ToolCall
+from sentinel_cli.observability import check_grafana_connection
 from sentinel_cli.session import SessionStore, TrajectoryRecorder
 from sentinel_cli.tools import ToolRegistry
 
@@ -63,11 +65,29 @@ class AgentLoop:
         )
 
     def _request(self, messages: list[ChatMessage]) -> ChatRequest:
+        system_prompt = self._config.agent.system_prompt
+        session = getattr(self, "_active_session", None)
+        if session and session.grafana_context_snapshot:
+            system_prompt = (
+                f"{system_prompt}\n\n"
+                "Grafana operasyonel ozeti asagidadir; bu ozet canli panel veya metrik akisi degildir.\n"
+                f"{session.grafana_context_snapshot}"
+            )
         return ChatRequest(
             messages=messages,
-            system_prompt=self._config.agent.system_prompt,
+            system_prompt=system_prompt,
             tools=self._registry.definitions() if self._profile.supports_tools else [],
         )
+
+    def _ensure_grafana_snapshot(self, session) -> None:
+        if not self._config.agent.grafana_context_in_repl:
+            return
+        if session.grafana_context_snapshot is not None:
+            return
+
+        result = check_grafana_connection(self._config.grafana, env=dict(os.environ))
+        session.grafana_context_snapshot = json.dumps(result.to_dict(), ensure_ascii=True)
+        self._session_store.save(session)
 
     def run(
         self,
@@ -94,6 +114,8 @@ class AgentLoop:
             )
             session = self._session_store.create(profile=self._profile.name, provider=self._profile.provider)
 
+        self._ensure_grafana_snapshot(session)
+        self._active_session = session
         session.messages = self._compactor.compact(session.messages)
         session.messages.append(ChatMessage(role=MessageRole.USER, content=prompt))
         self._session_store.save(session)
@@ -128,6 +150,7 @@ class AgentLoop:
 
             if not result.tool_calls:
                 self._session_store.save(session)
+                self._active_session = None
                 return AgentRunResult(
                     output_text=result.text or "(bos yanit)",
                     turns_used=turn,
@@ -147,7 +170,7 @@ class AgentLoop:
                         turns_used=turn,
                         stopped_reason="repeated_tool_call",
                         session_id=session.session_id,
-                        warnings=warnings,
+                    warnings=warnings,
                     )
                 try:
                     tool_result = self._registry.execute_tool_call(
@@ -177,6 +200,7 @@ class AgentLoop:
                 session.messages = self._compactor.compact(session.messages)
                 self._session_store.save(session)
 
+        self._active_session = None
         return AgentRunResult(
             output_text="Maksimum tur sinirina ulasildi.",
             turns_used=self._config.agent.max_turns,

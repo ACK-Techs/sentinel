@@ -133,6 +133,13 @@ def _env_overlay(env: dict[str, str]) -> dict[str, Any]:
     if max_turns:
         assign(("agent", "max_turns"), int(max_turns))
 
+    grafana_context_in_repl = env.get("SENTINEL_GRAFANA_CONTEXT_IN_REPL")
+    if grafana_context_in_repl:
+        assign(
+            ("agent", "grafana_context_in_repl"),
+            grafana_context_in_repl.lower() in {"1", "true", "yes", "on"},
+        )
+
     auto_approve = env.get("SENTINEL_AUTO_APPROVE")
     if auto_approve:
         normalized = auto_approve.lower() in {"1", "true", "yes", "on"}

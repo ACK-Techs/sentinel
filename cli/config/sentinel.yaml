@@ -49,6 +49,7 @@ logging:
 agent:
   max_turns: 6
   repeat_tool_call_limit: 2
+  grafana_context_in_repl: true
 
 tools:
   approval_mode: interactive

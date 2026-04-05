@@ -1,0 +1,33 @@
+{
+  "session_id": "d90fb5d82834",
+  "profile": "cloud",
+  "provider": "openai",
+  "created_at": "2026-04-05T12:09:55.057612+00:00",
+  "grafana_context_snapshot": "{\"configured\": true, \"attempted\": true, \"ok\": true, \"status\": \"ok\", \"message\": \"Grafana baglantisi dogrulandi.\", \"http_status\": 200, \"health_path\": \"/api/health\", \"token_present\": false, \"base_url_present\": true, \"verify_ssl\": true, \"troubleshoot_skill\": \"skills/agentic-troubleshoot-grafana/SKILL.md\"}",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Sentinel operasyonel Grafana ozetinde ne yaziyor, kisa tekrarla.",
+      "name": null,
+      "tool_call_id": null
+    },
+    {
+      "role": "assistant",
+      "content": "Sentinel operasyonel Grafana \u00f6zetine g\u00f6re:\n\n*   Grafana ba\u011flant\u0131s\u0131 ba\u015far\u0131yla do\u011fruland\u0131 ve durumu \"ok\" olarak belirtildi (HTTP 200).",
+      "name": null,
+      "tool_call_id": null
+    },
+    {
+      "role": "user",
+      "content": "Grafana ozeti bu oturumda yeniden mi cekildi? Tek cumle.",
+      "name": null,
+      "tool_call_id": null
+    },
+    {
+      "role": "assistant",
+      "content": "Ozetin bu oturumda yeniden \u00e7ekildi\u011fine dair bir bilgi bulunmamaktad\u0131r.",
+      "name": null,
+      "tool_call_id": null
+    }
+  ]
+}

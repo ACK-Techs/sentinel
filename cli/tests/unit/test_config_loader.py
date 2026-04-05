@@ -114,3 +114,11 @@ def test_grafana_explicit_enabled_without_base_url_is_preserved() -> None:
     assert config.grafana.enabled is True
     assert config.grafana.base_url is None
     assert config.grafana.health_path == "ready"
+
+
+def test_grafana_context_in_repl_defaults_true_and_env_can_disable() -> None:
+    default_config = load_config(env={})
+    disabled = load_config(env={"SENTINEL_GRAFANA_CONTEXT_IN_REPL": "false"})
+
+    assert default_config.agent.grafana_context_in_repl is True
+    assert disabled.agent.grafana_context_in_repl is False
