@@ -25,6 +25,7 @@ from sentinel_cli.config import CliOverrides, ConfigError, load_config, resolve_
 from sentinel_cli.hooks import HookManager
 from sentinel_cli.llm.errors import LLMError
 from sentinel_cli.llm.factory import build_provider
+from sentinel_cli.observability import check_grafana_connection
 from sentinel_cli.session import SessionStore, TrajectoryRecorder
 from sentinel_cli.tools import MCPClientManager
 
@@ -117,6 +118,7 @@ def _print_config(config, profile) -> int:
 
 def _doctor(config, profile) -> int:
     mcp = MCPClientManager(config.mcp).discover_tools()
+    grafana = check_grafana_connection(config.grafana, env=os.environ)
     payload = {
         "profile": profile.name,
         "provider": profile.provider,
@@ -136,6 +138,7 @@ def _doctor(config, profile) -> int:
                 for tool in mcp.tools
             ],
         },
+        "grafana": grafana.to_dict(),
     }
     print(json.dumps(payload, indent=2, ensure_ascii=True))
     return EXIT_OK

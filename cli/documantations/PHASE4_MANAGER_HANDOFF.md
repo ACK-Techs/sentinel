@@ -31,3 +31,7 @@ Bu dosya **kod yazmayan** koordinatör ajan ile **kod teslim eden** ajan arasın
 ## Yürütücüye verilecek tek kaynak
 
 Öncelik sırası: bu dosyadaki envanter + aşağıdaki **yapıştırma prompt’u** (veya doğrudan `CODEX_EXECUTION_PROMPT_PHASE4.md` içeriği). Cursor’da kod yazan ajan için ek bağlam: proje skill’i `sentinel-phase4-executor` (`.cursor/skills/sentinel-phase4-executor/SKILL.md`).
+
+## Faz 4 sonrası — canlı test öncesi
+
+Gerçek stack’e bağlanmadan önce mimari rapor ve genişletilmiş test/rehber için: [PRE_LIVE_VALIDATION_HANDOFF.md](PRE_LIVE_VALIDATION_HANDOFF.md).

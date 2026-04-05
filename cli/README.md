@@ -1,4 +1,4 @@
-# Sentinel CLI (Faz 3)
+# Sentinel CLI (Faz 4)
 
 Bu dizin, `sentinel-coming` deposundaki **Sentinel CLI** paketidir. Faz 1 içeriği depo kökündeki `documantations/` ve `skills/` altında kalır; Faz 2 ile kurulan Python tabanlı terminal ajanı Faz 3’te iç kullanım için sertleştirilir.
 
@@ -233,4 +233,36 @@ Detaylı faz planları: [Faz 2](documantations/IMPLEMENTATION_PLAN_PHASE2.md), [
 
 Geliştirici: [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md). Faz 3 env ve indeks: [ENV_FLAGS_PHASE3.md](documantations/ENV_FLAGS_PHASE3.md), [PHASE3_SKILL_AND_DOC_INDEX.md](documantations/PHASE3_SKILL_AND_DOC_INDEX.md). Faz 3’ü ajanla tek oturumda işlemek için: [CODEX_EXECUTION_PROMPT_PHASE3.md](documantations/CODEX_EXECUTION_PROMPT_PHASE3.md).
 
-Faz 4 (Grafana / observability bağlantısı): [PHASE4_SKILL_AND_DOC_INDEX.md](documantations/PHASE4_SKILL_AND_DOC_INDEX.md), [PHASE4_MANAGER_HANDOFF.md](documantations/PHASE4_MANAGER_HANDOFF.md), [GRAFANA_HTTP_PHASE4.md](documantations/GRAFANA_HTTP_PHASE4.md), canlı stack doğrulama notu: [PHASE4_REAL_STACK_VERIFY.md](documantations/PHASE4_REAL_STACK_VERIFY.md). Tek oturum prompt: [CODEX_EXECUTION_PROMPT_PHASE4.md](documantations/CODEX_EXECUTION_PROMPT_PHASE4.md).
+Faz 4 (Grafana / observability bağlantısı): [PHASE4_SKILL_AND_DOC_INDEX.md](documantations/PHASE4_SKILL_AND_DOC_INDEX.md), [PHASE4_MANAGER_HANDOFF.md](documantations/PHASE4_MANAGER_HANDOFF.md), [GRAFANA_HTTP_PHASE4.md](documantations/GRAFANA_HTTP_PHASE4.md), canlı stack doğrulama notu: [PHASE4_REAL_STACK_VERIFY.md](documantations/PHASE4_REAL_STACK_VERIFY.md). Tek oturum prompt: [CODEX_EXECUTION_PROMPT_PHASE4.md](documantations/CODEX_EXECUTION_PROMPT_PHASE4.md). Canlı test öncesi mimari + test genişletme: [PRE_LIVE_VALIDATION_HANDOFF.md](documantations/PRE_LIVE_VALIDATION_HANDOFF.md).
+
+## Faz 4: Grafana baglanti dogrulamasi
+
+Faz 4 ile `sentinel-cli doctor` mevcut profil/MCP ozetine ek olarak opsiyonel Grafana HTTP baglanti kontrolu de yapar. Ama amac dar tutulur: Grafana'ya erisiliyor mu, token reddediliyor mu, timeout mu var? Dashboard otomasyonu veya veri kaynagi kurulumunu yapmaz.
+
+Ornek env:
+
+```bash
+cd sentinel-coming/cli
+source .venv/bin/activate
+
+export SENTINEL_GRAFANA_BASE_URL=https://grafana.example.com
+export SENTINEL_GRAFANA_TOKEN=replace_me
+# Opsiyonel:
+# export SENTINEL_GRAFANA_TIMEOUT_SEC=5
+# export SENTINEL_GRAFANA_VERIFY_SSL=false
+
+python -m sentinel_cli doctor --profile local
+```
+
+YAML tarafinda ayni alanlar `config/sentinel.example.yaml` icindeki `grafana:` bolumunde bulunur. Secret degerleri YAML'a commit etmeyin; token'i env'de tutun.
+
+`doctor` cikti notlari:
+
+- `ok`: `GET /api/health` 200 dondu
+- `unauthorized`: HTTP cevap veriyor ama token veya yetki reddedildi
+- `timeout`: URL, TLS veya ag erisimi kontrol edilmeli
+- `skipped`: `SENTINEL_GRAFANA_BASE_URL` ayarlanmadigi icin aktif test yapilmadi
+
+Grafana erisiyor ama panellerde veri yoksa bu Faz 4 kontrolunun kapsami disindadir; datasource sirasini ve Faz 1 teshis akisini dogrulayin. Kopru skill: `skills/agentic-troubleshoot-grafana/SKILL.md`
+
+Canli stack dogrulamasi sonucu veya atlama notu su dosyada tutulur: [PHASE4_REAL_STACK_VERIFY.md](documantations/PHASE4_REAL_STACK_VERIFY.md). Faz 4 HTTP sozlesmesi ve env detaylari: [GRAFANA_HTTP_PHASE4.md](documantations/GRAFANA_HTTP_PHASE4.md).

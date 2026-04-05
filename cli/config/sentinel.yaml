@@ -72,6 +72,14 @@ mcp:
         - path/to/mcp_server.py
       tool_prefix: mcp_sample
 
+grafana:
+  enabled: false
+  base_url: null
+  health_path: /api/health
+  timeout_sec: 5
+  token_env: SENTINEL_GRAFANA_TOKEN
+  verify_ssl: true
+
 session:
   directory: ./.sentinel/sessions
   trajectory_directory: ./.sentinel/trajectories

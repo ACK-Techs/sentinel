@@ -48,6 +48,10 @@ packages = ["src/sentinel_cli"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "-m 'not live'"
+markers = [
+  "live: real network Grafana checks excluded from default CI runs",
+]
 
 [tool.ruff]
 line-length = 100

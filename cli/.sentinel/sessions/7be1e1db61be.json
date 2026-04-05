@@ -1,0 +1,44 @@
+{
+  "session_id": "7be1e1db61be",
+  "profile": "cloud",
+  "provider": "openai",
+  "created_at": "2026-04-05T11:42:59.419955+00:00",
+  "messages": [
+    {
+      "role": "user",
+      "content": "naber",
+      "name": null,
+      "tool_call_id": null
+    },
+    {
+      "role": "assistant",
+      "content": "Merhaba! \u0130yiyim, te\u015fekk\u00fcrler. Nas\u0131l yard\u0131mc\u0131 olabilirim?",
+      "name": null,
+      "tool_call_id": null
+    },
+    {
+      "role": "user",
+      "content": "grafanama eri\u015feibliyor musun",
+      "name": null,
+      "tool_call_id": null
+    },
+    {
+      "role": "assistant",
+      "content": "Hay\u0131r, bir yapay zeka modeli olarak d\u0131\u015f sistemlere veya senin \u00f6zel Grafana kurulumuna do\u011frudan eri\u015fimim yok. G\u00fcvenlik ve gizlilik nedeniyle b\u00f6yle bir yetene\u011fim bulunmamaktad\u0131r.\n\nAncak Grafana ile ilgili bir sorunun veya yard\u0131ma ihtiyac\u0131n olursa, bana bilgi vererek yard\u0131mc\u0131 olabilirim:\n\n*   Bir hata mesaj\u0131 m\u0131 al\u0131yorsun?\n*   Belirli bir paneli veya sorguyu yap\u0131land\u0131rmak m\u0131 istiyorsun?\n*   Grafana hakk\u0131nda genel bir sorunuz mu var?\n\nSorunu bana anlat\u0131rsan, bilgi birikimimle sana rehberlik etmeye \u00e7al\u0131\u015fabilirim.",
+      "name": null,
+      "tool_call_id": null
+    },
+    {
+      "role": "user",
+      "content": "grafana llme baglad\u0131m seni herhangi bir \u015fey gormuyor musun",
+      "name": null,
+      "tool_call_id": null
+    },
+    {
+      "role": "assistant",
+      "content": "Anlad\u0131m, bu ilgin\u00e7 bir kurulum! \u015e\u00f6yle ki:\n\nBenim senin Grafana kurulumuna veya herhangi bir d\u0131\u015f sisteme do\u011frudan, canl\u0131 bir ba\u011flant\u0131m bulunmuyor. Sen Grafana'y\u0131 bir LLM'ye (benim gibi bir modele) ba\u011flam\u0131\u015f olabilirsin, ancak bu ba\u011flant\u0131 genellikle \u015fu \u015fekillerde \u00e7al\u0131\u015f\u0131r:\n\n1.  **Veri G\u00f6nderme:** Grafana'dan belirli metrikler, uyar\u0131lar veya sorgu sonu\u00e7lar\u0131 bir \u015fekilde tetiklenerek bir API \u00e7a\u011fr\u0131s\u0131 arac\u0131l\u0131\u011f\u0131yla bir LLM'ye (benim gibi) g\u00f6nderilir.\n2.  **Prompt Olu\u015fturma:** Bu veriler, bir LLM'ye g\u00f6nderilecek bir \"prompt\" (talimat/soru) i\u00e7ine yerle\u015ftirilir.\n\nYani, **e\u011fer bana Grafana'dan bir \u015fey g\u00f6nderdiysen, bu bilgi bana senin yazd\u0131\u011f\u0131n son mesaj\u0131n bir par\u00e7as\u0131 olarak gelmeli.** \u00d6rne\u011fin, \"Grafana'dan gelen son uyar\u0131 \u015fu: [Uyar\u0131 metni buraya]\" \u015feklinde bir mesaj al\u0131rsam, o metni i\u015fleyebilirim.\n\n\u015eu an itibar\u0131yla, senin \"Grafana'dan bir \u015fey g\u00f6r\u00fcyor musun\" sorunun d\u0131\u015f\u0131nda bana herhangi bir Grafana verisi ula\u015fmad\u0131.\n\n**Benden ne g\u00f6rmemi bekliyordun?**\n*   Bana belirli bir metrik de\u011feri mi g\u00f6nderdin?\n*   Bir uyar\u0131 mesaj\u0131 m\u0131 yollad\u0131n?\n*   Bir panelin ekran g\u00f6r\u00fcnt\u00fcs\u00fcn\u00fc veya \u00f6zetini mi bekliyordun?\n\nE\u011fer bana bu bilgiyi (metin olarak) sa\u011flarsan, onu analiz edebilirim veya \u00fczerine konu\u015fabiliriz.",
+      "name": null,
+      "tool_call_id": null
+    }
+  ]
+}

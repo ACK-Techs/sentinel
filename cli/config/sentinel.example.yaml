@@ -1,6 +1,7 @@
 # SABLON — repoya commitlenir. Gercek dosya: sentinel.yaml
 # Olustur: cp config/sentinel.example.yaml config/sentinel.yaml
 # Sonra sentinel.yaml ve .env ile calisin; bu dosyayi degistirmek zorunlu degil.
+# Icerik sentinel.yaml ile ayni yapida tutulur (yorum satirlari haric).
 
 profile: local
 profiles:
@@ -74,6 +75,14 @@ mcp:
         - python3
         - path/to/mcp_server.py
       tool_prefix: mcp_sample
+
+grafana:
+  enabled: false
+  base_url: null
+  health_path: /api/health
+  timeout_sec: 5
+  token_env: SENTINEL_GRAFANA_TOKEN
+  verify_ssl: true
 
 session:
   directory: ./.sentinel/sessions

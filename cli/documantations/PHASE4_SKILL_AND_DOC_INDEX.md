@@ -7,6 +7,7 @@
 | `PHASE4_MANAGER_HANDOFF.md` | Yönetici ↔ yürütücü bağlamı; envanter ve kapanış tanımı |
 | `GRAFANA_HTTP_PHASE4.md` | Faz 4 uygulamasında doldurulur: HTTP uçları, env, resmi doc linki |
 | `PHASE4_REAL_STACK_VERIFY.md` | Lab/lokal canlı test sonucu şablonu (**secret yok**) |
+| `PRE_LIVE_VALIDATION_HANDOFF.md` | Canlı test öncesi: mimari rapor + test genişletme prompt’ları |
 
 **Skill köprüleri (repo):** `skills/agentic-troubleshoot-grafana/SKILL.md`, ilgili `agentic-cos-*`.
 

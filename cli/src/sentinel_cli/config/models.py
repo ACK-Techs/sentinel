@@ -149,6 +149,19 @@ class MCPSettings(BaseModel):
     servers: list[MCPServerConfig] = Field(default_factory=list)
 
 
+class GrafanaSettings(BaseModel):
+    """Optional Grafana connection settings for doctor checks."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool = False
+    base_url: str | None = None
+    health_path: str = "/api/health"
+    timeout_sec: float = 5.0
+    token_env: str = "SENTINEL_GRAFANA_TOKEN"
+    verify_ssl: bool = True
+
+
 class SessionSettings(BaseModel):
     """Session and trajectory persistence settings."""
 
@@ -199,6 +212,7 @@ class AppConfig(BaseModel):
     tools: ToolExecutionSettings = Field(default_factory=ToolExecutionSettings)
     hooks: HooksSettings = Field(default_factory=HooksSettings)
     mcp: MCPSettings = Field(default_factory=MCPSettings)
+    grafana: GrafanaSettings = Field(default_factory=GrafanaSettings)
     session: SessionSettings = Field(default_factory=SessionSettings)
     experimental: ExperimentalSettings = Field(default_factory=ExperimentalSettings)
 
@@ -226,6 +240,10 @@ class AppConfig(BaseModel):
             "tools": self.tools.model_dump(),
             "hooks": self.hooks.model_dump(),
             "mcp": self.mcp.model_dump(mode="json"),
+            "grafana": {
+                **self.grafana.model_dump(),
+                "token_env": self.grafana.token_env,
+            },
             "session": self.session.model_dump(mode="json"),
             "experimental": self.experimental.model_dump(),
             "list_merge_strategy": "replace",

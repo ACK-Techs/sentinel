@@ -161,6 +161,34 @@ def _env_overlay(env: dict[str, str]) -> dict[str, Any]:
             experimental_mcp.lower() in {"1", "true", "yes", "on"},
         )
 
+    grafana_enabled = env.get("SENTINEL_GRAFANA_ENABLED")
+    if grafana_enabled:
+        assign(("grafana", "enabled"), grafana_enabled.lower() in {"1", "true", "yes", "on"})
+
+    grafana_base_url = env.get("SENTINEL_GRAFANA_BASE_URL")
+    if grafana_base_url:
+        assign(("grafana", "enabled"), True)
+        assign(("grafana", "base_url"), grafana_base_url)
+
+    grafana_health_path = env.get("SENTINEL_GRAFANA_HEALTH_PATH")
+    if grafana_health_path:
+        assign(("grafana", "health_path"), grafana_health_path)
+
+    grafana_timeout = env.get("SENTINEL_GRAFANA_TIMEOUT_SEC")
+    if grafana_timeout:
+        assign(("grafana", "timeout_sec"), float(grafana_timeout))
+
+    grafana_token_env = env.get("SENTINEL_GRAFANA_TOKEN_ENV")
+    if grafana_token_env:
+        assign(("grafana", "token_env"), grafana_token_env)
+
+    grafana_verify_ssl = env.get("SENTINEL_GRAFANA_VERIFY_SSL")
+    if grafana_verify_ssl:
+        assign(
+            ("grafana", "verify_ssl"),
+            grafana_verify_ssl.lower() in {"1", "true", "yes", "on"},
+        )
+
     return overlay
 
 

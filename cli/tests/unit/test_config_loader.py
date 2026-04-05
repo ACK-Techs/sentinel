@@ -84,3 +84,33 @@ def test_cloud_supports_tools_env_overrides_profile() -> None:
     )
     assert off.profiles["cloud"].supports_tools is False
     assert on.profiles["cloud"].supports_tools is True
+
+
+def test_grafana_env_overlay_enables_and_configures_section() -> None:
+    config = load_config(
+        env={
+            "SENTINEL_GRAFANA_BASE_URL": "https://grafana.example.test",
+            "SENTINEL_GRAFANA_TIMEOUT_SEC": "9",
+            "SENTINEL_GRAFANA_VERIFY_SSL": "false",
+            "SENTINEL_GRAFANA_TOKEN_ENV": "CUSTOM_GRAFANA_TOKEN",
+        }
+    )
+
+    assert config.grafana.enabled is True
+    assert config.grafana.base_url == "https://grafana.example.test"
+    assert config.grafana.timeout_sec == 9
+    assert config.grafana.verify_ssl is False
+    assert config.grafana.token_env == "CUSTOM_GRAFANA_TOKEN"
+
+
+def test_grafana_explicit_enabled_without_base_url_is_preserved() -> None:
+    config = load_config(
+        env={
+            "SENTINEL_GRAFANA_ENABLED": "true",
+            "SENTINEL_GRAFANA_HEALTH_PATH": "ready",
+        }
+    )
+
+    assert config.grafana.enabled is True
+    assert config.grafana.base_url is None
+    assert config.grafana.health_path == "ready"
