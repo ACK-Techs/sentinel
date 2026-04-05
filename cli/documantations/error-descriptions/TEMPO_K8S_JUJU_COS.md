@@ -20,6 +20,18 @@ ops.pebble.APIError: cannot stop services: service "tempo-ready" does not exist
 
 İlgili kod yolu: `_on_tempo_pebble_custom_notice` → `self.tempo.container.stop("tempo-ready")`. Hook (`tempo-pebble-custom-notice`) başarısız olunca birim uzun süre **waiting** kalabilir.
 
+**PC aç/kapa veya pod yeniden başlayınca neden tekrarlıyor?**  
+Yeniden başlatmada Pebble bazen **workload-ready** bildirimini, `tempo-ready` servisi henüz yokken veya plandan düşmüşken iletebilir. Eski charm revizyonlarında `stop("tempo-ready")` **try/except olmadan** çağrıldığı için hook her seferinde düşer; `juju status` yine **“Tempo API not ready…”** gösterebilir. Upstream `tempo-k8s-operator` içinde bu durum için `APIError`/`RuntimeError` yakalanıp log’a debug yazılıyor; bu düzeltme **daha yeni charm revlerinde** (ör. `latest/edge`) bulunur.
+
+**Kalıcı düzeltme (stable rev 71’de takılı kaldıysan):**
+
+```bash
+juju switch cos
+juju refresh tempo --channel=latest/edge --force-units
+```
+
+Edge riskli sayılabilir; ileride aynı düzeltme `latest/stable`’a gelince tekrar `juju refresh tempo --channel=latest/stable` ile sabitleyebilirsin. Sadece `scale-application 0` / `1` **aynı revde** hook’u tekrar tetiklediği için tek başına bu hatayı çözmeyebilir.
+
 **Doğrulama:**
 
 ```bash
@@ -48,6 +60,23 @@ hook "start" ... failed: exit status 127
 gibi **yarım/bozuk charm dizini** belirtileri çıkabilir.
 
 **Not:** `juju restart` komutu her Juju sürümünde yoktur; CAAS için yeniden denemek için `refresh`, `scale-application` veya pod yenileme kullanılır.
+
+## MicroK8s’i her seferinde güvenli başlatma (Juju / Tempo yarışı)
+
+Doğrudan `sudo microk8s start` sonrası API veya `cos` pod’ları henüz hazır değilken Juju uniter tetiklenirse sorunlar görülebilir. Depoda sıralı bekleme yapan betik:
+
+```bash
+cd sentinel-coming
+sudo ./scripts/cos-microk8s-start.sh
+```
+
+Takılı Tempo’yu otomatik **edge refresh** ile kurtarmak için (isteğe bağlı):
+
+```bash
+COS_HEAL_TEMPO=1 sudo ./scripts/cos-microk8s-start.sh
+```
+
+**Kalıcı önlem:** `tempo-k8s` için `latest/edge` (veya bu düzeltmeyi içeren stable rev) kullanmaya devam et; aksi halde `latest/stable` rev 71 ile her yeniden başlatmada `tempo-ready` hatası tekrarlanabilir.
 
 ## Kurtarma adımları (önerilen sıra)
 
@@ -78,11 +107,12 @@ gibi **yarım/bozuk charm dizini** belirtileri çıkabilir.
    juju scale-application tempo 1
    ```
 
-4. **Charm kanalı**
+4. **Charm kanalı** (`tempo-ready` + `APIError` doğrulandıysa öncelik burada)
 
-   - Stabil: `juju refresh tempo --channel=latest/stable`
-   - Daha yeni rev denemek için: `latest/candidate` veya `latest/edge` (risk daha yüksek)
-   - Hata durumundaki birimlere zorlamak için: `juju refresh tempo --channel=... --force-units`
+   - **`tempo-ready does not exist` ise:** `juju refresh tempo --channel=latest/edge --force-units` (yukarıdaki “Kalıcı düzeltme”).
+   - Stabil tutmak için (düzeltme stable’a gelince): `juju refresh tempo --channel=latest/stable`
+   - Ara risk: `latest/candidate`
+   - Hata durumundaki birimlere zorlamak için her kanalda: `--force-units`
 
 5. **Birim Juju’da “error” ve hook bekliyorsa**
 
@@ -102,4 +132,4 @@ Canonical ekosisteminde `tempo-k8s` tek başına sınırlı/legacy kalabilir; ü
 
 ---
 
-*Son güncelleme: COS / Juju 3.6.x, `tempo-k8s` latest/stable rev 71 ve MicroK8s ortamında gözlemlenen vakalara dayanır.*
+*Son güncelleme: COS / Juju 3.6.x, `tempo-k8s` (stable rev 71’de `tempo-ready` hatası; edge rev 83’te try/except düzeltmesi doğrulandı) ve MicroK8s.*
