@@ -1,2 +1,3 @@
 # npm ile indirilen bagimliliklar
 node_modules/
+.env
