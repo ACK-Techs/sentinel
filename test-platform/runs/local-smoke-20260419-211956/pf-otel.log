@@ -1,0 +1,105 @@
+Forwarding from 127.0.0.1:4317 -> 4317
+Forwarding from [::1]:4317 -> 4317
+Handling connection for 4317
+I0419 21:20:09.994093  346598 log.go:245] (0xc000e9e000) (0xc000e0e000) Create stream
+I0419 21:20:09.994169  346598 log.go:245] (0xc000e9e000) (0xc000e0e000) Stream added, broadcasting: 1
+I0419 21:20:09.995037  346598 log.go:245] (0xc000e9e000) Reply frame received for 1
+I0419 21:20:09.995056  346598 log.go:245] (0xc000e0e000) (1) Writing data frame
+I0419 21:20:09.995098  346598 log.go:245] (0xc000e9e000) (0xc000924140) Create stream
+I0419 21:20:09.995103  346598 log.go:245] (0xc000e9e000) (0xc000924140) Stream added, broadcasting: 3
+I0419 21:20:09.995382  346598 log.go:245] (0xc000e9e000) Reply frame received for 3
+I0419 21:20:09.995421  346598 log.go:245] (0xc000924140) (3) Writing data frame
+I0419 21:20:09.995927  346598 log.go:245] (0xc000e9e000) Data frame received for 3
+I0419 21:20:09.995940  346598 log.go:245] (0xc000924140) (3) Data frame handling
+I0419 21:20:09.995945  346598 log.go:245] (0xc000924140) (3) Data frame sent
+I0419 21:20:10.997067  346598 log.go:245] (0xc000e9e000) Data frame received for 1
+I0419 21:20:10.997114  346598 log.go:245] (0xc000e0e000) (1) Data frame handling
+I0419 21:20:10.997129  346598 log.go:245] (0xc000e9e000) (0xc000e0e000) Stream removed, broadcasting: 1
+I0419 21:20:10.997143  346598 log.go:245] (0xc000e9e000) Data frame received for 3
+I0419 21:20:10.997155  346598 log.go:245] (0xc000924140) (3) Data frame handling
+I0419 21:20:10.997164  346598 log.go:245] (0xc000e9e000) (0xc000924140) Stream removed, broadcasting: 3
+I0419 21:20:10.997176  346598 log.go:245] (0xc000e9e000) (0xc000924140) Stream removed, broadcasting: 3
+Handling connection for 4317
+I0419 21:20:16.144685  346598 log.go:245] (0xc000e9e000) (0xc0009241e0) Create stream
+I0419 21:20:16.144705  346598 log.go:245] (0xc000e9e000) (0xc0009241e0) Stream added, broadcasting: 5
+I0419 21:20:16.145639  346598 log.go:245] (0xc000e9e000) Reply frame received for 5
+I0419 21:20:16.145670  346598 log.go:245] (0xc0009241e0) (5) Writing data frame
+I0419 21:20:16.145784  346598 log.go:245] (0xc000e9e000) (0xc000e0e0a0) Create stream
+I0419 21:20:16.145799  346598 log.go:245] (0xc000e9e000) (0xc000e0e0a0) Stream added, broadcasting: 7
+I0419 21:20:16.146427  346598 log.go:245] (0xc000e9e000) Reply frame received for 7
+I0419 21:20:16.146501  346598 log.go:245] (0xc000e0e0a0) (7) Writing data frame
+I0419 21:20:16.147221  346598 log.go:245] (0xc000e9e000) Data frame received for 7
+I0419 21:20:16.147251  346598 log.go:245] (0xc000e0e0a0) (7) Data frame handling
+I0419 21:20:16.147265  346598 log.go:245] (0xc000e0e0a0) (7) Data frame sent
+I0419 21:20:16.147273  346598 log.go:245] (0xc000e9e000) Data frame received for 7
+I0419 21:20:16.147280  346598 log.go:245] (0xc000e0e0a0) (7) Data frame handling
+I0419 21:20:16.147340  346598 log.go:245] (0xc000e0e0a0) (7) Data frame sent
+I0419 21:20:16.147493  346598 log.go:245] (0xc000e0e0a0) (7) Writing data frame
+I0419 21:20:16.147642  346598 log.go:245] (0xc000e0e0a0) (7) Writing data frame
+I0419 21:20:16.148325  346598 log.go:245] (0xc000e9e000) Data frame received for 7
+I0419 21:20:16.148357  346598 log.go:245] (0xc000e0e0a0) (7) Data frame handling
+I0419 21:20:16.148372  346598 log.go:245] (0xc000e0e0a0) (7) Data frame sent
+I0419 21:20:16.148527  346598 log.go:245] (0xc000e0e0a0) (7) Writing data frame
+I0419 21:20:16.148679  346598 log.go:245] (0xc000e9e000) Data frame received for 7
+I0419 21:20:16.148693  346598 log.go:245] (0xc000e0e0a0) (7) Data frame handling
+I0419 21:20:16.148704  346598 log.go:245] (0xc000e0e0a0) (7) Data frame sent
+I0419 21:20:16.148995  346598 log.go:245] (0xc000e0e0a0) (7) Writing data frame
+I0419 21:20:16.149500  346598 log.go:245] (0xc000e9e000) Data frame received for 7
+I0419 21:20:16.149518  346598 log.go:245] (0xc000e0e0a0) (7) Data frame handling
+I0419 21:20:16.149529  346598 log.go:245] (0xc000e0e0a0) (7) Data frame sent
+Handling connection for 4317
+I0419 21:20:16.169577  346598 log.go:245] (0xc000e9e000) (0xc0003a72c0) Create stream
+I0419 21:20:16.169601  346598 log.go:245] (0xc000e9e000) (0xc0003a72c0) Stream added, broadcasting: 9
+I0419 21:20:16.170614  346598 log.go:245] (0xc000e9e000) Reply frame received for 9
+I0419 21:20:16.170664  346598 log.go:245] (0xc0003a72c0) (9) Writing data frame
+I0419 21:20:16.170785  346598 log.go:245] (0xc000e9e000) (0xc0003a7360) Create stream
+I0419 21:20:16.170804  346598 log.go:245] (0xc000e9e000) (0xc0003a7360) Stream added, broadcasting: 11
+I0419 21:20:16.171663  346598 log.go:245] (0xc000e9e000) Reply frame received for 11
+I0419 21:20:16.171769  346598 log.go:245] (0xc0003a7360) (11) Writing data frame
+I0419 21:20:16.172845  346598 log.go:245] (0xc000e9e000) Data frame received for 11
+I0419 21:20:16.172884  346598 log.go:245] (0xc0003a7360) (11) Data frame handling
+I0419 21:20:16.172902  346598 log.go:245] (0xc0003a7360) (11) Data frame sent
+I0419 21:20:16.172910  346598 log.go:245] (0xc000e9e000) Data frame received for 11
+I0419 21:20:16.172917  346598 log.go:245] (0xc0003a7360) (11) Data frame handling
+I0419 21:20:16.173004  346598 log.go:245] (0xc0003a7360) (11) Data frame sent
+I0419 21:20:16.173158  346598 log.go:245] (0xc0003a7360) (11) Writing data frame
+I0419 21:20:16.173375  346598 log.go:245] (0xc0003a7360) (11) Writing data frame
+I0419 21:20:16.174128  346598 log.go:245] (0xc000e9e000) Data frame received for 11
+I0419 21:20:16.174154  346598 log.go:245] (0xc0003a7360) (11) Data frame handling
+I0419 21:20:16.174169  346598 log.go:245] (0xc0003a7360) (11) Data frame sent
+I0419 21:20:16.174351  346598 log.go:245] (0xc0003a7360) (11) Writing data frame
+I0419 21:20:16.174426  346598 log.go:245] (0xc000e9e000) Data frame received for 11
+I0419 21:20:16.174453  346598 log.go:245] (0xc0003a7360) (11) Data frame handling
+I0419 21:20:16.174462  346598 log.go:245] (0xc0003a7360) (11) Data frame sent
+I0419 21:20:16.174857  346598 log.go:245] (0xc0003a7360) (11) Writing data frame
+I0419 21:20:16.175582  346598 log.go:245] (0xc000e9e000) Data frame received for 11
+I0419 21:20:16.175629  346598 log.go:245] (0xc0003a7360) (11) Data frame handling
+I0419 21:20:16.175643  346598 log.go:245] (0xc0003a7360) (11) Data frame sent
+Handling connection for 4317
+I0419 21:20:16.232883  346598 log.go:245] (0xc000e9e000) (0xc000924280) Create stream
+I0419 21:20:16.232914  346598 log.go:245] (0xc000e9e000) (0xc000924280) Stream added, broadcasting: 13
+I0419 21:20:16.234542  346598 log.go:245] (0xc000e9e000) Reply frame received for 13
+I0419 21:20:16.234619  346598 log.go:245] (0xc000924280) (13) Writing data frame
+I0419 21:20:16.234835  346598 log.go:245] (0xc000e9e000) (0xc0003a7400) Create stream
+I0419 21:20:16.234867  346598 log.go:245] (0xc000e9e000) (0xc0003a7400) Stream added, broadcasting: 15
+I0419 21:20:16.236365  346598 log.go:245] (0xc000e9e000) Reply frame received for 15
+I0419 21:20:16.236541  346598 log.go:245] (0xc0003a7400) (15) Writing data frame
+I0419 21:20:16.238064  346598 log.go:245] (0xc000e9e000) Data frame received for 15
+I0419 21:20:16.238114  346598 log.go:245] (0xc0003a7400) (15) Data frame handling
+I0419 21:20:16.238138  346598 log.go:245] (0xc0003a7400) (15) Data frame sent
+I0419 21:20:16.238152  346598 log.go:245] (0xc000e9e000) Data frame received for 15
+I0419 21:20:16.238162  346598 log.go:245] (0xc0003a7400) (15) Data frame handling
+I0419 21:20:16.238285  346598 log.go:245] (0xc0003a7400) (15) Data frame sent
+I0419 21:20:16.238619  346598 log.go:245] (0xc0003a7400) (15) Writing data frame
+I0419 21:20:16.239048  346598 log.go:245] (0xc0003a7400) (15) Writing data frame
+I0419 21:20:16.240339  346598 log.go:245] (0xc000e9e000) Data frame received for 15
+I0419 21:20:16.240389  346598 log.go:245] (0xc0003a7400) (15) Data frame handling
+I0419 21:20:16.240412  346598 log.go:245] (0xc0003a7400) (15) Data frame sent
+I0419 21:20:16.240791  346598 log.go:245] (0xc0003a7400) (15) Writing data frame
+I0419 21:20:16.240948  346598 log.go:245] (0xc000e9e000) Data frame received for 15
+I0419 21:20:16.241002  346598 log.go:245] (0xc0003a7400) (15) Data frame handling
+I0419 21:20:16.241025  346598 log.go:245] (0xc0003a7400) (15) Data frame sent
+I0419 21:20:16.241529  346598 log.go:245] (0xc0003a7400) (15) Writing data frame
+I0419 21:20:16.242591  346598 log.go:245] (0xc000e9e000) Data frame received for 15
+I0419 21:20:16.242639  346598 log.go:245] (0xc0003a7400) (15) Data frame handling
+I0419 21:20:16.242665  346598 log.go:245] (0xc0003a7400) (15) Data frame sent

@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import importlib.util
 import os
+import sys
 from pathlib import Path
 
 from redis.asyncio import Redis
@@ -17,6 +18,7 @@ def load_base(module_name: str, models_path: Path):
     if spec is None or spec.loader is None:
         raise RuntimeError(f"failed to load models module from {models_path}")
     module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
     spec.loader.exec_module(module)
     return module.Base
 

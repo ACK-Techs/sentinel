@@ -1,0 +1,500 @@
+     -> db.name: Str(inventory_db)
+     -> db.user: Str(sentinel)
+     -> db.statement: Str(SELECT inventory.sku, inventory.stock, inventory.updated_at 
+FROM inventory 
+WHERE inventory.sku = $1::VARCHAR)
+     -> db.system: Str(postgresql)
+     -> db.operation: Str(SELECT)
+ScopeSpans #1
+ScopeSpans SchemaURL: https://opentelemetry.io/schemas/1.11.0
+InstrumentationScope opentelemetry.instrumentation.fastapi 0.62b0
+Span #0
+    Trace ID       : ef9892edbba3f7f782c0e41aacedf74b
+    Parent ID      : a60222fc8a9b72b0
+    ID             : d513ece4a1e2d06f
+    Name           : POST /reserve http receive
+    Kind           : Internal
+    Start time     : 2026-04-19 18:20:53.045759558 +0000 UTC
+    End time       : 2026-04-19 18:20:53.045856271 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> asgi.event.type: Str(http.request)
+Span #1
+    Trace ID       : ef9892edbba3f7f782c0e41aacedf74b
+    Parent ID      : a60222fc8a9b72b0
+    ID             : 0794d43e82f3eecc
+    Name           : POST /reserve http send
+    Kind           : Internal
+    Start time     : 2026-04-19 18:20:53.069002545 +0000 UTC
+    End time       : 2026-04-19 18:20:53.069062308 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> asgi.event.type: Str(http.response.start)
+     -> http.status_code: Int(200)
+Span #2
+    Trace ID       : ef9892edbba3f7f782c0e41aacedf74b
+    Parent ID      : a60222fc8a9b72b0
+    ID             : 6aa3535ca110390c
+    Name           : POST /reserve http send
+    Kind           : Internal
+    Start time     : 2026-04-19 18:20:53.069447702 +0000 UTC
+    End time       : 2026-04-19 18:20:53.069472794 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> asgi.event.type: Str(http.response.body)
+Span #3
+    Trace ID       : ef9892edbba3f7f782c0e41aacedf74b
+    Parent ID      : 43b101a7afa0a461
+    ID             : a60222fc8a9b72b0
+    Name           : POST /reserve
+    Kind           : Server
+    Start time     : 2026-04-19 18:20:53.044624992 +0000 UTC
+    End time       : 2026-04-19 18:20:53.069537257 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> http.scheme: Str(http)
+     -> http.host: Str(127.0.0.1:8083)
+     -> net.host.port: Int(8083)
+     -> http.flavor: Str(1.1)
+     -> http.target: Str(/reserve)
+     -> http.url: Str(http://127.0.0.1:8083/reserve)
+     -> http.method: Str(POST)
+     -> http.server_name: Str(127.0.0.1:8083)
+     -> http.user_agent: Str(python-httpx/0.28.1)
+     -> net.peer.ip: Str(127.0.0.1)
+     -> net.peer.port: Int(57298)
+     -> http.route: Str(/reserve)
+     -> http.status_code: Int(200)
+Span #4
+    Trace ID       : d54cdf064cb94f1c3fb24af40f022eea
+    Parent ID      : 704adfdd4c2e7342
+    ID             : 9c0ad68188bcbdad
+    Name           : GET /inventory/{sku} http send
+    Kind           : Internal
+    Start time     : 2026-04-19 18:20:53.1854658 +0000 UTC
+    End time       : 2026-04-19 18:20:53.185499968 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> asgi.event.type: Str(http.response.start)
+     -> http.status_code: Int(200)
+Span #5
+    Trace ID       : d54cdf064cb94f1c3fb24af40f022eea
+    Parent ID      : 704adfdd4c2e7342
+    ID             : 3eac22d52dc7d483
+    Name           : GET /inventory/{sku} http send
+    Kind           : Internal
+    Start time     : 2026-04-19 18:20:53.185780965 +0000 UTC
+    End time       : 2026-04-19 18:20:53.185796589 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> asgi.event.type: Str(http.response.body)
+Span #6
+    Trace ID       : d54cdf064cb94f1c3fb24af40f022eea
+    Parent ID      : a0704739e05549f1
+    ID             : 704adfdd4c2e7342
+    Name           : GET /inventory/{sku}
+    Kind           : Server
+    Start time     : 2026-04-19 18:20:53.174426699 +0000 UTC
+    End time       : 2026-04-19 18:20:53.185839369 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> http.scheme: Str(http)
+     -> http.host: Str(127.0.0.1:8083)
+     -> net.host.port: Int(8083)
+     -> http.flavor: Str(1.1)
+     -> http.target: Str(/inventory/SKU-001)
+     -> http.url: Str(http://127.0.0.1:8083/inventory/SKU-001)
+     -> http.method: Str(GET)
+     -> http.server_name: Str(127.0.0.1:8083)
+     -> http.user_agent: Str(python-httpx/0.28.1)
+     -> net.peer.ip: Str(127.0.0.1)
+     -> net.peer.port: Int(57310)
+     -> http.route: Str(/inventory/{sku})
+     -> http.status_code: Int(200)
+ScopeSpans #2
+ScopeSpans SchemaURL: https://opentelemetry.io/schemas/1.11.0
+InstrumentationScope opentelemetry.instrumentation.redis 0.62b0
+Span #0
+    Trace ID       : ef9892edbba3f7f782c0e41aacedf74b
+    Parent ID      : a60222fc8a9b72b0
+    ID             : 283a1e38e87a6680
+    Name           : DEL
+    Kind           : Client
+    Start time     : 2026-04-19 18:20:53.064067643 +0000 UTC
+    End time       : 2026-04-19 18:20:53.068707898 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> db.statement: Str(DEL ?)
+     -> db.system: Str(redis)
+     -> db.redis.database_index: Int(2)
+     -> net.peer.name: Str(127.0.0.1)
+     -> net.peer.port: Int(6379)
+     -> net.transport: Str(ip_tcp)
+     -> db.redis.args_length: Int(2)
+Span #1
+    Trace ID       : d54cdf064cb94f1c3fb24af40f022eea
+    Parent ID      : 704adfdd4c2e7342
+    ID             : 6ded80a69715c49d
+    Name           : HGETALL
+    Kind           : Client
+    Start time     : 2026-04-19 18:20:53.176474192 +0000 UTC
+    End time       : 2026-04-19 18:20:53.178909379 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> db.statement: Str(HGETALL ?)
+     -> db.system: Str(redis)
+     -> db.redis.database_index: Int(2)
+     -> net.peer.name: Str(127.0.0.1)
+     -> net.peer.port: Int(6379)
+     -> net.transport: Str(ip_tcp)
+     -> db.redis.args_length: Int(2)
+Span #2
+    Trace ID       : d54cdf064cb94f1c3fb24af40f022eea
+    Parent ID      : 704adfdd4c2e7342
+    ID             : f77aad98debc3438
+    Name           : HSET
+    Kind           : Client
+    Start time     : 2026-04-19 18:20:53.183774148 +0000 UTC
+    End time       : 2026-04-19 18:20:53.184544559 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> db.statement: Str(HSET ? ? ? ? ?)
+     -> db.system: Str(redis)
+     -> db.redis.database_index: Int(2)
+     -> net.peer.name: Str(127.0.0.1)
+     -> net.peer.port: Int(6379)
+     -> net.transport: Str(ip_tcp)
+     -> db.redis.args_length: Int(6)
+Span #3
+    Trace ID       : d54cdf064cb94f1c3fb24af40f022eea
+    Parent ID      : 704adfdd4c2e7342
+    ID             : 4b8fcc1e14619419
+    Name           : EXPIRE
+    Kind           : Client
+    Start time     : 2026-04-19 18:20:53.184642448 +0000 UTC
+    End time       : 2026-04-19 18:20:53.185281853 +0000 UTC
+    Status code    : Unset
+    Status message : 
+Attributes:
+     -> db.statement: Str(EXPIRE ? ?)
+     -> db.system: Str(redis)
+     -> db.redis.database_index: Int(2)
+     -> net.peer.name: Str(127.0.0.1)
+     -> net.peer.port: Int(6379)
+     -> net.transport: Str(ip_tcp)
+     -> db.redis.args_length: Int(3)
+	{"otelcol.component.id": "debug", "otelcol.component.kind": "Exporter", "otelcol.signal": "traces"}
+2026-04-19T18:20:58.724Z	info	Logs	{"otelcol.component.id": "debug", "otelcol.component.kind": "Exporter", "otelcol.signal": "logs", "resource logs": 1, "log records": 2}
+2026-04-19T18:20:58.724Z	info	ResourceLog #0
+Resource SchemaURL: 
+Resource attributes:
+     -> telemetry.sdk.language: Str(python)
+     -> telemetry.sdk.name: Str(opentelemetry)
+     -> telemetry.sdk.version: Str(1.41.0)
+     -> service.name: Str(worker)
+     -> service.version: Str(0.1.0)
+     -> deployment.environment: Str(dev)
+     -> service.instance.id: Str(caglarkc-EXCALIBUR-G911)
+ScopeLogs #0
+ScopeLogs SchemaURL: 
+InstrumentationScope worker 
+LogRecord #0
+ObservedTimestamp: 2026-04-19 18:20:58.297407984 +0000 UTC
+Timestamp: 2026-04-19 18:20:58.297322496 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(worker heartbeat)
+Attributes:
+     -> otelSpanID: Str(0)
+     -> otelTraceID: Str(0)
+     -> otelTraceSampled: Bool(false)
+     -> otelServiceName: Str(worker)
+     -> code.file.path: Str(/home/caglarkc/Desktop/sentinel/sentinel-coming/test-platform/services/worker/app/main.py)
+     -> code.function.name: Str(run)
+     -> code.line.number: Int(68)
+Trace ID: 
+Span ID: 
+Flags: 0
+LogRecord #1
+ObservedTimestamp: 2026-04-19 18:20:58.297611266 +0000 UTC
+Timestamp: 2026-04-19 18:20:58.297322496 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(worker heartbeat)
+Attributes:
+     -> otelSpanID: Str(0)
+     -> otelTraceID: Str(0)
+     -> otelTraceSampled: Bool(false)
+     -> otelServiceName: Str(worker)
+Trace ID: 
+Span ID: 
+Flags: 0
+	{"otelcol.component.id": "debug", "otelcol.component.kind": "Exporter", "otelcol.signal": "logs"}
+2026-04-19T18:21:51.880Z	info	Logs	{"otelcol.component.id": "debug", "otelcol.component.kind": "Exporter", "otelcol.signal": "logs", "resource logs": 3, "log records": 14}
+2026-04-19T18:21:51.881Z	info	ResourceLog #0
+Resource SchemaURL: 
+Resource attributes:
+     -> telemetry.sdk.language: Str(python)
+     -> telemetry.sdk.name: Str(opentelemetry)
+     -> telemetry.sdk.version: Str(1.41.0)
+     -> service.name: Str(worker)
+     -> service.version: Str(0.1.0)
+     -> deployment.environment: Str(dev)
+     -> service.instance.id: Str(caglarkc-EXCALIBUR-G911)
+ScopeLogs #0
+ScopeLogs SchemaURL: 
+InstrumentationScope worker 
+LogRecord #0
+ObservedTimestamp: 2026-04-19 18:21:50.79122977 +0000 UTC
+Timestamp: 2026-04-19 18:21:50.791148288 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(worker heartbeat)
+Attributes:
+     -> otelSpanID: Str(0)
+     -> otelTraceID: Str(0)
+     -> otelTraceSampled: Bool(false)
+     -> otelServiceName: Str(worker)
+     -> code.file.path: Str(/home/caglarkc/Desktop/sentinel/sentinel-coming/test-platform/services/worker/app/main.py)
+     -> code.function.name: Str(run)
+     -> code.line.number: Int(68)
+Trace ID: 
+Span ID: 
+Flags: 0
+LogRecord #1
+ObservedTimestamp: 2026-04-19 18:21:50.791363633 +0000 UTC
+Timestamp: 2026-04-19 18:21:50.791148288 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(worker heartbeat)
+Attributes:
+     -> otelSpanID: Str(0)
+     -> otelTraceID: Str(0)
+     -> otelTraceSampled: Bool(false)
+     -> otelServiceName: Str(worker)
+Trace ID: 
+Span ID: 
+Flags: 0
+LogRecord #2
+ObservedTimestamp: 2026-04-19 18:21:51.511976237 +0000 UTC
+Timestamp: 2026-04-19 18:21:51.511936256 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(worker heartbeat)
+Attributes:
+     -> otelSpanID: Str(0)
+     -> otelTraceID: Str(0)
+     -> otelTraceSampled: Bool(false)
+     -> otelServiceName: Str(worker)
+     -> code.file.path: Str(/home/caglarkc/Desktop/sentinel/sentinel-coming/test-platform/services/worker/app/main.py)
+     -> code.function.name: Str(run)
+     -> code.line.number: Int(68)
+Trace ID: 
+Span ID: 
+Flags: 0
+LogRecord #3
+ObservedTimestamp: 2026-04-19 18:21:51.512038227 +0000 UTC
+Timestamp: 2026-04-19 18:21:51.511936256 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(worker heartbeat)
+Attributes:
+     -> otelSpanID: Str(0)
+     -> otelTraceID: Str(0)
+     -> otelTraceSampled: Bool(false)
+     -> otelServiceName: Str(worker)
+Trace ID: 
+Span ID: 
+Flags: 0
+ResourceLog #1
+Resource SchemaURL: 
+Resource attributes:
+     -> telemetry.sdk.language: Str(python)
+     -> telemetry.sdk.name: Str(opentelemetry)
+     -> telemetry.sdk.version: Str(1.41.0)
+     -> service.name: Str(gateway)
+     -> service.version: Str(0.1.0)
+     -> deployment.environment: Str(dev)
+     -> service.instance.id: Str(caglarkc-EXCALIBUR-G911)
+ScopeLogs #0
+ScopeLogs SchemaURL: 
+InstrumentationScope httpx 
+LogRecord #0
+ObservedTimestamp: 2026-04-19 18:21:51.312770507 +0000 UTC
+Timestamp: 2026-04-19 18:21:51.312647424 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(HTTP Request: POST http://127.0.0.1:8081/orders "HTTP/1.1 201 Created")
+Attributes:
+     -> otelSpanID: Str(53582248090be6a9)
+     -> otelTraceID: Str(1cba0857225ff2c7e571550bd07d9ea5)
+     -> otelTraceSampled: Bool(true)
+     -> otelServiceName: Str(gateway)
+     -> code.file.path: Str(/home/caglarkc/Desktop/sentinel/sentinel-coming/.venv/lib/python3.12/site-packages/httpx/_client.py)
+     -> code.function.name: Str(_send_single_request)
+     -> code.line.number: Int(1740)
+Trace ID: 1cba0857225ff2c7e571550bd07d9ea5
+Span ID: 53582248090be6a9
+Flags: 1
+LogRecord #1
+ObservedTimestamp: 2026-04-19 18:21:51.312987556 +0000 UTC
+Timestamp: 2026-04-19 18:21:51.312647424 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(HTTP Request: POST http://127.0.0.1:8081/orders "HTTP/1.1 201 Created")
+Attributes:
+     -> otelSpanID: Str(53582248090be6a9)
+     -> otelTraceID: Str(1cba0857225ff2c7e571550bd07d9ea5)
+     -> otelTraceSampled: Bool(true)
+     -> otelServiceName: Str(gateway)
+Trace ID: 1cba0857225ff2c7e571550bd07d9ea5
+Span ID: 53582248090be6a9
+Flags: 1
+LogRecord #2
+ObservedTimestamp: 2026-04-19 18:21:51.363975049 +0000 UTC
+Timestamp: 2026-04-19 18:21:51.363905792 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(HTTP Request: GET http://127.0.0.1:8081/orders/75c350d0-688a-4eb0-b203-e48eb23353cc "HTTP/1.1 200 OK")
+Attributes:
+     -> otelSpanID: Str(e7efa0501be89370)
+     -> otelTraceID: Str(8bcc4bf0e2f1284fd0137530701d1827)
+     -> otelTraceSampled: Bool(true)
+     -> otelServiceName: Str(gateway)
+     -> code.file.path: Str(/home/caglarkc/Desktop/sentinel/sentinel-coming/.venv/lib/python3.12/site-packages/httpx/_client.py)
+     -> code.function.name: Str(_send_single_request)
+     -> code.line.number: Int(1740)
+Trace ID: 8bcc4bf0e2f1284fd0137530701d1827
+Span ID: e7efa0501be89370
+Flags: 1
+LogRecord #3
+ObservedTimestamp: 2026-04-19 18:21:51.36413443 +0000 UTC
+Timestamp: 2026-04-19 18:21:51.363905792 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(HTTP Request: GET http://127.0.0.1:8081/orders/75c350d0-688a-4eb0-b203-e48eb23353cc "HTTP/1.1 200 OK")
+Attributes:
+     -> otelSpanID: Str(e7efa0501be89370)
+     -> otelTraceID: Str(8bcc4bf0e2f1284fd0137530701d1827)
+     -> otelTraceSampled: Bool(true)
+     -> otelServiceName: Str(gateway)
+Trace ID: 8bcc4bf0e2f1284fd0137530701d1827
+Span ID: e7efa0501be89370
+Flags: 1
+LogRecord #4
+ObservedTimestamp: 2026-04-19 18:21:51.398089135 +0000 UTC
+Timestamp: 2026-04-19 18:21:51.398023936 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(HTTP Request: GET http://127.0.0.1:8083/inventory/SKU-001 "HTTP/1.1 200 OK")
+Attributes:
+     -> otelSpanID: Str(5e106603b0f9d6d6)
+     -> otelTraceID: Str(4d8530cb36d01cc29e22d31c516d8bd3)
+     -> otelTraceSampled: Bool(true)
+     -> otelServiceName: Str(gateway)
+     -> code.file.path: Str(/home/caglarkc/Desktop/sentinel/sentinel-coming/.venv/lib/python3.12/site-packages/httpx/_client.py)
+     -> code.function.name: Str(_send_single_request)
+     -> code.line.number: Int(1740)
+Trace ID: 4d8530cb36d01cc29e22d31c516d8bd3
+Span ID: 5e106603b0f9d6d6
+Flags: 1
+LogRecord #5
+ObservedTimestamp: 2026-04-19 18:21:51.398230676 +0000 UTC
+Timestamp: 2026-04-19 18:21:51.398023936 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(HTTP Request: GET http://127.0.0.1:8083/inventory/SKU-001 "HTTP/1.1 200 OK")
+Attributes:
+     -> otelSpanID: Str(5e106603b0f9d6d6)
+     -> otelTraceID: Str(4d8530cb36d01cc29e22d31c516d8bd3)
+     -> otelTraceSampled: Bool(true)
+     -> otelServiceName: Str(gateway)
+Trace ID: 4d8530cb36d01cc29e22d31c516d8bd3
+Span ID: 5e106603b0f9d6d6
+Flags: 1
+ResourceLog #2
+Resource SchemaURL: 
+Resource attributes:
+     -> telemetry.sdk.language: Str(python)
+     -> telemetry.sdk.name: Str(opentelemetry)
+     -> telemetry.sdk.version: Str(1.41.0)
+     -> service.name: Str(orders)
+     -> service.version: Str(0.1.0)
+     -> deployment.environment: Str(dev)
+     -> service.instance.id: Str(caglarkc-EXCALIBUR-G911)
+ScopeLogs #0
+ScopeLogs SchemaURL: 
+InstrumentationScope httpx 
+LogRecord #0
+ObservedTimestamp: 2026-04-19 18:21:51.289552577 +0000 UTC
+Timestamp: 2026-04-19 18:21:51.289440512 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(HTTP Request: POST http://127.0.0.1:8082/charge "HTTP/1.1 200 OK")
+Attributes:
+     -> otelSpanID: Str(801c347076369dcd)
+     -> otelTraceID: Str(1cba0857225ff2c7e571550bd07d9ea5)
+     -> otelTraceSampled: Bool(true)
+     -> otelServiceName: Str(orders)
+     -> code.file.path: Str(/home/caglarkc/Desktop/sentinel/sentinel-coming/.venv/lib/python3.12/site-packages/httpx/_client.py)
+     -> code.function.name: Str(_send_single_request)
+     -> code.line.number: Int(1740)
+Trace ID: 1cba0857225ff2c7e571550bd07d9ea5
+Span ID: 801c347076369dcd
+Flags: 1
+LogRecord #1
+ObservedTimestamp: 2026-04-19 18:21:51.289776097 +0000 UTC
+Timestamp: 2026-04-19 18:21:51.289440512 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(HTTP Request: POST http://127.0.0.1:8082/charge "HTTP/1.1 200 OK")
+Attributes:
+     -> otelSpanID: Str(801c347076369dcd)
+     -> otelTraceID: Str(1cba0857225ff2c7e571550bd07d9ea5)
+     -> otelTraceSampled: Bool(true)
+     -> otelServiceName: Str(orders)
+Trace ID: 1cba0857225ff2c7e571550bd07d9ea5
+Span ID: 801c347076369dcd
+Flags: 1
+LogRecord #2
+ObservedTimestamp: 2026-04-19 18:21:51.29134153 +0000 UTC
+Timestamp: 2026-04-19 18:21:51.291285248 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(HTTP Request: POST http://127.0.0.1:8083/reserve "HTTP/1.1 200 OK")
+Attributes:
+     -> otelSpanID: Str(801c347076369dcd)
+     -> otelTraceID: Str(1cba0857225ff2c7e571550bd07d9ea5)
+     -> otelTraceSampled: Bool(true)
+     -> otelServiceName: Str(orders)
+     -> code.file.path: Str(/home/caglarkc/Desktop/sentinel/sentinel-coming/.venv/lib/python3.12/site-packages/httpx/_client.py)
+     -> code.function.name: Str(_send_single_request)
+     -> code.line.number: Int(1740)
+Trace ID: 1cba0857225ff2c7e571550bd07d9ea5
+Span ID: 801c347076369dcd
+Flags: 1
+LogRecord #3
+ObservedTimestamp: 2026-04-19 18:21:51.291464178 +0000 UTC
+Timestamp: 2026-04-19 18:21:51.291285248 +0000 UTC
+SeverityText: INFO
+SeverityNumber: Info(9)
+Body: Str(HTTP Request: POST http://127.0.0.1:8083/reserve "HTTP/1.1 200 OK")
+Attributes:
+     -> otelSpanID: Str(801c347076369dcd)
+     -> otelTraceID: Str(1cba0857225ff2c7e571550bd07d9ea5)
+     -> otelTraceSampled: Bool(true)
+     -> otelServiceName: Str(orders)
+Trace ID: 1cba0857225ff2c7e571550bd07d9ea5
+Span ID: 801c347076369dcd
+Flags: 1
+	{"otelcol.component.id": "debug", "otelcol.component.kind": "Exporter", "otelcol.signal": "logs"}

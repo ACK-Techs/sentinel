@@ -13,8 +13,6 @@ data:
     processors:
       batch: {}
     exporters:
-      logging:
-        verbosity: detailed
       debug:
         verbosity: detailed
     service:
@@ -22,13 +20,12 @@ data:
         traces:
           receivers: [otlp]
           processors: [batch]
-          exporters: [logging, debug]
+          exporters: [debug]
         metrics:
           receivers: [otlp]
           processors: [batch]
-          exporters: [logging, debug]
+          exporters: [debug]
         logs:
           receivers: [otlp]
           processors: [batch]
-          exporters: [logging, debug]
-
+          exporters: [debug]
