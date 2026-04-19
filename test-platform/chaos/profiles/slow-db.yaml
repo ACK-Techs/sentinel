@@ -1,0 +1,10 @@
+profile: slow-db
+error_rate: 0.0
+error_status: 503
+latency_p50_ms: 40
+latency_p99_ms: 450
+cpu_burn: false
+downstream_block: []
+memory_leak_kb_per_req: 0
+db_slow: 300
+downstream_timeout_ms: 0

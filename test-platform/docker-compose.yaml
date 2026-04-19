@@ -1,0 +1,124 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: sentinel
+      POSTGRES_PASSWORD: sentinel
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/postgres-init:/docker-entrypoint-initdb.d
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.121.0
+    command: ["--config=/etc/otelcol-contrib/config.yaml"]
+    volumes:
+      - ./docker/otel-collector.yaml:/etc/otelcol-contrib/config.yaml:ro
+    ports:
+      - "4317:4317"
+
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    environment: &service_env
+      DEPLOYMENT_ENV: dev
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      CHAOS_TOKEN: sentinel-chaos-token
+      OTEL_SERVICE_NAME: gateway
+    depends_on:
+      - otel-collector
+      - orders
+      - inventory
+    ports:
+      - "8080:8080"
+
+  orders:
+    build:
+      context: .
+      dockerfile: services/orders/Dockerfile
+    environment:
+      <<: *service_env
+      OTEL_SERVICE_NAME: orders
+      DB_URL: postgresql+asyncpg://sentinel:sentinel@postgres:5432/orders_db
+      REDIS_URL: redis://redis:6379/0
+      PAYMENTS_URL: http://payments:8080
+      INVENTORY_URL: http://inventory:8080
+      ORDERS_STREAM: orders.events
+    depends_on:
+      - postgres
+      - redis
+      - otel-collector
+      - payments
+      - inventory
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./chaos/profiles/healthy.yaml:/etc/chaos/profile.yaml:ro
+
+  payments:
+    build:
+      context: .
+      dockerfile: services/payments/Dockerfile
+    environment:
+      <<: *service_env
+      OTEL_SERVICE_NAME: payments
+      DB_URL: postgresql+asyncpg://sentinel:sentinel@postgres:5432/payments_db
+      REDIS_URL: redis://redis:6379/1
+    depends_on:
+      - postgres
+      - redis
+      - otel-collector
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./chaos/profiles/healthy.yaml:/etc/chaos/profile.yaml:ro
+
+  inventory:
+    build:
+      context: .
+      dockerfile: services/inventory/Dockerfile
+    environment:
+      <<: *service_env
+      OTEL_SERVICE_NAME: inventory
+      DB_URL: postgresql+asyncpg://sentinel:sentinel@postgres:5432/inventory_db
+      REDIS_URL: redis://redis:6379/2
+    depends_on:
+      - postgres
+      - redis
+      - otel-collector
+    ports:
+      - "8083:8080"
+    volumes:
+      - ./chaos/profiles/healthy.yaml:/etc/chaos/profile.yaml:ro
+
+  worker:
+    build:
+      context: .
+      dockerfile: services/worker/Dockerfile
+    environment:
+      <<: *service_env
+      OTEL_SERVICE_NAME: worker
+      REDIS_URL: redis://redis:6379/0
+      ORDERS_STREAM: orders.events
+    depends_on:
+      - redis
+      - orders
+      - otel-collector
+    volumes:
+      - ./chaos/profiles/healthy.yaml:/etc/chaos/profile.yaml:ro
+
+  load:
+    build:
+      context: .
+      dockerfile: load/Dockerfile
+    environment:
+      SCENARIO: steady
+    depends_on:
+      - gateway
+

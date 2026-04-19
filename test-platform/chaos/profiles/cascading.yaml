@@ -1,0 +1,11 @@
+profile: cascading
+error_rate: 0.1
+error_status: 503
+latency_p50_ms: 120
+latency_p99_ms: 1200
+cpu_burn: true
+downstream_block:
+  - payments
+memory_leak_kb_per_req: 64
+db_slow: 120
+downstream_timeout_ms: 250

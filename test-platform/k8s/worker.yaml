@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: worker-chaos
+  namespace: sentinel-target
+data:
+  profile.yaml: |
+    profile: healthy
+    error_rate: 0.0
+    error_status: 503
+    latency_p50_ms: 0
+    latency_p99_ms: 0
+    cpu_burn: false
+    downstream_block: []
+    memory_leak_kb_per_req: 0
+    db_slow: 0
+    downstream_timeout_ms: 0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: sentinel-target
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+        - name: worker
+          image: sentinel/worker:phase1
+          env:
+            - {name: DEPLOYMENT_ENV, value: dev}
+            - {name: OTEL_EXPORTER_OTLP_ENDPOINT, value: http://otel-collector:4317}
+            - {name: OTEL_SERVICE_NAME, value: worker}
+            - {name: OTEL_RESOURCE_ATTRIBUTES, value: service.namespace=sentinel-target}
+            - {name: REDIS_URL, value: redis://redis:6379/0}
+            - {name: ORDERS_STREAM, value: orders.events}
+            - {name: CHAOS_TOKEN, value: sentinel-chaos-token}
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits: {cpu: 100m, memory: 256Mi}
+          volumeMounts:
+            - {name: chaos, mountPath: /etc/chaos}
+      volumes:
+        - name: chaos
+          configMap:
+            name: worker-chaos

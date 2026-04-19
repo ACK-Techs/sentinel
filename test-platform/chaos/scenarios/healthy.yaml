@@ -1,0 +1,16 @@
+name: healthy
+description: Baseline healthy run
+duration_s: 300
+warmup_s: 30
+cooldown_s: 30
+load:
+  scenario: steady
+expected_symptoms:
+  - stable_latency
+  - low_error_rate
+steps:
+  - at_s: 0
+    target: orders
+    chaos:
+      profile: healthy
+

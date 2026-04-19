@@ -1,0 +1,17 @@
+name: cascading
+description: Cascading slowdown across orders
+duration_s: 600
+warmup_s: 60
+cooldown_s: 90
+load:
+  scenario: gradual_degradation
+expected_symptoms:
+  - multi_service_latency
+  - retries_exhausted
+  - stream_lag_up
+steps:
+  - at_s: 0
+    target: orders
+    chaos:
+      profile: cascading
+

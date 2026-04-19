@@ -1,0 +1,16 @@
+name: downstream-outage
+description: Payments downstream outage
+duration_s: 600
+warmup_s: 60
+cooldown_s: 60
+load:
+  scenario: flash_crowd
+expected_symptoms:
+  - elevated_5xx
+  - downstream_failure
+steps:
+  - at_s: 0
+    target: orders
+    chaos:
+      profile: downstream-outage
+

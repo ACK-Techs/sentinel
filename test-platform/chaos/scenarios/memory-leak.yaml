@@ -1,0 +1,16 @@
+name: memory-leak
+description: Controlled memory pressure on orders
+duration_s: 600
+warmup_s: 45
+cooldown_s: 60
+load:
+  scenario: steady
+expected_symptoms:
+  - memory_growth
+  - latency_drift
+steps:
+  - at_s: 0
+    target: orders
+    chaos:
+      profile: memory-leak
+

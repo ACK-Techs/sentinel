@@ -1,0 +1,10 @@
+profile: cache-stampede
+error_rate: 0.02
+error_status: 503
+latency_p50_ms: 50
+latency_p99_ms: 900
+cpu_burn: false
+downstream_block: []
+memory_leak_kb_per_req: 0
+db_slow: 180
+downstream_timeout_ms: 0

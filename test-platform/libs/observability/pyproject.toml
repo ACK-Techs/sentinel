@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sentinel-obs"
+version = "0.1.0"
+description = "Shared OpenTelemetry bootstrap for Sentinel target services"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115,<1.0",
+  "opentelemetry-api>=1.32,<2.0",
+  "opentelemetry-sdk>=1.32,<2.0",
+  "opentelemetry-exporter-otlp-proto-grpc>=1.32,<2.0",
+  "opentelemetry-instrumentation-fastapi>=0.53b0,<1.0",
+  "opentelemetry-instrumentation-httpx>=0.53b0,<1.0",
+  "opentelemetry-instrumentation-logging>=0.53b0,<1.0",
+  "opentelemetry-instrumentation-redis>=0.53b0,<1.0",
+  "opentelemetry-instrumentation-sqlalchemy>=0.53b0,<1.0",
+  "pydantic>=2.11,<3.0",
+  "pydantic-settings>=2.8,<3.0",
+  "PyYAML>=6.0,<7.0",
+  "sqlalchemy>=2.0,<3.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["sentinel_obs"]
+

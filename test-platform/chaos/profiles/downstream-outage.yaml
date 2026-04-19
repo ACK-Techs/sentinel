@@ -1,0 +1,11 @@
+profile: downstream-outage
+error_rate: 0.25
+error_status: 503
+latency_p50_ms: 25
+latency_p99_ms: 200
+cpu_burn: false
+downstream_block:
+  - payments
+memory_leak_kb_per_req: 0
+db_slow: 0
+downstream_timeout_ms: 400
