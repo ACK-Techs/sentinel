@@ -82,6 +82,7 @@ Sentinel CLI'nin agent döngüsüne entegre edilmiş 65+ SKILL.md dosyası. Her 
 ### `/scripts` — Operasyonel Scriptler
 
 - **`cos-microk8s-start.sh`** — MicroK8s'i güvenli şekilde başlatır; Kubernetes API, node hazırlığı ve Juju agent stabilizasyonunu bekler. Erken hook çalışmasını önlemek için 45 saniyelik stabilizasyon gecikmesi içerir.
+- **`cos-microk8s-heal.sh`** — Host IP değişince Juju kubeconfig drift'ini ve `kubelet.crt` SAN uyumsuzluğunu onarır; gerekirse MicroK8s'i yeniden başlatır.
 
 ---
 
@@ -90,6 +91,7 @@ Sentinel CLI'nin agent döngüsüne entegre edilmiş 65+ SKILL.md dosyası. Her 
 Doğrudan kullanıma hazır deployment template ve scriptleri:
 
 - **`prepare-env.sh`** — MicroK8s, MetalLB ve Juju'yu otomatik kurar; host IP'ye göre MetalLB IP aralığını hesaplar.
+  Ayrıca Juju classic snap altındaki `microk8s` kubeconfig kopyalarını da güncel tutar.
 - **`my-product-bundle.yaml`** — Prometheus, Loki, Alertmanager, Grafana, Traefik, Catalogue, Tempo ve OpenTelemetry Collector içeren tam COS Lite Kubernetes bundle'ı.
 - **`faz1-telemetry.sh`** — Mevcut COS'a Tempo ve OTEL Collector ekler; metrics/logs/traces pipeline'larını kurar.
 - **`faz4-5.sh`** — Deploy sonrası doğrulama: Traefik endpoint'leri, Grafana credential'ları ve OTLP Gateway IP'sini getirir.

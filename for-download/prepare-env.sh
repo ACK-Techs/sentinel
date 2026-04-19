@@ -70,17 +70,23 @@ ensure_microk8s_group_and_reexec() {
 }
 
 ensure_juju_kubeconfig_fix() {
-  local juju_current juju_target_dir juju_target_cfg
+  local juju_current juju_target_dir juju_target_cfg tmp_cfg
 
   juju_current="$(readlink -f /var/snap/juju/current)"
   [ -n "$juju_current" ] || fail "Juju current revision yolu bulunamadi."
 
   juju_target_dir="${juju_current}/microk8s/credentials"
   juju_target_cfg="${juju_target_dir}/client.config"
+  tmp_cfg="$(mktemp)"
 
   retry_twice "mkdir juju microk8s credentials dizini" sudo mkdir -p "$juju_target_dir"
   retry_twice "chown juju microk8s credentials dizini" sudo chown -R "$USER:$USER" "${juju_current}/microk8s"
-  retry_twice "microk8s kubeconfig yaz" bash -lc "microk8s config > '$juju_target_cfg'"
+  retry_twice "microk8s kubeconfig gecici dosya yaz" bash -lc "microk8s config > '$tmp_cfg'"
+  retry_twice "microk8s kubeconfig yaz" install -m 0644 "$tmp_cfg" "$juju_target_cfg"
+  while IFS= read -r -d '' cfg; do
+    retry_twice "ek juju kubeconfig yaz: $cfg" install -m 0644 "$tmp_cfg" "$cfg"
+  done < <(find /var/snap/juju -path '*/microk8s/credentials/client.config' -print0 2>/dev/null)
+  rm -f "$tmp_cfg"
   ok "Juju classic kubeconfig fix uygulandi: $juju_target_cfg"
 }
 

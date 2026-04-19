@@ -22,6 +22,11 @@ fi
 echo "==> microk8s start"
 microk8s start
 
+if [[ -x "$(dirname "$0")/cos-microk8s-heal.sh" ]]; then
+  echo "==> IP drift / Juju kubeconfig / kubelet cert onarimi"
+  "$(dirname "$0")/cos-microk8s-heal.sh"
+fi
+
 echo "==> Kubernetes API / servisler hazir (bekleniyor)"
 # --wait-ready yoksa veya --timeout desteklenmiyorsa yedek dongu
 if microk8s status --help 2>&1 | grep -q -- '--wait-ready'; then

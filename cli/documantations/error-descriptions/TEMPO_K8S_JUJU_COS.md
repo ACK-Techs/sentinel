@@ -76,6 +76,18 @@ Takılı Tempo’yu otomatik **edge refresh** ile kurtarmak için (isteğe bağl
 COS_HEAL_TEMPO=1 sudo ./scripts/cos-microk8s-start.sh
 ```
 
+Bu script artik IP drift kurtarmasini da yapar:
+
+- Juju client kubeconfig'lerinde eski `https://<ip>:16443` endpoint'lerini yeni host IP ile hizalar
+- `/var/snap/juju/*/microk8s/credentials/client.config` kopyalarini gunceller
+- `kubelet.crt` icindeki eski IP SAN'ini tespit ederse cert'i yeniden uretir ve MicroK8s'i yeniden baslatir
+
+Sadece bu fix'i ayri calistirmak icin:
+
+```bash
+sudo ./scripts/cos-microk8s-heal.sh
+```
+
 **Kalıcı önlem:** `tempo-k8s` için `latest/edge` (veya bu düzeltmeyi içeren stable rev) kullanmaya devam et; aksi halde `latest/stable` rev 71 ile her yeniden başlatmada `tempo-ready` hatası tekrarlanabilir.
 
 ## Kurtarma adımları (önerilen sıra)
