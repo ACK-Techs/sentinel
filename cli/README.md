@@ -174,6 +174,47 @@ python -m sentinel_cli obs logs --service gateway
 python -m sentinel_cli obs traces --service orders
 ```
 
+## Canli Lab Smoke
+
+Gateway + CLI canli smoke akisi icin lab/local hedefli referans script:
+
+```bash
+cd sentinel-coming/test-platform
+../.venv/bin/python -m pip install -e ../observability-gateway -e ../cli
+./scripts/run_cos_stack_check.sh
+```
+
+Script su akisi tek seferde dener:
+
+1. COS port-forward ve test-platform servislerini ayaga kaldirir.
+2. `observability-gateway` servisini `127.0.0.1:8091` uzerinde baslatir.
+3. `GET /health` ve `GET /api/v1/status` ile gateway'i dogrular.
+4. `sentinel_cli doctor`, `obs metric`, `obs logs`, `obs traces` komutlarini calistirir.
+5. Tum ciktilari `test-platform/runs/cos-smoke-YYYYMMDD-HHMMSS/` altina kaydeder.
+
+Canli kullanim ornekleri:
+
+```bash
+cd sentinel-coming/cli
+source .venv/bin/activate
+export SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL=http://127.0.0.1:8091
+
+python -m sentinel_cli doctor --profile local
+python -m sentinel_cli obs metric 'app_orders_created_total'
+python -m sentinel_cli obs logs --service gateway
+python -m sentinel_cli obs traces --service orders
+```
+
+Run klasorunde beklenen artefactlar:
+
+- `observability-gateway.log`
+- `observability-gateway-health.json`
+- `observability-gateway-status.json`
+- `cli-doctor.json`
+- `cli-obs-metric.json`
+- `cli-obs-logs.json`
+- `cli-obs-traces.json`
+
 ## Wheel ile kurulum (iç kullanım)
 
 Wheel kurulumu, geliştirme modundan farklı olarak paketi editable olmadan doğrular. İç kullanım için önerilen akış:

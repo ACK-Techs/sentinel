@@ -97,6 +97,18 @@ Kullanıcıdan onay istenmez. Kriterler + `ruff` + `pytest` sağlandıysa sonrak
 
 **G6:** F.3 dosyası oluşturuldu veya atlama gerekçesi yazıldı; `IMPLEMENTATION_PLAN_PHASE4.md` sonuna kapanış tarihi.
 
+### Lab smoke ek notu — observability-gateway + CLI
+
+Faz 4 sonrasi lokal/lab dogrulama akisinda Grafana health kontrolu korunur; ancak metrics/logs/traces canli sorgulari icin CLI artik `observability-gateway` uzerinden test edilmelidir. Referans akisi:
+
+1. `test-platform/scripts/run_cos_stack_check.sh`
+2. test-platform servisleri ve COS port-forward
+3. lokal `observability-gateway` prosesi
+4. `GET /health` ve `GET /api/v1/status`
+5. `sentinel-cli obs metric`, `sentinel-cli obs logs`, `sentinel-cli obs traces`
+
+Run artefactlari `test-platform/runs/cos-smoke-YYYYMMDD-HHMMSS/` altina yazilir. Bu akisin amaci lab/local smoke olup prod-grade deployment, ingress, TLS ve servis yonetimi bu planin disindadir.
+
 ---
 
 ## Bilinçli dışarıda bırakılanlar

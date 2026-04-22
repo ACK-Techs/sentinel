@@ -5,6 +5,8 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPO_ROOT="$(cd "$ROOT/.." && pwd)"
 VENV_PY="$REPO_ROOT/.venv/bin/python"
 VENV_PIP="$REPO_ROOT/.venv/bin/pip"
+CLI_DIR="$REPO_ROOT/cli"
+OBS_GATEWAY_DIR="$REPO_ROOT/observability-gateway"
 RUN_DIR="$ROOT/runs/cos-smoke-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$RUN_DIR"
 
@@ -125,6 +127,9 @@ microk8s status --wait-ready >"$RUN_DIR/microk8s-status.txt"
 juju status >"$RUN_DIR/juju-status.txt"
 
 log "Installing editable packages into repo venv"
+"$VENV_PIP" install -e "$REPO_ROOT/observability-gateway" \
+  -e "$CLI_DIR" \
+  >/dev/null
 "$VENV_PIP" install -e "$ROOT/libs/observability" \
   -e "$ROOT/services/gateway" \
   -e "$ROOT/services/orders" \
@@ -142,6 +147,7 @@ microk8s kubectl -n sentinel-target wait --for=condition=Ready pod/redis-0 --tim
 log "Stopping previous local test-platform processes if any"
 pkill -f 'test-platform/services/.*/uvicorn app.main:app --host 127.0.0.1 --port 808' >/dev/null 2>&1 || true
 pkill -f 'test-platform/services/worker.*-m app.main' >/dev/null 2>&1 || true
+pkill -f 'uvicorn observability_gateway.main:app --host 127.0.0.1 --port 8091' >/dev/null 2>&1 || true
 sleep 1
 
 log "Starting port-forwards"
@@ -208,6 +214,15 @@ wait_for_http http://127.0.0.1:8082/health payments
 wait_for_http http://127.0.0.1:8083/health inventory
 wait_for_http http://127.0.0.1:8081/health orders
 wait_for_http http://127.0.0.1:8080/health gateway
+
+log "Starting observability gateway"
+start_service "$OBS_GATEWAY_DIR" "$RUN_DIR/observability-gateway.log" \
+  SENTINEL_OBSERVABILITY_PROMETHEUS__BASE_URL=http://127.0.0.1:9090 \
+  SENTINEL_OBSERVABILITY_LOKI__BASE_URL=http://127.0.0.1:3100 \
+  SENTINEL_OBSERVABILITY_TEMPO__BASE_URL=http://127.0.0.1:3200 \
+  SENTINEL_OBSERVABILITY_HTTP__TIMEOUT_SEC=10 \
+  "$VENV_PY" -m uvicorn observability_gateway.main:app --host 127.0.0.1 --port 8091
+wait_for_http http://127.0.0.1:8091/health observability-gateway
 
 log "Generating traffic"
 ORDER_RESPONSE="$(curl -fsS -X POST http://127.0.0.1:8080/api/orders -H 'content-type: application/json' -d '{"sku":"SKU-001","qty":1,"amount":25}')"
@@ -281,6 +296,40 @@ curl -fsS 'http://127.0.0.1:3200/api/search/tags' >"$RUN_DIR/tempo-tags.json"
 curl -fsS 'http://127.0.0.1:3200/api/search?limit=5&tags=service.name%3Dorders' >"$RUN_DIR/tempo-orders.json"
 grep -q '"service.name"' "$RUN_DIR/tempo-tags.json"
 grep -q '"traceID"' "$RUN_DIR/tempo-orders.json"
+
+log "Checking observability gateway"
+curl -fsS http://127.0.0.1:8091/health >"$RUN_DIR/observability-gateway-health.json"
+curl -fsS http://127.0.0.1:8091/api/v1/status >"$RUN_DIR/observability-gateway-status.json"
+grep -q '"status":"ok"' "$RUN_DIR/observability-gateway-health.json"
+grep -q '"prometheus"' "$RUN_DIR/observability-gateway-status.json"
+grep -q '"loki"' "$RUN_DIR/observability-gateway-status.json"
+grep -q '"tempo"' "$RUN_DIR/observability-gateway-status.json"
+
+log "Checking Sentinel CLI through observability gateway"
+(
+  cd "$CLI_DIR"
+  SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL=http://127.0.0.1:8091 \
+  "$VENV_PY" -m sentinel_cli doctor --profile local
+) >"$RUN_DIR/cli-doctor.json"
+(
+  cd "$CLI_DIR"
+  SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL=http://127.0.0.1:8091 \
+  "$VENV_PY" -m sentinel_cli obs metric 'app_orders_created_total'
+) >"$RUN_DIR/cli-obs-metric.json"
+(
+  cd "$CLI_DIR"
+  SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL=http://127.0.0.1:8091 \
+  "$VENV_PY" -m sentinel_cli obs logs --service gateway
+) >"$RUN_DIR/cli-obs-logs.json"
+(
+  cd "$CLI_DIR"
+  SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL=http://127.0.0.1:8091 \
+  "$VENV_PY" -m sentinel_cli obs traces --service orders
+) >"$RUN_DIR/cli-obs-traces.json"
+grep -q '"observability_gateway"' "$RUN_DIR/cli-doctor.json"
+grep -q '"backend": "prometheus"' "$RUN_DIR/cli-obs-metric.json"
+grep -q '"backend": "loki"' "$RUN_DIR/cli-obs-logs.json"
+grep -q '"backend": "tempo"' "$RUN_DIR/cli-obs-traces.json"
 
 log "COS smoke test passed"
 printf 'order_id=%s\n' "$ORDER_ID"

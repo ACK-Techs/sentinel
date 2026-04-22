@@ -67,6 +67,44 @@ Alternatif:
 uvicorn observability_gateway.main:app --host 0.0.0.0 --port 8091
 ```
 
+## Lab Ops Rehberi
+
+Bu servis lab/local akis icin tek proses olarak calistirilir. Uretim dagitimi, process supervisor, TLS termination veya secret rotation bu README'nin kapsami disindadir.
+
+En kisa local baslatma:
+
+```bash
+cd sentinel-coming/observability-gateway
+export SENTINEL_OBSERVABILITY_PROMETHEUS__BASE_URL=http://127.0.0.1:9090
+export SENTINEL_OBSERVABILITY_LOKI__BASE_URL=http://127.0.0.1:3100
+export SENTINEL_OBSERVABILITY_TEMPO__BASE_URL=http://127.0.0.1:3200
+uvicorn observability_gateway.main:app --host 127.0.0.1 --port 8091
+```
+
+Hizli dogrulama:
+
+```bash
+curl -fsS http://127.0.0.1:8091/health
+curl -fsS http://127.0.0.1:8091/api/v1/status | jq .
+curl -fsS -X POST http://127.0.0.1:8091/api/v1/metrics/query \
+  -H 'content-type: application/json' \
+  -d '{"query":"up"}' | jq .
+```
+
+Run klasoru mantigi:
+
+- `test-platform/scripts/run_cos_stack_check.sh` calistiginda artefactlar `test-platform/runs/cos-smoke-YYYYMMDD-HHMMSS/` altina yazilir.
+- Gateway logu `observability-gateway.log`, health sonucu `observability-gateway-health.json`, durum ozeti `observability-gateway-status.json` olarak kaydedilir.
+- CLI smoke ciktilari ayni klasorde `cli-doctor.json`, `cli-obs-metric.json`, `cli-obs-logs.json`, `cli-obs-traces.json` adlariyla tutulur.
+
+## Troubleshooting
+
+- `GET /health` gecmiyor ise once proses logunu kontrol edin: `test-platform/runs/.../observability-gateway.log`
+- `GET /api/v1/status` icinde backend `configured=false` gorunuyorsa ilgili `SENTINEL_OBSERVABILITY_*__BASE_URL` env degerini kontrol edin.
+- Metric geliyor ama logs/traces bos ise once `test-platform/scripts/run_cos_stack_check.sh` icindeki trafik uretim adimlarinin tamamlandigini dogrulayin.
+- 401/403 aliyorsaniz gateway token env ve gerekiyorsa upstream backend token env eslesmesini kontrol edin.
+- Bu ilk akis sadece local port-forward ve tek proses icindir; ingress, TLS ve multi-user beklentisiyle kullanmayin.
+
 ## API
 
 - `GET /health`
