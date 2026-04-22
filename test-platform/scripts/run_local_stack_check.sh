@@ -106,7 +106,7 @@ resolve_service_host() {
     echo "ClusterIP not found for ${namespace}/${service}" >&2
     exit 1
   fi
-  wait_for_tcp "$host" "$port" "$name"
+  wait_for_tcp "$host" "$port" "$name" >&2
   printf '%s\n' "$host"
 }
 

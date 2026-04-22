@@ -18,8 +18,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 router = APIRouter()
 logger = logging.getLogger("orders")
 meter = get_meter("orders")
-orders_created = meter.create_counter("app.orders.created", unit="1")
-order_latency = meter.create_histogram("app.order.latency", unit="ms")
+orders_created = meter.create_counter("app_orders_created", unit="1")
+order_latency = meter.create_histogram("app_order_latency_ms", unit="ms")
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 
@@ -70,8 +70,9 @@ async def create_order(payload: dict, session: SessionDep) -> dict:
         },
     )
     latency_ms = (datetime.now(UTC) - start).total_seconds() * 1000
-    orders_created.add(1, {"status": "created"})
-    order_latency.record(latency_ms, {"status": "created"})
+    orders_created.add(1, {"status": "created", "service": "orders"})
+    order_latency.record(latency_ms, {"status": "created", "service": "orders"})
+    logger.info("order created", extra={"order_id": order_id, "sku": sku, "qty": qty})
     return {"order_id": order_id, "status": "created"}
 
 

@@ -108,7 +108,7 @@ resolve_service_host() {
     echo "ClusterIP not found for ${namespace}/${service}" >&2
     exit 1
   fi
-  wait_for_tcp "$host" "$port" "$name"
+  wait_for_tcp "$host" "$port" "$name" >&2
   printf '%s\n' "$host"
 }
 
@@ -124,6 +124,83 @@ query_window_end_ns() {
 import time
 print(int(time.time() * 1e9))
 PY
+}
+
+wait_for_prometheus_result() {
+  local url="$1"
+  local output="$2"
+  local name="$3"
+  local retries=24
+  while (( retries > 0 )); do
+    curl -fsS "$url" >"$output"
+    if "$VENV_PY" - <<'PY' "$output" >/dev/null 2>&1
+import json
+import sys
+payload = json.load(open(sys.argv[1], encoding="utf-8"))
+assert payload.get("status") == "success"
+assert payload.get("data", {}).get("result")
+PY
+    then
+      log "$name has data"
+      return 0
+    fi
+    retries=$((retries - 1))
+    sleep 5
+  done
+  echo "$name did not return data: $url" >&2
+  exit 1
+}
+
+wait_for_loki_logs() {
+  local output="$1"
+  local retries=24
+  while (( retries > 0 )); do
+    curl -fsS "http://${LOKI_HOST}:3100/loki/api/v1/label/job/values" >"$RUN_DIR/loki-job-values.json"
+    curl -G -fsS \
+      --data-urlencode 'query={job="gateway"}' \
+      --data-urlencode 'limit=5' \
+      --data-urlencode "start=$(query_window_start_ns)" \
+      --data-urlencode "end=$(query_window_end_ns)" \
+      "http://${LOKI_HOST}:3100/loki/api/v1/query_range" >"$output"
+    if "$VENV_PY" - <<'PY' "$output" >/dev/null 2>&1
+import json
+import sys
+payload = json.load(open(sys.argv[1], encoding="utf-8"))
+assert payload.get("status") == "success"
+assert payload.get("data", {}).get("result")
+PY
+    then
+      log "loki has gateway logs"
+      return 0
+    fi
+    retries=$((retries - 1))
+    sleep 5
+  done
+  echo "Loki did not return gateway logs" >&2
+  exit 1
+}
+
+wait_for_tempo_traces() {
+  local output="$1"
+  local retries=24
+  while (( retries > 0 )); do
+    curl -fsS "http://${TEMPO_HOST}:3200/api/search/tags" >"$RUN_DIR/tempo-tags.json"
+    curl -fsS "http://${TEMPO_HOST}:3200/api/search?limit=5&tags=service.name%3Dorders" >"$output"
+    if "$VENV_PY" - <<'PY' "$output" >/dev/null 2>&1
+import json
+import sys
+payload = json.load(open(sys.argv[1], encoding="utf-8"))
+assert payload.get("traces")
+PY
+    then
+      log "tempo has orders traces"
+      return 0
+    fi
+    retries=$((retries - 1))
+    sleep 5
+  done
+  echo "Tempo did not return orders traces" >&2
+  exit 1
 }
 
 require_cmd microk8s
@@ -298,31 +375,36 @@ log "Waiting for metric export"
 sleep 20
 
 log "Checking Prometheus"
-curl -fsS "http://${PROMETHEUS_HOST}:9090/api/v1/query?query=target_info" >"$RUN_DIR/prom-target-info.json"
-curl -fsS "http://${PROMETHEUS_HOST}:9090/api/v1/query?query=app_orders_created_total" >"$RUN_DIR/prom-orders-created.json"
-grep -q '"job":"gateway"' "$RUN_DIR/prom-target-info.json"
-grep -q '"job":"orders"' "$RUN_DIR/prom-target-info.json"
-grep -q '"job":"payments"' "$RUN_DIR/prom-target-info.json"
-grep -q '"job":"inventory"' "$RUN_DIR/prom-target-info.json"
-grep -q '"job":"worker"' "$RUN_DIR/prom-target-info.json"
-grep -q '"app_orders_created_total"' "$RUN_DIR/prom-orders-created.json"
+wait_for_prometheus_result "http://${PROMETHEUS_HOST}:9090/api/v1/query?query=target_info" "$RUN_DIR/prom-target-info.json" "prometheus target_info"
+wait_for_prometheus_result "http://${PROMETHEUS_HOST}:9090/api/v1/query?query=app_orders_created_total" "$RUN_DIR/prom-orders-created.json" "prometheus orders metric"
+"$VENV_PY" - <<'PY' "$RUN_DIR/prom-target-info.json"
+import json
+import sys
+payload = json.load(open(sys.argv[1], encoding="utf-8"))
+dump = json.dumps(payload, ensure_ascii=True)
+for name in ["gateway", "orders", "payments", "inventory", "worker"]:
+    assert name in dump, name
+PY
 
 log "Checking Loki"
-curl -fsS "http://${LOKI_HOST}:3100/loki/api/v1/label/job/values" >"$RUN_DIR/loki-job-values.json"
-curl -G -fsS \
-  --data-urlencode 'query={job="gateway"}' \
-  --data-urlencode 'limit=5' \
-  --data-urlencode "start=$(query_window_start_ns)" \
-  --data-urlencode "end=$(query_window_end_ns)" \
-  "http://${LOKI_HOST}:3100/loki/api/v1/query_range" >"$RUN_DIR/loki-gateway.json"
+wait_for_loki_logs "$RUN_DIR/loki-gateway.json"
 grep -q '"gateway"' "$RUN_DIR/loki-job-values.json"
-grep -q 'HTTP Request:' "$RUN_DIR/loki-gateway.json"
+"$VENV_PY" - <<'PY' "$RUN_DIR/loki-gateway.json"
+import json
+import sys
+payload = json.load(open(sys.argv[1], encoding="utf-8"))
+assert payload["data"]["result"], payload
+PY
 
 log "Checking Tempo"
-curl -fsS "http://${TEMPO_HOST}:3200/api/search/tags" >"$RUN_DIR/tempo-tags.json"
-curl -fsS "http://${TEMPO_HOST}:3200/api/search?limit=5&tags=service.name%3Dorders" >"$RUN_DIR/tempo-orders.json"
+wait_for_tempo_traces "$RUN_DIR/tempo-orders.json"
 grep -q '"service.name"' "$RUN_DIR/tempo-tags.json"
-grep -q '"traceID"' "$RUN_DIR/tempo-orders.json"
+"$VENV_PY" - <<'PY' "$RUN_DIR/tempo-orders.json"
+import json
+import sys
+payload = json.load(open(sys.argv[1], encoding="utf-8"))
+assert payload["traces"], payload
+PY
 
 log "Checking observability gateway"
 curl -fsS http://127.0.0.1:8091/health \

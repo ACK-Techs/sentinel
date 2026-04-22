@@ -5,6 +5,7 @@ import os
 import socket
 import sys
 from threading import Lock
+from urllib.parse import urlparse
 
 from opentelemetry import metrics, trace
 from opentelemetry._logs import set_logger_provider
@@ -30,6 +31,22 @@ def _required_endpoint() -> str:
         print("OTEL_EXPORTER_OTLP_ENDPOINT is required", file=sys.stderr)
         raise SystemExit(1)
     os.environ["OTEL_EXPORTER_OTLP_PROTOCOL"] = "grpc"
+    return _normalize_endpoint(endpoint)
+
+
+def _normalize_endpoint(endpoint: str) -> str:
+    if "://" not in endpoint:
+        os.environ.setdefault("OTEL_EXPORTER_OTLP_INSECURE", "true")
+        return endpoint
+    parsed = urlparse(endpoint)
+    if parsed.scheme:
+        host = parsed.netloc or parsed.path
+        if parsed.scheme == "https":
+            os.environ.setdefault("OTEL_EXPORTER_OTLP_INSECURE", "false")
+        else:
+            os.environ.setdefault("OTEL_EXPORTER_OTLP_INSECURE", "true")
+        return host
+    os.environ.setdefault("OTEL_EXPORTER_OTLP_INSECURE", "true")
     return endpoint
 
 
@@ -56,19 +73,32 @@ def init_telemetry(
 
         tracer_provider = TracerProvider(resource=resource)
         tracer_provider.add_span_processor(
-            BatchSpanProcessor(OTLPSpanExporter(endpoint=endpoint, insecure=True))
+            BatchSpanProcessor(
+                OTLPSpanExporter(
+                    endpoint=endpoint,
+                    insecure=os.getenv("OTEL_EXPORTER_OTLP_INSECURE", "true").lower() == "true",
+                )
+            )
         )
         trace.set_tracer_provider(tracer_provider)
 
         reader = PeriodicExportingMetricReader(
-            OTLPMetricExporter(endpoint=endpoint, insecure=True),
+            OTLPMetricExporter(
+                endpoint=endpoint,
+                insecure=os.getenv("OTEL_EXPORTER_OTLP_INSECURE", "true").lower() == "true",
+            ),
             export_interval_millis=15000,
         )
         metrics.set_meter_provider(MeterProvider(resource=resource, metric_readers=[reader]))
 
         logger_provider = LoggerProvider(resource=resource)
         logger_provider.add_log_record_processor(
-            BatchLogRecordProcessor(OTLPLogExporter(endpoint=endpoint, insecure=True))
+            BatchLogRecordProcessor(
+                OTLPLogExporter(
+                    endpoint=endpoint,
+                    insecure=os.getenv("OTEL_EXPORTER_OTLP_INSECURE", "true").lower() == "true",
+                )
+            )
         )
         set_logger_provider(logger_provider)
         root_logger = logging.getLogger()

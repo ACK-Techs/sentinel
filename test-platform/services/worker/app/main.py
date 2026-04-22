@@ -57,6 +57,7 @@ async def process_record(redis: Redis, record_id: str, payload: dict[str, str]) 
         await asyncio.sleep(0.2)
         processed_counter.add(1, {"event_type": payload.get("event_type", "unknown")})
         await redis.xack(settings.orders_stream, settings.consumer_group, record_id)
+        logger.info("worker processed record %s", record_id)
         span.set_attribute("worker.result", "acked")
 
 
