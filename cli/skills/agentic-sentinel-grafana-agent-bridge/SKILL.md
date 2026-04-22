@@ -12,7 +12,7 @@ Faz 4’ün **bağlantı doğrulamasını** REPL’deki LLM’in kullanabileceğ
 ### Dahil
 
 - `check_grafana_connection` → `GrafanaCheckResult.to_dict()` → **oturumda** `grafana_context_snapshot` (JSON string); LLM’e **`system_prompt` birleştirmesi** ile verilmesi (USER mesajı olarak session’a ekleme — compaction ile çakışır).
-- YAML/env ile aç/kapa: `agent.grafana_context_in_repl` + `SENTINEL_GRAFANA_CONTEXT_IN_REPL` (`IMPLEMENTATION_PLAN_INDIVIDUAL_CLOSE.md` ile senkron).
+- YAML/env ile aç/kapa: `agent.grafana_context_in_repl` + `SENTINEL_GRAFANA_CONTEXT_IN_REPL` (guncel plan ile senkron).
 - İsteğe bağlı ince tool (yalnızca health/status); Gemini profillerinde tool kapalıysa varsayılan dışı.
 
 ### Hariç
@@ -22,7 +22,7 @@ Faz 4’ün **bağlantı doğrulamasını** REPL’deki LLM’in kullanabileceğ
 
 ## Adımlar
 
-1. `IMPLEMENTATION_PLAN_INDIVIDUAL_CLOSE.md` kapılarına göre A katmanını (enjeksiyon) uygula.
+1. `OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md` icindeki agent entegrasyonu adimlarina gore enjeksiyon katmanini uygula.
 2. `GrafanaCheckResult.to_dict()` alanlarını kullan; yeni secret alanı ekleme.
 3. REPL başlangıcında tek seferlik enjeksiyon; session resume davranışını dokümante et (gerekirse yalnızca yeni oturumda).
 4. README’de kullanıcıya: “Özet ≠ canlı metrik; detay için doctor veya datasource skill zinciri.”
@@ -45,8 +45,7 @@ Faz 4’ün **bağlantı doğrulamasını** REPL’deki LLM’in kullanabileceğ
 
 ## İlgili belgeler ve skill'ler
 
-- `../documantations/IMPLEMENTATION_PLAN_INDIVIDUAL_CLOSE.md`
-- `../documantations/INDIVIDUAL_CLOSE_SKILL_AND_DOC_INDEX.md`
+- `../documantations/OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md`
 - `../documantations/GRAFANA_AI_PLATFORM_RESEARCH.md`
 - `../agentic-grafana-llm-platform-overview/SKILL.md`
 - `../agentic-troubleshoot-grafana/SKILL.md`

@@ -85,7 +85,7 @@ Bu plan, **bu klasördeki** `SKILL_CATALOG_PHASE2.md` içindeki `cli/skills/agen
 
 ---
 
-**Faz 2 kapanışı:** A–E tamamlandıktan sonra teslim notları `cli/documantations/archive/` altına taşınabilir. Sonraki fazlar: `ROADMAP_PHASE3_5.md`, `IMPLEMENTATION_PLAN_PHASE3.md`, `IMPLEMENTATION_PLAN_PHASE4.md`.
+**Faz 2 kapanışı:** A–E tamamlandıktan sonra teslim notları `cli/documantations/archive/` altına taşınabilir. Faz 2 sonrasındaki güncel yol haritası ve sonraki agent entegrasyonu: `OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md`.
 
 ---
 

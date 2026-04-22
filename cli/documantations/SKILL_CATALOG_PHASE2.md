@@ -569,7 +569,7 @@ paths: []           # örnek: göreli repo kökleri
 |------|--------|
 | **Amaç** | Faz 3’te uzaktan ürün telemetrisi kodu eklenmez; README tek cümle politikası. |
 | **İçerik maddeleri** | Yerel log vs analytics ayrımı; `agentic-telemetry-optional` sonraya bırakılır. |
-| **Çapraz** | `IMPLEMENTATION_PLAN_PHASE3.md`, `ROADMAP_PHASE3_5.md` |
+| **Çapraz** | `OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md` |
 
 ---
 
@@ -579,7 +579,7 @@ Aşağıdaki **58** Faz 2 skill için `SKILL.md` üretilmelidir (dal sırasıyla
 
 `agentic-project-charter`, `agentic-repo-layout`, `agentic-dependency-licensing`, `agentic-threat-model`, `agentic-secrets-handling`, `agentic-approval-policy-design`, `agentic-prompt-injection-guardrails`, `agentic-config-layers`, `agentic-config-env-reference`, `agentic-config-profiles`, `agentic-feature-flags`, `agentic-llm-provider-contract`, `agentic-llm-openai-compatible-remote`, `agentic-llm-openai-compatible-local`, `agentic-llm-anthropic-messages`, `agentic-llm-streaming-events`, `agentic-llm-context-window-strategy`, `agentic-llm-retries-timeouts`, `agentic-cli-entrypoint`, `agentic-cli-repl-vs-once`, `agentic-cli-logging`, `agentic-cli-user-errors`, `agentic-agent-turn-loop`, `agentic-agent-tool-call-parse`, `agentic-agent-history-compaction`, `agentic-agent-multi-provider-switch`, `agentic-tools-base-contract`, `agentic-tools-bash-shell`, `agentic-tools-filesystem-read`, `agentic-tools-filesystem-write`, `agentic-tools-web-fetch-optional`, `agentic-hooks-pre-post-tool`, `agentic-mcp-client-config`, `agentic-mcp-tool-mapping`, `agentic-session-persistence`, `agentic-trajectory-recording`, `agentic-cos-advisor-overview`, `agentic-microk8s-ops-reference`, `agentic-juju-ops-reference`, `agentic-troubleshoot-grafana`, `agentic-troubleshoot-prometheus`, `agentic-troubleshoot-loki`, `agentic-troubleshoot-alertmanager`, `agentic-troubleshoot-traefik-ingress`, `agentic-cos-catalogue-endpoints`, `agentic-cos-no-data-playbook`, `agentic-packaging-pypi`, `agentic-testing-unit`, `agentic-testing-integration-mock-llm`, `agentic-ci-github-actions`, `agentic-docs-user-quickstart`, `agentic-skill-authoring-standard`, `agentic-telemetry-optional`, `agentic-reference-agentic-folder`, `agentic-sandbox-hardening-reference`, `agentic-offline-airgap-notes`, `agentic-devcontainer-optional`, `agentic-adr-template`.
 
-**Faz 3 ekleri (3 skill):** `agentic-wheel-build-verify`, `agentic-docs-developer-checklist`, `agentic-faz3-no-remote-telemetry`. Ayrıntı: `PHASE3_SKILL_AND_DOC_INDEX.md`.
+**Sonraki ekler (3 skill):** `agentic-wheel-build-verify`, `agentic-docs-developer-checklist`, `agentic-faz3-no-remote-telemetry`. Ayrıntı: `OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md`.
 </think>
 
 

@@ -90,6 +90,7 @@ Sentinel CLI'nin agent döngüsüne entegre edilmiş 65+ SKILL.md dosyası. Her 
 | `PROJECT_ROOT.md` | Monorepo vizyonu, fazlar (0–5), COS Lite mimari özeti, AI otomasyon kuralları |
 | `ARCHITECTURE_COS.md` | MicroK8s → Kubernetes → Juju → COS bileşenleri arası ilişki haritası |
 | `IMPLEMENTATION_PLAN*.md` | Faz bazlı uygulama adımları, hata kurtarma yolları |
+| `cli/documantations/OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md` | Gateway ile tamamlanan son entegrasyon ve agent/CLI icin sonraki adim |
 | `PHASE*_SKILL_AND_DOC_INDEX.md` | Her faza ait skill ve doküman kataloğu |
 | `ENV_FLAGS_PHASE*.md` | Faz bazlı environment değişkenleri ve feature flag'ler |
 | `GRAFANA_AI_PLATFORM_RESEARCH.md` | Grafana LLM Platform araştırması |

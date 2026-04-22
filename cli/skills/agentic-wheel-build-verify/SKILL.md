@@ -40,5 +40,5 @@ description: Hatch ile wheel/sdist üretip temiz venv’de kurarak CLI’nin ça
 ## İlgili belgeler ve skill'ler
 
 - `../agentic-packaging-pypi/SKILL.md`
-- `../../documantations/IMPLEMENTATION_PLAN_PHASE3.md`
+- `../../documantations/OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md`
 - `../agentic-ci-github-actions/SKILL.md`

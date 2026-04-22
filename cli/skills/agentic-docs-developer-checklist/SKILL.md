@@ -41,4 +41,4 @@ description: Katkı öncesi ruff/pytest komutları ve PR kontrol listesi yazarke
 - `../../CONTRIBUTING.md` (varsa)
 - `../agentic-testing-unit/SKILL.md`
 - `../agentic-ci-github-actions/SKILL.md`
-- `../../documantations/IMPLEMENTATION_PLAN_PHASE3.md`
+- `../../documantations/OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md`

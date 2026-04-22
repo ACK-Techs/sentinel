@@ -2,7 +2,7 @@
 
 Bu klasör, **Faz 2.A–E** sırasında yazılmış **anlık teslim / karar özeti** belgelerini içerir. İçerik çoğunlukla tarihsel referans ve denetim içindir; güncel operasyonel doğruluk kaynağı değildir.
 
-**Güncel referanslar** (üst dizin): `PROJECT_ROOT_PHASE2.md`, `ARCHITECTURE_AGENTIC_CLI.md`, `IMPLEMENTATION_PLAN_PHASE2.md`, `SKILL_CATALOG_PHASE2.md`, `LLM_PROVIDERS.md`, `REPO_LAYOUT_RECOMMENDED.md`. Faz 3 iç kullanım teslimatı: `IMPLEMENTATION_PLAN_PHASE3.md`, `PHASE3_SKILL_AND_DOC_INDEX.md`, `CODEX_EXECUTION_PROMPT_PHASE3.md`, `ENV_FLAGS_PHASE3.md`.
+**Güncel referanslar** (üst dizin): `PROJECT_ROOT_PHASE2.md`, `ARCHITECTURE_AGENTIC_CLI.md`, `IMPLEMENTATION_PLAN_PHASE2.md`, `SKILL_CATALOG_PHASE2.md`, `LLM_PROVIDERS.md`, `REPO_LAYOUT_RECOMMENDED.md`, `OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md`, `ENV_FLAGS_PHASE3.md`.
 
 | Dosya | Ne zaman / ne için |
 |-------|---------------------|

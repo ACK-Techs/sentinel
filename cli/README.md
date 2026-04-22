@@ -2,7 +2,7 @@
 
 Bu dizin, `sentinel-coming` deposundaki **Sentinel CLI** paketidir. Faz 1 içeriği depo kökündeki `documantations/` ve `skills/` altında kalır; Faz 2 ile kurulan Python tabanlı terminal ajanı Faz 3’te iç kullanım için sertleştirilir.
 
-İlk okuma için: [ARCHITECTURE_AGENTIC_CLI.md](documantations/ARCHITECTURE_AGENTIC_CLI.md), [LLM_PROVIDERS.md](documantations/LLM_PROVIDERS.md), [PHASE3_SKILL_AND_DOC_INDEX.md](documantations/PHASE3_SKILL_AND_DOC_INDEX.md), [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md).
+İlk okuma için: [ARCHITECTURE_AGENTIC_CLI.md](documantations/ARCHITECTURE_AGENTIC_CLI.md), [LLM_PROVIDERS.md](documantations/LLM_PROVIDERS.md), [OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md](documantations/OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md), [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md).
 
 ## Faz 1 ve Faz 2 ayrımı
 
@@ -320,11 +320,7 @@ Bağımlılık güncellerken küçük ve geri döndürülebilir artışları ter
 - Tehdit modeli ve sır yönetimi belgeleri
 - Onay politikası ve prompt injection guardrail özeti
 
-Detaylı faz planları: [Faz 2](documantations/IMPLEMENTATION_PLAN_PHASE2.md), [Faz 3](documantations/IMPLEMENTATION_PLAN_PHASE3.md), [Faz 4](documantations/IMPLEMENTATION_PLAN_PHASE4.md). Yol haritası özeti: [ROADMAP_PHASE3_5.md](documantations/ROADMAP_PHASE3_5.md).
-
-Geliştirici: [CONTRIBUTING.md](CONTRIBUTING.md), [CHANGELOG.md](CHANGELOG.md). Faz 3 env ve indeks: [ENV_FLAGS_PHASE3.md](documantations/ENV_FLAGS_PHASE3.md), [PHASE3_SKILL_AND_DOC_INDEX.md](documantations/PHASE3_SKILL_AND_DOC_INDEX.md). Faz 3’ü ajanla tek oturumda işlemek için: [CODEX_EXECUTION_PROMPT_PHASE3.md](documantations/CODEX_EXECUTION_PROMPT_PHASE3.md).
-
-Faz 4 (Grafana / observability bağlantısı): [PHASE4_SKILL_AND_DOC_INDEX.md](documantations/PHASE4_SKILL_AND_DOC_INDEX.md), [PHASE4_MANAGER_HANDOFF.md](documantations/PHASE4_MANAGER_HANDOFF.md), [GRAFANA_HTTP_PHASE4.md](documantations/GRAFANA_HTTP_PHASE4.md), canlı stack doğrulama notu: [PHASE4_REAL_STACK_VERIFY.md](documantations/PHASE4_REAL_STACK_VERIFY.md). Tek oturum prompt: [CODEX_EXECUTION_PROMPT_PHASE4.md](documantations/CODEX_EXECUTION_PROMPT_PHASE4.md). Canlı test öncesi mimari + test genişletme: [PRE_LIVE_VALIDATION_HANDOFF.md](documantations/PRE_LIVE_VALIDATION_HANDOFF.md). Bireysel kapanış (REPL ↔ Grafana): [INDIVIDUAL_CLOSE_SKILL_AND_DOC_INDEX.md](documantations/INDIVIDUAL_CLOSE_SKILL_AND_DOC_INDEX.md).
+Aktif planlama ve sonraki adım dokümanı: [OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md](documantations/OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md). Faz 2 temel teslimi için [IMPLEMENTATION_PLAN_PHASE2.md](documantations/IMPLEMENTATION_PLAN_PHASE2.md), teknik referans için [GRAFANA_HTTP_PHASE4.md](documantations/GRAFANA_HTTP_PHASE4.md) ve [GRAFANA_AI_PLATFORM_RESEARCH.md](documantations/GRAFANA_AI_PLATFORM_RESEARCH.md) korunur.
 
 ## Faz 4: Grafana baglanti dogrulamasi
 
@@ -356,7 +352,7 @@ YAML tarafinda ayni alanlar `config/sentinel.example.yaml` icindeki `grafana:` b
 
 Grafana erisiyor ama panellerde veri yoksa bu Faz 4 kontrolunun kapsami disindadir; datasource sirasini ve Faz 1 teshis akisini dogrulayin. Kopru skill: `skills/agentic-troubleshoot-grafana/SKILL.md`
 
-Canli stack dogrulamasi sonucu veya atlama notu su dosyada tutulur: [PHASE4_REAL_STACK_VERIFY.md](documantations/PHASE4_REAL_STACK_VERIFY.md). Faz 4 HTTP sozlesmesi ve env detaylari: [GRAFANA_HTTP_PHASE4.md](documantations/GRAFANA_HTTP_PHASE4.md).
+Canli stack dogrulamasi ve bundan sonraki agent baglama adimlari [OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md](documantations/OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md) icinde tutulur. HTTP sozlesmesi ve env detaylari icin: [GRAFANA_HTTP_PHASE4.md](documantations/GRAFANA_HTTP_PHASE4.md).
 
 ## REPL + Grafana ozeti
 
@@ -369,6 +365,6 @@ Bu ozet session mesajlarina ayri bir `user` mesaji olarak yazilmaz; compaction d
 
 ## Bireysel kapanis: REPL ve Grafana ozeti
 
-`doctor` ciktisi REPL sohbetine otomatik dusmez. Grafana Labs LLM / Assistant ozellikleri Grafana UI veya Cloud katmaninda calisir; terminal ajanindan farklidir — ozet: [GRAFANA_AI_PLATFORM_RESEARCH.md](documantations/GRAFANA_AI_PLATFORM_RESEARCH.md). REPL ile baglam koprusu (secret-safe doctor ozeti enjeksiyonu vb.) icin plan ve prompt: [IMPLEMENTATION_PLAN_INDIVIDUAL_CLOSE.md](documantations/IMPLEMENTATION_PLAN_INDIVIDUAL_CLOSE.md), indeks [INDIVIDUAL_CLOSE_SKILL_AND_DOC_INDEX.md](documantations/INDIVIDUAL_CLOSE_SKILL_AND_DOC_INDEX.md), tek mesaj: [CODEX_EXECUTION_PROMPT_INDIVIDUAL_CLOSE.md](documantations/CODEX_EXECUTION_PROMPT_INDIVIDUAL_CLOSE.md).
+`doctor` ciktisi REPL sohbetine otomatik dusmez. Grafana Labs LLM / Assistant ozellikleri Grafana UI veya Cloud katmaninda calisir; terminal ajanindan farklidir — ozet: [GRAFANA_AI_PLATFORM_RESEARCH.md](documantations/GRAFANA_AI_PLATFORM_RESEARCH.md). REPL ve ajan tarafinda gateway verisini nasil kullanacagimiz yeni planda toplanir: [OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md](documantations/OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md).
 
 **Otomatik adim adim dogrulama:** `scripts/verify_grafana_context_repl.sh` — `cli` kokunden `./scripts/verify_grafana_context_repl.sh`. Adimlar arasinda Enter ile duraklatmak icin: `STEP_PAUSE=1 ./scripts/verify_grafana_context_repl.sh`.

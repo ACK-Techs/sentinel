@@ -1,6 +1,6 @@
 # Sentinel CLI — katkı / geliştirici notları
 
-Kök dizin: `sentinel-coming/cli/`. Bu depo parçası **iç kullanım** odaklıdır; Faz 3 teslimatı `documantations/IMPLEMENTATION_PLAN_PHASE3.md` ile hizalanır.
+Kök dizin: `sentinel-coming/cli/`. Bu depo parçası **iç kullanım** odaklıdır; güncel geliştirme sırası `documantations/OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md` ile hizalanır.
 
 ## Ortam
 
@@ -39,7 +39,7 @@ Gerçek API anahtarlarını repoya veya örnek dosyalara yazmayın. Ortam deği�
 
 ## İlgili belgeler
 
-- `documantations/IMPLEMENTATION_PLAN_PHASE2.md` — Faz 2 teslimatı
-- `documantations/IMPLEMENTATION_PLAN_PHASE3.md` — Faz 3 görevleri
+- `documantations/IMPLEMENTATION_PLAN_PHASE2.md` — Faz 2 temel teslimatı
+- `documantations/OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md` — güncel gateway + agent planı
 - `documantations/ARCHITECTURE_AGENTIC_CLI.md` — mimari özet
 - `skills/agentic-docs-developer-checklist/SKILL.md` — kontrol listesi şartnamesi
