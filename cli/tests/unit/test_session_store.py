@@ -10,11 +10,13 @@ def test_session_store_roundtrip(tmp_path) -> None:
     store = SessionStore(config.session)
     session = store.create(profile="local", provider="openai")
     session.messages.append(ChatMessage(role=MessageRole.USER, content="hello"))
+    session.observability_context_snapshot = '{"gateway":{"status":"ok"}}'
     store.save(session)
 
     loaded = store.load(session.session_id)
     assert loaded.profile == "local"
     assert loaded.messages[0].content == "hello"
+    assert loaded.observability_context_snapshot == '{"gateway":{"status":"ok"}}'
 
 
 def test_session_store_loads_missing_grafana_snapshot_for_legacy_files(tmp_path) -> None:
@@ -39,6 +41,7 @@ def test_session_store_loads_missing_grafana_snapshot_for_legacy_files(tmp_path)
     loaded = store.load("legacy123")
 
     assert loaded.grafana_context_snapshot is None
+    assert loaded.observability_context_snapshot is None
 
 
 def test_trajectory_redacts_tokens(tmp_path) -> None:

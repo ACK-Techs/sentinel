@@ -11,7 +11,7 @@ from sentinel_cli.config import AppConfig, ResolvedProfile
 from sentinel_cli.hooks import HookManager
 from sentinel_cli.llm.errors import LLMError
 from sentinel_cli.llm.types import ChatMessage, ChatRequest, CompletionResult, MessageRole, ToolCall
-from sentinel_cli.observability import check_grafana_connection
+from sentinel_cli.observability import GatewayClient, GatewayClientError, check_gateway_connection, check_grafana_connection
 from sentinel_cli.session import SessionStore, TrajectoryRecorder
 from sentinel_cli.tools import ToolRegistry
 
@@ -73,6 +73,12 @@ class AgentLoop:
                 "Grafana operasyonel ozeti asagidadir; bu ozet canli panel veya metrik akisi degildir.\n"
                 f"{session.grafana_context_snapshot}"
             )
+        if session and session.observability_context_snapshot:
+            system_prompt = (
+                f"{system_prompt}\n\n"
+                "Observability gateway operasyonel ozeti asagidadir; bu ozet canli veri dump'i degildir.\n"
+                f"{session.observability_context_snapshot}"
+            )
         return ChatRequest(
             messages=messages,
             system_prompt=system_prompt,
@@ -87,6 +93,47 @@ class AgentLoop:
 
         result = check_grafana_connection(self._config.grafana, env=dict(os.environ))
         session.grafana_context_snapshot = json.dumps(result.to_dict(), ensure_ascii=True)
+        self._session_store.save(session)
+
+    def _ensure_observability_snapshot(self, session) -> None:
+        if not self._config.agent.grafana_context_in_repl:
+            return
+        if session.observability_context_snapshot is not None:
+            return
+
+        env = dict(os.environ)
+        gateway = check_gateway_connection(self._config.observability_gateway, env=env)
+        snapshot = {
+            "gateway": {
+                "configured": gateway.configured,
+                "attempted": gateway.attempted,
+                "ok": gateway.ok,
+                "status": gateway.status,
+            },
+            "backends_configured": [],
+            "backends_reachable": [],
+        }
+
+        if gateway.base_url_present:
+            try:
+                payload = GatewayClient(self._config.observability_gateway, env=env).get_status()
+            except GatewayClientError:
+                payload = None
+            if isinstance(payload, dict):
+                backends = payload.get("backends", {})
+                if isinstance(backends, dict):
+                    snapshot["backends_configured"] = sorted(
+                        name
+                        for name, details in backends.items()
+                        if isinstance(details, dict) and details.get("configured") is True
+                    )
+                    snapshot["backends_reachable"] = sorted(
+                        name
+                        for name, details in backends.items()
+                        if isinstance(details, dict) and details.get("reachable") is True
+                    )
+
+        session.observability_context_snapshot = json.dumps(snapshot, ensure_ascii=True)
         self._session_store.save(session)
 
     def run(
@@ -115,6 +162,7 @@ class AgentLoop:
             session = self._session_store.create(profile=self._profile.name, provider=self._profile.provider)
 
         self._ensure_grafana_snapshot(session)
+        self._ensure_observability_snapshot(session)
         self._active_session = session
         session.messages = self._compactor.compact(session.messages)
         session.messages.append(ChatMessage(role=MessageRole.USER, content=prompt))

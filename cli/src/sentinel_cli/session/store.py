@@ -20,6 +20,7 @@ class SessionState:
     messages: list[ChatMessage]
     created_at: str
     grafana_context_snapshot: str | None = None
+    observability_context_snapshot: str | None = None
 
 
 class SessionStore:
@@ -38,6 +39,7 @@ class SessionStore:
             messages=[],
             created_at=datetime.now(UTC).isoformat(),
             grafana_context_snapshot=None,
+            observability_context_snapshot=None,
         )
         self.save(session)
         return session
@@ -53,6 +55,7 @@ class SessionStore:
             "provider": session.provider,
             "created_at": session.created_at,
             "grafana_context_snapshot": session.grafana_context_snapshot,
+            "observability_context_snapshot": session.observability_context_snapshot,
             "messages": [message.model_dump(mode="json") for message in session.messages],
         }
         path.write_text(json.dumps(payload, ensure_ascii=True, indent=2), encoding="utf-8")
@@ -66,5 +69,6 @@ class SessionStore:
             provider=payload["provider"],
             created_at=payload["created_at"],
             grafana_context_snapshot=payload.get("grafana_context_snapshot", None),
+            observability_context_snapshot=payload.get("observability_context_snapshot", None),
             messages=[ChatMessage.model_validate(item) for item in payload.get("messages", [])],
         )
