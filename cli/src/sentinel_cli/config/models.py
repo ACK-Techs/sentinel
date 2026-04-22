@@ -190,20 +190,21 @@ class AppConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    profile: str = "local"
+    profile: str = "cloud"
     config_path: Path | None = None
     profiles: dict[str, ProfileSettings] = Field(
         default_factory=lambda: {
             "cloud": ProfileSettings(
                 provider="openai",
-                model="provider-model-placeholder",
-                base_url="https://api.openai.com/v1",
+                model="gemini-2.5-flash",
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
                 api_key_env="SENTINEL_API_KEY",
                 timeout_sec=120.0,
+                supports_tools=False,
             ),
             "local": ProfileSettings(
                 provider="openai",
-                model="local_model_placeholder",
+                model="gemma4:latest",
                 base_url="http://127.0.0.1:11434/v1",
                 api_key_env=None,
                 timeout_sec=120.0,

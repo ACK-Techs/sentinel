@@ -1,21 +1,15 @@
-# Yerel çalışma dosyası (repoda yok; .gitignore). Şablon: sentinel.example.yaml
-profile: local
+# Yerel çalışma dosyası. Gemini cloud varsayılan, local Gemma opsiyonel fallback.
+profile: cloud
 profiles:
   cloud:
     provider: openai
-    model: provider-model-placeholder
-    base_url: https://api.example.com/v1
+    model: gemini-2.5-flash
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai/
     api_key_env: SENTINEL_API_KEY
-    # Agent araçları (bash, dosya): OpenAI ile true; Gemini OpenAI-compat cogu kurulumda HTTP 400 verir — .env ile SENTINEL_CLOUD_SUPPORTS_TOOLS=false kullan veya burayi false yap.
-    supports_tools: true
-    # Gemini OpenAI-compat bridge example:
-    # model: gemini-2.5-flash
-    # base_url: https://generativelanguage.googleapis.com/v1beta/openai/
-    # api_key_env: SENTINEL_API_KEY
-    # supports_tools: false
+    supports_tools: false
   local:
     provider: openai
-    model: local_model_placeholder
+    model: gemma4:latest
     base_url: http://127.0.0.1:11434/v1
     timeout_sec: 120
   anthropic:

@@ -69,6 +69,19 @@ def test_experimental_mcp_flag_defaults_off_and_can_be_enabled() -> None:
     assert enabled_config.experimental.mcp_stdio_client is True
 
 
+def test_default_profile_is_cloud_with_gemini_defaults() -> None:
+    config = load_config(env={})
+
+    assert config.profile == "cloud"
+    assert config.profiles["cloud"].model == "gemini-2.5-flash"
+    assert (
+        config.profiles["cloud"].base_url
+        == "https://generativelanguage.googleapis.com/v1beta/openai/"
+    )
+    assert config.profiles["cloud"].supports_tools is False
+    assert config.profiles["local"].model == "gemma4:latest"
+
+
 def test_cloud_supports_tools_env_overrides_profile() -> None:
     off = load_config(
         env={
