@@ -38,7 +38,7 @@ spec:
             - containerPort: 8080
           env:
             - {name: DEPLOYMENT_ENV, value: dev}
-            - {name: OTEL_EXPORTER_OTLP_ENDPOINT, value: http://otel-collector:4317}
+            - {name: OTEL_EXPORTER_OTLP_ENDPOINT, value: otel-collector.cos.svc.cluster.local:4317}
             - {name: OTEL_SERVICE_NAME, value: gateway}
             - {name: OTEL_RESOURCE_ATTRIBUTES, value: service.namespace=sentinel-target}
             - {name: ORDERS_URL, value: http://orders:8080}

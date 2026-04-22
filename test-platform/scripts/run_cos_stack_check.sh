@@ -169,7 +169,7 @@ sleep 1
 
 POSTGRES_HOST="$(resolve_service_host sentinel-target postgres 5432 postgres-service)"
 REDIS_HOST="$(resolve_service_host sentinel-target redis 6379 redis-service)"
-OTEL_HOST="$(resolve_service_host sentinel-target otel-collector 4317 otel-service)"
+OTEL_HOST="$(resolve_service_host cos otel-collector 4317 cos-otel-service)"
 PROMETHEUS_HOST="$(resolve_service_host cos prometheus 9090 prometheus-service)"
 LOKI_HOST="$(resolve_service_host cos loki 3100 loki-service)"
 TEMPO_HOST="$(resolve_service_host cos tempo 3200 tempo-service)"

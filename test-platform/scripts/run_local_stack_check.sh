@@ -137,7 +137,7 @@ microk8s kubectl -n sentinel-target wait --for=condition=Ready pod/redis-0 --tim
 
 POSTGRES_HOST="$(resolve_service_host sentinel-target postgres 5432 postgres-service)"
 REDIS_HOST="$(resolve_service_host sentinel-target redis 6379 redis-service)"
-OTEL_HOST="$(resolve_service_host sentinel-target otel-collector 4317 otel-service)"
+OTEL_HOST="$(resolve_service_host cos otel-collector 4317 cos-otel-service)"
 
 log "Seeding databases"
 export ORDERS_DB_URL="postgresql+asyncpg://sentinel:sentinel@${POSTGRES_HOST}:5432/orders_db"
@@ -237,7 +237,7 @@ PY
 
 log "Checking collector telemetry"
 sleep 3
-microk8s kubectl -n sentinel-target logs deploy/otel-collector --tail=500 >"$RUN_DIR/collector.log"
+microk8s kubectl -n cos logs pod/otel-collector-0 --tail=500 >"$RUN_DIR/collector.log"
 grep -Eq 'ResourceSpans #|ResourceLog #' "$RUN_DIR/collector.log"
 grep -q 'service.name: Str(gateway)' "$RUN_DIR/collector.log"
 grep -q 'service.name: Str(orders)' "$RUN_DIR/collector.log"

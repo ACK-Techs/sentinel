@@ -38,7 +38,7 @@ spec:
             - containerPort: 8080
           env:
             - {name: DEPLOYMENT_ENV, value: dev}
-            - {name: OTEL_EXPORTER_OTLP_ENDPOINT, value: http://otel-collector:4317}
+            - {name: OTEL_EXPORTER_OTLP_ENDPOINT, value: otel-collector.cos.svc.cluster.local:4317}
             - {name: OTEL_SERVICE_NAME, value: orders}
             - {name: OTEL_RESOURCE_ATTRIBUTES, value: service.namespace=sentinel-target}
             - {name: DB_URL, value: postgresql+asyncpg://sentinel:sentinel@postgres:5432/orders_db}

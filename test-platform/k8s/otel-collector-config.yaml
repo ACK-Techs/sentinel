@@ -5,6 +5,8 @@ metadata:
   namespace: sentinel-target
 data:
   config.yaml: |
+    # Legacy local collector path. The active COS topology sends telemetry
+    # directly to otel-collector.cos.svc.cluster.local:4317.
     receivers:
       otlp:
         protocols:

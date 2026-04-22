@@ -3,8 +3,6 @@ kind: Kustomization
 namespace: sentinel-target
 resources:
   - namespace.yaml
-  - otel-collector-config.yaml
-  - otel-collector.yaml
   - postgres.yaml
   - redis.yaml
   - gateway.yaml
@@ -13,4 +11,3 @@ resources:
   - inventory.yaml
   - worker.yaml
   - networkpolicy.yaml
-
