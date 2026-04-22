@@ -16,6 +16,12 @@ from sentinel_cli.tools.base import SentinelTool, ToolContext, ToolResult
 from sentinel_cli.tools.bash import BashTool
 from sentinel_cli.tools.filesystem import ReadFileTool, WriteFileTool
 from sentinel_cli.tools.mcp import MCPClientManager
+from sentinel_cli.tools.observability import (
+    ObsLogsQueryTool,
+    ObsMetricQueryTool,
+    ObsTraceGetTool,
+    ObsTracesSearchTool,
+)
 
 
 @dataclass(slots=True)
@@ -46,6 +52,10 @@ class ToolRegistry:
             ),
             "read_file": ReadFileTool(),
             "write_file": WriteFileTool(),
+            "obs_metric_query": ObsMetricQueryTool(config.observability_gateway),
+            "obs_logs_query": ObsLogsQueryTool(config.observability_gateway),
+            "obs_traces_search": ObsTracesSearchTool(config.observability_gateway),
+            "obs_trace_get": ObsTraceGetTool(config.observability_gateway),
         }
         for tool in self._mcp.dynamic_tools():
             self._tools.setdefault(tool.name, tool)

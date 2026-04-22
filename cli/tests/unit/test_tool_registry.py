@@ -46,3 +46,30 @@ def test_write_tool_respects_auto_approval(tmp_path) -> None:
     )
     assert result.ok is True
     assert target.read_text(encoding="utf-8") == "hello"
+
+
+def test_registry_exposes_observability_tools() -> None:
+    registry = ToolRegistry(config=AppConfig(), hook_manager=HookManager(AppConfig().hooks))
+
+    names = {definition.name for definition in registry.definitions()}
+
+    assert "obs_metric_query" in names
+    assert "obs_logs_query" in names
+    assert "obs_traces_search" in names
+    assert "obs_trace_get" in names
+
+
+def test_registry_parses_observability_tool_args() -> None:
+    registry = ToolRegistry(config=AppConfig(), hook_manager=HookManager(AppConfig().hooks))
+
+    parsed = registry.parse_tool_call(
+        ToolCall(
+            id="1",
+            name="obs_logs_query",
+            arguments_json=json.dumps({"service": "gateway", "limit": 5}),
+        )
+    )
+
+    assert parsed.tool.name == "obs_logs_query"
+    assert parsed.arguments.service == "gateway"
+    assert parsed.arguments.limit == 5

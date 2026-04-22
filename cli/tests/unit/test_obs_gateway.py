@@ -121,6 +121,40 @@ def test_gateway_client_sends_service_without_loki_syntax() -> None:
     assert payload["query"] == "gateway-managed-query"
 
 
+def test_gateway_client_get_status_calls_status_endpoint() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "GET"
+        assert request.url.path == "/api/v1/status"
+        return httpx.Response(200, json={"status": "ok", "backends": {}})
+
+    client = GatewayClient(
+        ObservabilityGatewaySettings(base_url="https://gateway.example.test"),
+        env={},
+        transport=httpx.MockTransport(handler),
+    )
+
+    payload = client.get_status()
+
+    assert payload["status"] == "ok"
+
+
+def test_gateway_client_get_trace_calls_trace_detail_endpoint() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "GET"
+        assert request.url.path == "/api/v1/traces/trace-123"
+        return httpx.Response(200, json={"backend": "tempo", "trace": {"trace_id": "trace-123"}})
+
+    client = GatewayClient(
+        ObservabilityGatewaySettings(base_url="https://gateway.example.test"),
+        env={},
+        transport=httpx.MockTransport(handler),
+    )
+
+    payload = client.get_trace("trace-123")
+
+    assert payload["trace"]["trace_id"] == "trace-123"
+
+
 def test_obs_traces_command_builds_service_search(monkeypatch, capsys) -> None:
     class FakeGatewayClient:
         def __init__(self, settings, *, env):

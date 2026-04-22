@@ -159,6 +159,9 @@ class GatewayClient:
     def query_metric(self, query: str) -> dict[str, Any]:
         return self._request("POST", "/api/v1/metrics/query", json={"query": query})
 
+    def get_status(self) -> dict[str, Any]:
+        return self._request("GET", "/api/v1/status")
+
     def query_logs(
         self,
         *,
@@ -194,7 +197,18 @@ class GatewayClient:
             raise GatewayClientError("Trace sorgusu icin --query veya --service gerekli.")
         return self._request("POST", "/api/v1/traces/search", json=payload)
 
-    def _request(self, method: str, path: str, *, json: dict[str, Any]) -> dict[str, Any]:
+    def get_trace(self, trace_id: str) -> dict[str, Any]:
+        if not trace_id:
+            raise GatewayClientError("Trace detayi icin trace_id gerekli.")
+        return self._request("GET", f"/api/v1/traces/{trace_id}")
+
+    def _request(
+        self,
+        method: str,
+        path: str,
+        *,
+        json: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         if not self._settings.base_url:
             raise GatewayClientError(
                 "Observability gateway ayarli degil. Config veya env icinde base_url ekleyin."
