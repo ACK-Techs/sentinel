@@ -125,7 +125,10 @@ fi
 
 log "Checking cluster and model health"
 microk8s status --wait-ready >"$RUN_DIR/microk8s-status.txt"
-juju status >"$RUN_DIR/juju-status.txt"
+if ! timeout 30 juju status >"$RUN_DIR/juju-status.txt"; then
+  log "juju status timed out; continuing smoke with existing cluster state"
+  printf 'juju status timed out after 30s\n' >>"$RUN_DIR/juju-status.txt"
+fi
 
 log "Installing editable packages into repo venv"
 "$VENV_PIP" install -e "$REPO_ROOT/observability-gateway" \
@@ -347,10 +350,90 @@ log "Checking Sentinel CLI through observability gateway"
   SENTINEL_OBSERVABILITY_GATEWAY_TOKEN="$OBS_GATEWAY_TOKEN" \
   "$VENV_PY" -m sentinel_cli obs traces --service orders
 ) >"$RUN_DIR/cli-obs-traces.json"
+(
+  cd "$CLI_DIR"
+  SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL=http://127.0.0.1:8091 \
+  SENTINEL_OBSERVABILITY_GATEWAY_TOKEN="$OBS_GATEWAY_TOKEN" \
+  SENTINEL_TRAJECTORY_ENABLED=1 \
+  SENTINEL_TRAJECTORY_DIR="$RUN_DIR/agent-trajectories" \
+  "$VENV_PY" - <<'PY'
+import contextlib
+import io
+import json
+from pathlib import Path
+
+import sentinel_cli.cli.app as app
+from sentinel_cli.llm.types import CompletionResult, ToolCall
+
+
+class ScriptedProvider:
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def complete(self, request):
+        self.calls += 1
+        if self.calls == 1:
+            return CompletionResult(
+                text="Gateway araciyla log sorgusu baslatiliyor.",
+                tool_calls=[
+                    ToolCall(
+                        id="obs-smoke-1",
+                        name="obs_logs_query",
+                        arguments_json=json.dumps({"service": "gateway", "limit": 5}),
+                    )
+                ],
+                provider_name="smoke-scripted",
+            )
+        return CompletionResult(
+            text="Gateway loglari icin agentik smoke tamamlandi.",
+            provider_name="smoke-scripted",
+        )
+
+    def stream(self, request):
+        raise NotImplementedError
+
+
+def fake_build_provider(config, resolved_profile):
+    del config, resolved_profile
+    return ScriptedProvider()
+
+
+trajectory_dir = Path("agent-trajectories")
+before = set(trajectory_dir.glob("*.jsonl"))
+app.build_provider = fake_build_provider
+
+buffer = io.StringIO()
+with contextlib.redirect_stdout(buffer):
+    exit_code = app.main(
+        ["run", "--profile", "local", "gateway loglarinda son 5 dakikayi ozetle"]
+    )
+
+after = set(trajectory_dir.glob("*.jsonl"))
+new_files = sorted(str(path.name) for path in (after - before))
+trajectory_content = ""
+if new_files:
+    trajectory_content = (trajectory_dir / new_files[0]).read_text(encoding="utf-8")
+
+print(
+    json.dumps(
+        {
+            "exit_code": exit_code,
+            "stdout": buffer.getvalue(),
+            "trajectory_files": new_files,
+            "trajectory": trajectory_content,
+        },
+        ensure_ascii=True,
+    )
+)
+PY
+) >"$RUN_DIR/cli-agent-run.json"
 grep -q '"observability_gateway"' "$RUN_DIR/cli-doctor.json"
 grep -q '"backend": "prometheus"' "$RUN_DIR/cli-obs-metric.json"
 grep -q '"backend": "loki"' "$RUN_DIR/cli-obs-logs.json"
 grep -q '"backend": "tempo"' "$RUN_DIR/cli-obs-traces.json"
+grep -q '"exit_code": 0' "$RUN_DIR/cli-agent-run.json"
+grep -q '"tool_name": "obs_logs_query"' "$RUN_DIR/cli-agent-run.json"
+grep -q 'Gateway loglari icin agentik smoke tamamlandi.' "$RUN_DIR/cli-agent-run.json"
 
 log "COS smoke test passed"
 printf 'order_id=%s\n' "$ORDER_ID"

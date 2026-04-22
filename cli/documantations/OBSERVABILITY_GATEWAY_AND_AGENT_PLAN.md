@@ -5,7 +5,7 @@ Bu dosya, eski Faz 3/4 planlarının yerine geçen **tek aktif plan** dokümanı
 Amaç iki parçadır:
 
 1. Tamamlanan işi tek yerde özetlemek
-2. Bir sonraki turda Sentinel CLI ajanının `observability-gateway` üzerinden canlı veri kullanmasını planlamak
+2. Sentinel CLI ajanının `observability-gateway` üzerinden canlı veri kullanma entegrasyonunu özetlemek
 
 ## Tamamlanan Durum
 
@@ -20,11 +20,21 @@ Bu repo turunda 3 ayrı prompt hattı ile şu entegrasyon tamamlandı:
   - `sentinel-cli obs metric`
   - `sentinel-cli obs logs`
   - `sentinel-cli obs traces`
+- Agent `run/repl` akışı yeni read-only gateway tool'larini kullanabiliyor:
+  - `obs_metric_query`
+  - `obs_logs_query`
+  - `obs_traces_search`
+  - `obs_trace_get`
+- Agent session icine secret-safe kisa observability snapshot giriyor:
+  - gateway health
+  - configured backend listesi
+  - reachable backend listesi
 - `doctor` çıktısı gateway sağlığını gösteriyor
 - `test-platform/scripts/run_cos_stack_check.sh` canlı smoke akışında:
   - test-platform servislerini kaldırıyor
   - gateway’i başlatıyor
-  - CLI komutlarını gerçek veriyle doğruluyor
+  - CLI `obs` komutlarını gerçek veriyle doğruluyor
+  - CLI `run` akışında agent tool entegrasyonunu doğruluyor
 
 ## Mevcut Mimari
 
@@ -50,47 +60,19 @@ Kural:
 - Alert yönetimi
 - Dashboard yönetimi
 - Grafana datasource proxy katmanı
-- Ajanın doğal dil turunda gateway verisini otomatik kullanması
 
-## Sonraki Hedef
+## Tamamlanan Agent Entegrasyonu
 
-Bir sonraki iş, mevcut `obs` alt komutlarını büyütmek değil; **ajanın kendisini** gateway üzerinden canlı veri okuyabilir hale getirmektir.
+Bu tur sonunda agent artik `run` ve `repl` akışında gerektiğinde gateway tool'larini cagirabilir.
 
 Başka deyişle:
 
-- Bugün: kullanıcı `sentinel-cli obs ...` diyerek veri alıyor
-- Sonraki tur: kullanıcı `sentinel-cli run "orders servisinde ne bozuk?"` dediğinde ajan gateway araçlarını kullanabiliyor
+- Kullanıcı `sentinel-cli obs ...` diyerek ham veri alabilir
+- Kullanıcı `sentinel-cli run "orders servisinde ne bozuk?"` dediğinde ajan gateway araçlarını kullanabilir
 
-## Sonraki Faz Planı
+## Operasyonel Baglam
 
-### 1. Gateway Tool Yüzeyi
-
-CLI ajanı için read-only tool yüzeyi eklenir:
-
-- `obs_metric_query`
-- `obs_logs_query`
-- `obs_traces_search`
-- `obs_trace_get`
-
-Kurallar:
-
-- Bu tool’lar doğrudan backend değil sadece gateway çağırır
-- Token veya hassas header model çıktısına düşmez
-- Gateway kapalıysa ajan anlamlı kısa hata verir
-
-### 2. Agent Döngüsüne Entegrasyon
-
-`run` ve `repl` akışında ajan gerektiğinde bu tool’ları çağırabilir hale getirilir.
-
-Beklenen kullanıcı örnekleri:
-
-- `orders servisinde hata var mi bak`
-- `gateway loglarinda son 5 dakikayi ozetle`
-- `orders trace tarafinda timeout izi var mi`
-
-### 3. Kısa Operasyonel Bağlam
-
-REPL veya tek seferlik ajan turu başlamadan önce opsiyonel kısa snapshot eklenir:
+REPL veya tek seferlik ajan turu baslamadan once session'a kisa bir snapshot eklenir:
 
 - gateway health
 - hangi backend’ler reachable
@@ -102,7 +84,7 @@ Bu snapshot:
 - session’a kısa JSON özet olarak girer
 - canlı veri yerine “durum çerçevesi” verir
 
-### 4. UX Kuralı
+## UX Kuralı
 
 Ajan şu ayrımı korur:
 
@@ -110,23 +92,24 @@ Ajan şu ayrımı korur:
 - `obs ...` = kullanıcı kontrollü ham veri
 - `run/repl` = gerektiğinde gateway tool kullanarak yorumlama
 
-### 5. Test ve Smoke
+## Test ve Smoke
 
-Sonraki turda başarı kriteri:
+Doğrulama yüzeyi:
 
 - unit testler
 - CLI agent loop testleri
-- mevcut `run_cos_stack_check.sh` içine agentik kullanım adımı eklenmesi
+- `run_cos_stack_check.sh` içinde agentik kullanım adımı
 
-Örnek smoke:
+Operator dostu manuel smoke:
 
 ```bash
-python -m sentinel_cli run --profile local "gateway ve orders tarafinda son durumu ozetle"
+cd sentinel-coming/test-platform
+./scripts/run_cos_stack_check.sh
 ```
 
 ## Kabul Kriteri
 
-Bir sonraki tur “tamamlandı” sayılmak için:
+Bu tur sonunda karsilanan kriterler:
 
 - ajan gateway tool’larını çağırabiliyor olmalı
 - gateway dışında doğrudan backend HTTP çağrısı eklenmemeli
@@ -148,4 +131,5 @@ Eski faz planları kaldırıldı; ama aşağıdaki teknik referanslar yaşamaya 
 Aktif durum:
 
 - gateway + CLI `obs` entegrasyonu tamam
-- sonraki adım agent/repl canlı veri entegrasyonu
+- agent/repl canli veri entegrasyonu tamam
+- smoke ve dokumantasyon bu davranisla hizali

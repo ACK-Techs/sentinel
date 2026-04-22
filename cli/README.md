@@ -39,6 +39,7 @@ Faz 2.C ile birlikte CLI aşağıdaki temel akışları destekleyecek şekilde g
 - `sentinel-cli obs metric '<query>'`: gateway uzerinden metric sorgusu
 - `sentinel-cli obs logs --service gateway`: gateway uzerinden log sorgusu
 - `sentinel-cli obs traces --service orders`: gateway uzerinden trace aramasi
+- `sentinel-cli run/repl`: gerekiyorsa `obs_metric_query`, `obs_logs_query`, `obs_traces_search`, `obs_trace_get` tool'lariyla gateway uzerinden canli observability okur
 
 Örnek:
 
@@ -173,7 +174,16 @@ python -m sentinel_cli doctor --profile local
 python -m sentinel_cli obs metric 'up'
 python -m sentinel_cli obs logs --service gateway
 python -m sentinel_cli obs traces --service orders
+python -m sentinel_cli run --profile local "orders servisinde hata var mi bak"
 ```
+
+`run` ve `repl` akisi da backend adreslerini dogrudan bilmez. Agent tarafinda kullanilan observability tool'lar sadece `observability-gateway` uzerinden calisir. Oturum baslangicinda session'a kisa bir operasyonel snapshot eklenir:
+
+- gateway health
+- configured backend listesi
+- reachable backend listesi
+
+Bu snapshot canli metric/log/trace dump'i degildir ve token/header icermez.
 
 ## Canli Lab Smoke
 
@@ -191,6 +201,7 @@ Script su akisi tek seferde dener:
 2. `observability-gateway` servisini `127.0.0.1:8091` uzerinde baslatir.
 3. `GET /health` ve `GET /api/v1/status` ile gateway'i dogrular.
 4. `sentinel_cli doctor`, `obs metric`, `obs logs`, `obs traces` komutlarini calistirir.
+5. `sentinel_cli run` yolunu scripted provider ile smoke ederek agent'in gateway tool cagirabildigini dogrular.
 5. Tum ciktilari `test-platform/runs/cos-smoke-YYYYMMDD-HHMMSS/` altina kaydeder.
 
 Canli kullanim ornekleri:
@@ -204,6 +215,7 @@ python -m sentinel_cli doctor --profile local
 python -m sentinel_cli obs metric 'app_orders_created_total'
 python -m sentinel_cli obs logs --service gateway
 python -m sentinel_cli obs traces --service orders
+python -m sentinel_cli run --profile local "gateway loglarinda son 5 dakikayi ozetle"
 ```
 
 Run klasorunde beklenen artefactlar:
@@ -215,6 +227,7 @@ Run klasorunde beklenen artefactlar:
 - `cli-obs-metric.json`
 - `cli-obs-logs.json`
 - `cli-obs-traces.json`
+- `cli-agent-run.json`
 
 ## Wheel ile kurulum (iç kullanım)
 
