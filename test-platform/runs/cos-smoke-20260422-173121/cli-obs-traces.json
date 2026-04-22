@@ -1,0 +1,165 @@
+{
+  "backend": "tempo",
+  "traces": [
+    {
+      "trace_id": "3cdbe744d4604f414bb472923d7c8d24",
+      "root_service_name": "gateway",
+      "root_trace_name": "POST /api/orders",
+      "start_time_unix_nano": "1776868337502001947",
+      "duration_ms": 28,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "9afb44d6f041f1c6576c900eba07fcd0",
+      "root_service_name": "gateway",
+      "root_trace_name": "POST /api/orders",
+      "start_time_unix_nano": "1776868337443871027",
+      "duration_ms": 30,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "637ce408e64660aa5a0efd646b3dfe2c",
+      "root_service_name": "gateway",
+      "root_trace_name": "POST /api/orders",
+      "start_time_unix_nano": "1776868337382909880",
+      "duration_ms": 25,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "f4cacc9c679935cfb9e74db0c1b74a7",
+      "root_service_name": "gateway",
+      "root_trace_name": "POST /api/orders",
+      "start_time_unix_nano": "1776868337285171644",
+      "duration_ms": 26,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "6212a76191d183c47c27586416451d48",
+      "root_service_name": "gateway",
+      "root_trace_name": "POST /api/orders",
+      "start_time_unix_nano": "1776868337146273224",
+      "duration_ms": 65,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "29fbb4dbb84e9730d4d4a47fe2222fef",
+      "root_service_name": "orders",
+      "root_trace_name": "connect",
+      "start_time_unix_nano": "1776868335266690583",
+      "duration_ms": 40,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "383d5dae325557ba15492569461f7000",
+      "root_service_name": "gateway",
+      "root_trace_name": "GET /api/orders/{order_id}",
+      "start_time_unix_nano": "1776868090844088489",
+      "duration_ms": 6,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "85283d0c482460afa81e8fe4ceab18d2",
+      "root_service_name": "gateway",
+      "root_trace_name": "POST /api/orders",
+      "start_time_unix_nano": "1776868090733365848",
+      "duration_ms": 74,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "45e6dbb1b1103345f883036a34d6245d",
+      "root_service_name": "orders",
+      "root_trace_name": "SELECT",
+      "start_time_unix_nano": "1776868088962296508",
+      "duration_ms": 2,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "50641c056c0b9e7d56c0b2ecf625dd99",
+      "root_service_name": "orders",
+      "root_trace_name": "connect",
+      "start_time_unix_nano": "1776868088920682433",
+      "duration_ms": 37,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "2b2377caa987f7f3d27aa04f44b65a92",
+      "root_service_name": "gateway",
+      "root_trace_name": "POST /api/orders",
+      "start_time_unix_nano": "1776868027493072740",
+      "duration_ms": 25,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "ced058b175b0a84fc75ee4f8622540f7",
+      "root_service_name": "gateway",
+      "root_trace_name": "POST /api/orders",
+      "start_time_unix_nano": "1776868027443182315",
+      "duration_ms": 24,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "5ce78ade6bd0e9e24acfbae33fa0d4e8",
+      "root_service_name": "gateway",
+      "root_trace_name": "POST /api/orders",
+      "start_time_unix_nano": "1776868027391195572",
+      "duration_ms": 26,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "3f16aca39d4f3945bdf43378f42419bf",
+      "root_service_name": "gateway",
+      "root_trace_name": "POST /api/orders",
+      "start_time_unix_nano": "1776868027283146076",
+      "duration_ms": 29,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "654a6884ac6b5c2c6045d87268ad1c92",
+      "root_service_name": "gateway",
+      "root_trace_name": "GET /api/orders/{order_id}",
+      "start_time_unix_nano": "1776868027241596865",
+      "duration_ms": 6,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "227bfecc86d8a0fafae3706bc6161e8e",
+      "root_service_name": "gateway",
+      "root_trace_name": "POST /api/orders",
+      "start_time_unix_nano": "1776868027147264559",
+      "duration_ms": 56,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "6910018c58ef0690048301980fa35399",
+      "root_service_name": "orders",
+      "root_trace_name": "SELECT",
+      "start_time_unix_nano": "1776868025325934974",
+      "duration_ms": 2,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "196083f896ffa224ecf5b8e3dcc11fd3",
+      "root_service_name": "gateway",
+      "root_trace_name": "POST /api/orders",
+      "start_time_unix_nano": "1776867802993990284",
+      "duration_ms": 26,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "286eca87c6d0509fcde92d8fbd6b564f",
+      "root_service_name": "orders",
+      "root_trace_name": "SELECT",
+      "start_time_unix_nano": "1776867801025730044",
+      "duration_ms": 4,
+      "matched_spans": null
+    },
+    {
+      "trace_id": "428d3f93766136834307c0d4a76ec813",
+      "root_service_name": "gateway",
+      "root_trace_name": "POST /api/orders",
+      "start_time_unix_nano": "1776867607093109201",
+      "duration_ms": 43,
+      "matched_spans": null
+    }
+  ]
+}

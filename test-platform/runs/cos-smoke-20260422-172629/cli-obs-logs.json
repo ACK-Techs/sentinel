@@ -1,0 +1,95 @@
+{
+  "backend": "loki",
+  "query": "{job=\"gateway\"}",
+  "streams": [
+    {
+      "labels": {
+        "instance": "caglarkc-EXCALIBUR-G911",
+        "job": "gateway",
+        "level": "INFO"
+      },
+      "entries": [
+        {
+          "timestamp_ns": "1776868027534938624",
+          "line": "HTTP Request: GET http://127.0.0.1:8083/inventory/SKU-001 \"HTTP/1.1 200 OK\""
+        },
+        {
+          "timestamp_ns": "1776868027517668352",
+          "line": "HTTP Request: POST http://127.0.0.1:8081/orders \"HTTP/1.1 201 Created\""
+        },
+        {
+          "timestamp_ns": "1776868027484134656",
+          "line": "HTTP Request: GET http://127.0.0.1:8083/inventory/SKU-001 \"HTTP/1.1 200 OK\""
+        },
+        {
+          "timestamp_ns": "1776868027466439936",
+          "line": "HTTP Request: POST http://127.0.0.1:8081/orders \"HTTP/1.1 201 Created\""
+        },
+        {
+          "timestamp_ns": "1776868027432553216",
+          "line": "HTTP Request: GET http://127.0.0.1:8083/inventory/SKU-001 \"HTTP/1.1 200 OK\""
+        },
+        {
+          "timestamp_ns": "1776868027416052736",
+          "line": "HTTP Request: POST http://127.0.0.1:8081/orders \"HTTP/1.1 201 Created\""
+        },
+        {
+          "timestamp_ns": "1776868027382203904",
+          "line": "HTTP Request: GET http://127.0.0.1:8083/inventory/SKU-001 \"HTTP/1.1 200 OK\""
+        },
+        {
+          "timestamp_ns": "1776868027363268608",
+          "line": "HTTP Request: POST http://127.0.0.1:8081/orders \"HTTP/1.1 201 Created\""
+        },
+        {
+          "timestamp_ns": "1776868027331528704",
+          "line": "HTTP Request: GET http://127.0.0.1:8083/inventory/SKU-001 \"HTTP/1.1 200 OK\""
+        },
+        {
+          "timestamp_ns": "1776868027311580672",
+          "line": "HTTP Request: POST http://127.0.0.1:8081/orders \"HTTP/1.1 201 Created\""
+        },
+        {
+          "timestamp_ns": "1776868027268251904",
+          "line": "HTTP Request: GET http://127.0.0.1:8083/inventory/SKU-001 \"HTTP/1.1 200 OK\""
+        },
+        {
+          "timestamp_ns": "1776868027246468352",
+          "line": "HTTP Request: GET http://127.0.0.1:8081/orders/e5e02086-f709-4c13-bb6d-477d0af30a81 \"HTTP/1.1 200 OK\""
+        },
+        {
+          "timestamp_ns": "1776868027202428160",
+          "line": "HTTP Request: POST http://127.0.0.1:8081/orders \"HTTP/1.1 201 Created\""
+        },
+        {
+          "timestamp_ns": "1776867803243279360",
+          "line": "HTTP Request: GET http://127.0.0.1:8083/inventory/SKU-001 \"HTTP/1.1 200 OK\""
+        },
+        {
+          "timestamp_ns": "1776867803226264576",
+          "line": "HTTP Request: POST http://127.0.0.1:8081/orders \"HTTP/1.1 201 Created\""
+        },
+        {
+          "timestamp_ns": "1776867803189180416",
+          "line": "HTTP Request: GET http://127.0.0.1:8083/inventory/SKU-001 \"HTTP/1.1 200 OK\""
+        },
+        {
+          "timestamp_ns": "1776867803168362240",
+          "line": "HTTP Request: POST http://127.0.0.1:8081/orders \"HTTP/1.1 201 Created\""
+        },
+        {
+          "timestamp_ns": "1776867803133991680",
+          "line": "HTTP Request: GET http://127.0.0.1:8083/inventory/SKU-001 \"HTTP/1.1 200 OK\""
+        },
+        {
+          "timestamp_ns": "1776867803116904960",
+          "line": "HTTP Request: POST http://127.0.0.1:8081/orders \"HTTP/1.1 201 Created\""
+        },
+        {
+          "timestamp_ns": "1776867803084124672",
+          "line": "HTTP Request: GET http://127.0.0.1:8083/inventory/SKU-001 \"HTTP/1.1 200 OK\""
+        }
+      ]
+    }
+  ]
+}

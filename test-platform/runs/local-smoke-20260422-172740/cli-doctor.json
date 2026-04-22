@@ -1,0 +1,36 @@
+{
+  "profile": "local",
+  "provider": "openai",
+  "model": "gemma4:latest",
+  "base_url": "http://127.0.0.1:11434/v1",
+  "api_key_present": false,
+  "trajectory_enabled": false,
+  "mcp": {
+    "available": false,
+    "message": "MCP devre disi veya sunucu tanimli degil.",
+    "tools": []
+  },
+  "observability_gateway": {
+    "configured": true,
+    "attempted": true,
+    "ok": true,
+    "status": "ok",
+    "message": "Observability gateway baglantisi dogrulandi.",
+    "http_status": 200,
+    "token_present": true,
+    "base_url_present": true
+  },
+  "grafana": {
+    "configured": true,
+    "attempted": true,
+    "ok": false,
+    "status": "http_error",
+    "message": "Grafana beklenmeyen HTTP durumu dondurdu: 502.",
+    "http_status": 502,
+    "health_path": "/api/health",
+    "token_present": false,
+    "base_url_present": true,
+    "verify_ssl": true,
+    "troubleshoot_skill": "skills/agentic-troubleshoot-grafana/SKILL.md"
+  }
+}

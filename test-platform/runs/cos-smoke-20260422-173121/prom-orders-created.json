@@ -1,0 +1,1 @@
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"app_orders_created_total","instance":"caglarkc-EXCALIBUR-G911","job":"orders","service":"orders","status":"created"},"value":[1776868358.821,"6"]}]}}

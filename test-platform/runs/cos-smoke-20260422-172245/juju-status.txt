@@ -1,0 +1,22 @@
+Model  Controller           Cloud/Region        Version  SLA          Timestamp
+cos    microk8s-controller  microk8s/localhost  3.6.20   unsupported  17:22:46+03:00
+
+App             Version  Status  Scale  Charm                        Channel        Rev  Address         Exposed  Message
+alertmanager    0.27.0   active      1  alertmanager-k8s             1/stable       180  10.152.183.166  no       
+catalogue                active      1  catalogue-k8s                1/stable        87  10.152.183.124  no       
+grafana         9.5.21   active      1  grafana-k8s                  1/stable       160  10.152.183.232  no       
+loki            2.9.6    active      1  loki-k8s                     1/stable       199  10.152.183.93   no       
+otel-collector  0.130.1  active      1  opentelemetry-collector-k8s  dev/edge       161  10.152.183.226  no       
+prometheus      2.52.0   active      1  prometheus-k8s               1/stable       247  10.152.183.210  no       
+tempo           ...      active      1  tempo-k8s                    latest/edge     83  10.152.183.132  no       
+traefik         2.11.0   active      1  traefik-k8s                  latest/stable  281  10.152.183.47   no       Serving at http://192.168.1.6
+
+Unit               Workload  Agent  Address       Ports  Message
+alertmanager/0*    active    idle   10.1.244.128         
+catalogue/0*       active    idle   10.1.244.172         
+grafana/0*         active    idle   10.1.244.180         
+loki/0*            active    idle   10.1.244.165         
+otel-collector/0*  active    idle   10.1.244.138         
+prometheus/0*      active    idle   10.1.244.131         
+tempo/0*           active    idle   10.1.244.183         
+traefik/0*         active    idle   10.1.244.177         Serving at http://192.168.1.6

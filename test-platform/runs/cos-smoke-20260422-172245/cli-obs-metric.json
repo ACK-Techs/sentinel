@@ -1,0 +1,22 @@
+{
+  "backend": "prometheus",
+  "query": "app_orders_created_total",
+  "result_type": "vector",
+  "series": [
+    {
+      "labels": {
+        "__name__": "app_orders_created_total",
+        "instance": "caglarkc-EXCALIBUR-G911",
+        "job": "orders",
+        "service": "orders",
+        "status": "created"
+      },
+      "values": [
+        {
+          "unix_sec": 1776867827.475,
+          "value": "6"
+        }
+      ]
+    }
+  ]
+}

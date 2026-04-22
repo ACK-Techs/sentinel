@@ -1,0 +1,4 @@
+{"event": "user_prompt", "profile": "local", "content": "gateway loglarinda son 5 dakikayi ozetle"}
+{"event": "assistant_text", "turn": 1, "content": "Gateway araciyla log sorgusu baslatiliyor."}
+{"event": "tool_result", "turn": 1, "tool_name": "obs_logs_query", "ok": true, "code": "OK", "message": "Log sorgusu tamamlandi."}
+{"event": "assistant_text", "turn": 2, "content": "Gateway loglari icin agentik smoke tamamlandi."}
