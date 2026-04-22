@@ -126,6 +126,29 @@ print(int(time.time() * 1e9))
 PY
 }
 
+reset_orders_stream() {
+  local redis_host="$1"
+  "$VENV_PY" - <<'PY' "$redis_host"
+import asyncio
+import sys
+from redis.asyncio import Redis
+from redis.exceptions import ResponseError
+
+async def main() -> None:
+    redis = Redis.from_url(f"redis://{sys.argv[1]}:6379/0", decode_responses=True)
+    try:
+        try:
+            await redis.xgroup_destroy("orders.events", "orders-workers")
+        except ResponseError:
+            pass
+        await redis.delete("orders.events")
+    finally:
+        await redis.aclose()
+
+asyncio.run(main())
+PY
+}
+
 wait_for_prometheus_result() {
   local url="$1"
   local output="$2"
@@ -239,8 +262,8 @@ microk8s kubectl -n sentinel-target wait --for=condition=Ready pod/postgres-0 --
 microk8s kubectl -n sentinel-target wait --for=condition=Ready pod/redis-0 --timeout=300s >/dev/null
 
 log "Stopping previous local test-platform processes if any"
-pkill -f 'test-platform/services/.*/uvicorn app.main:app --host 127.0.0.1 --port 808' >/dev/null 2>&1 || true
-pkill -f 'test-platform/services/worker.*-m app.main' >/dev/null 2>&1 || true
+pkill -f 'uvicorn app.main:app --host 127.0.0.1 --port 808[0-3]' >/dev/null 2>&1 || true
+pkill -f 'python.*-m app.main' >/dev/null 2>&1 || true
 pkill -f 'uvicorn observability_gateway.main:app --host 127.0.0.1 --port 8091' >/dev/null 2>&1 || true
 sleep 1
 
@@ -258,6 +281,7 @@ export ORDERS_DB_URL="postgresql+asyncpg://sentinel:sentinel@${POSTGRES_HOST}:54
 export PAYMENTS_DB_URL="postgresql+asyncpg://sentinel:sentinel@${POSTGRES_HOST}:5432/payments_db"
 export INVENTORY_DB_URL="postgresql+asyncpg://sentinel:sentinel@${POSTGRES_HOST}:5432/inventory_db"
 export PAYMENTS_REDIS_URL="redis://${REDIS_HOST}:6379/1"
+reset_orders_stream "$REDIS_HOST"
 "$VENV_PY" "$ROOT/scripts/seed_db.py"
 
 log "Starting local services against COS"
@@ -451,6 +475,7 @@ log "Checking Sentinel CLI through observability gateway"
 import contextlib
 import io
 import json
+import os
 from pathlib import Path
 
 import sentinel_cli.cli.app as app
@@ -489,7 +514,8 @@ def fake_build_provider(config, resolved_profile):
     return ScriptedProvider()
 
 
-trajectory_dir = Path("agent-trajectories")
+trajectory_dir = Path(os.environ["SENTINEL_TRAJECTORY_DIR"])
+trajectory_dir.mkdir(parents=True, exist_ok=True)
 before = set(trajectory_dir.glob("*.jsonl"))
 app.build_provider = fake_build_provider
 
@@ -522,9 +548,15 @@ grep -q '"observability_gateway"' "$RUN_DIR/cli-doctor.json"
 grep -q '"backend": "prometheus"' "$RUN_DIR/cli-obs-metric.json"
 grep -q '"backend": "loki"' "$RUN_DIR/cli-obs-logs.json"
 grep -q '"backend": "tempo"' "$RUN_DIR/cli-obs-traces.json"
-grep -q '"exit_code": 0' "$RUN_DIR/cli-agent-run.json"
-grep -q '"tool_name": "obs_logs_query"' "$RUN_DIR/cli-agent-run.json"
-grep -q 'Gateway loglari icin agentik smoke tamamlandi.' "$RUN_DIR/cli-agent-run.json"
+"$VENV_PY" - <<'PY' "$RUN_DIR/cli-agent-run.json"
+import json
+import sys
+
+payload = json.load(open(sys.argv[1], encoding="utf-8"))
+assert payload["exit_code"] == 0, payload
+assert "Gateway loglari icin agentik smoke tamamlandi." in payload["stdout"], payload
+assert "obs_logs_query" in payload["trajectory"], payload
+PY
 
 log "COS smoke test passed"
 printf 'order_id=%s\n' "$ORDER_ID"

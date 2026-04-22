@@ -101,7 +101,24 @@ Run klasoru mantigi:
 
 - `test-platform/scripts/run_cos_stack_check.sh` calistiginda artefactlar `test-platform/runs/cos-smoke-YYYYMMDD-HHMMSS/` altina yazilir.
 - Gateway logu `observability-gateway.log`, health sonucu `observability-gateway-health.json`, durum ozeti `observability-gateway-status.json` olarak kaydedilir.
-- CLI smoke ciktilari ayni klasorde `cli-doctor.json`, `cli-obs-metric.json`, `cli-obs-logs.json`, `cli-obs-traces.json` adlariyla tutulur.
+- CLI smoke ciktilari ayni klasorde `cli-doctor.json`, `cli-obs-metric.json`, `cli-obs-logs.json`, `cli-obs-traces.json`, `cli-agent-run.json` adlariyla tutulur.
+
+## COS ile uctan uca yerel dogrulama
+
+Sentinel repo icindeki tek guvenilir referans smoke akisi:
+
+```bash
+cd sentinel-coming/test-platform
+./scripts/run_cos_stack_check.sh
+```
+
+Bu akista:
+
+- test-platform servisleri telemetry'yi dogrudan COS `otel-collector` servisine gonderir
+- COS bunu Prometheus, Loki ve Tempo'da gorunur kilir
+- `observability-gateway` bu backend'leri read-only okur
+- Sentinel CLI yalniz gateway'e baglanir
+- `doctor`, `obs` ve scripted `run` smoke'u ayni gateway uzerinden dogrulanir
 
 ## Troubleshooting
 
@@ -110,7 +127,7 @@ Run klasoru mantigi:
 - `GET /api/v1/status` icinde backend `configured=false` gorunuyorsa ilgili `SENTINEL_OBSERVABILITY_*__BASE_URL` env degerini kontrol edin.
 - Metric geliyor ama logs/traces bos ise once `test-platform/scripts/run_cos_stack_check.sh` icindeki trafik uretim adimlarinin tamamlandigini dogrulayin.
 - Gateway aciksa ama upstream 401/403 aliyorsaniz ondan sonra backend `*_TOKEN_ENV` eslesmelerini kontrol edin.
-- Bu ilk akis sadece local port-forward ve tek proses icindir; ingress, TLS ve multi-user beklentisiyle kullanmayin.
+- Bu akista backend erisimi local port-forward yerine dogrudan cluster service IP'leriyle kurulur; IP drift durumunda `scripts/cos-microk8s-heal.sh` ile kubelet/juju erisimi onarilabilir.
 
 ## API
 

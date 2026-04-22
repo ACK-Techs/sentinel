@@ -253,13 +253,16 @@ cd sentinel-coming/cli
 source .venv/bin/activate
 
 export SENTINEL_PROFILE=cloud
-export SENTINEL_OPENAI_BASE_URL=https://api.example.com/v1
-export SENTINEL_API_KEY=sentinel_api_key_placeholder
-export SENTINEL_MODEL=provider-model-placeholder
+export SENTINEL_OPENAI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
+export SENTINEL_API_KEY=<set>
+export SENTINEL_MODEL=gemini-2.5-flash
+export SENTINEL_CLOUD_SUPPORTS_TOOLS=false
 
 python -m sentinel_cli doctor --profile cloud
 python -m sentinel_cli run --profile cloud "Grafana durumunu ozetle"
 ```
+
+Repo varsayilani artik `cloud` profili ve Gemini OpenAI-uyumlu bridge'idir. Local Gemma fallback olarak korunur.
 
 Gemini'yi mevcut OpenAI-uyumlu `cloud` yolu üzerinden denemek için kısa örnek:
 
@@ -269,8 +272,9 @@ source .venv/bin/activate
 
 export SENTINEL_PROFILE=cloud
 export SENTINEL_OPENAI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
-export SENTINEL_API_KEY=gemini_api_key_placeholder
+export SENTINEL_API_KEY=<set>
 export SENTINEL_MODEL=gemini-2.5-flash
+export SENTINEL_CLOUD_SUPPORTS_TOOLS=false
 
 python -m sentinel_cli doctor --profile cloud
 python -m sentinel_cli run --profile cloud "Grafana durumunu kisa ozetle"
@@ -286,13 +290,31 @@ source .venv/bin/activate
 
 export SENTINEL_PROFILE=local
 export SENTINEL_LOCAL_BASE_URL=http://127.0.0.1:11434/v1
-export SENTINEL_LOCAL_MODEL=local_model_placeholder
+export SENTINEL_LOCAL_MODEL=gemma4:latest
 
 python -m sentinel_cli doctor --profile local
 python -m sentinel_cli run --profile local "Prometheus sagligini kontrol et"
 ```
 
 Env adlari `LLM_PROVIDERS.md` ile hizalidir; gerçek secret değerleri repoya yazılmamalıdır.
+
+## Uctan Uca Smoke
+
+Tek komutta tum gozlemlenebilirlik zincirini dogrulayan referans akis:
+
+```bash
+cd sentinel-coming/test-platform
+./scripts/run_cos_stack_check.sh
+```
+
+Bu smoke su zinciri dogrular:
+
+1. COS hazir
+2. test-platform servisleri ayaga kalkiyor
+3. telemetry COS Prometheus/Loki/Tempo'ya akiyor
+4. observability-gateway bu backend'leri okuyabiliyor
+5. `sentinel_cli doctor` ve `obs` komutlari canli veriye baglaniyor
+6. `sentinel_cli run` scripted smoke'u gateway tool cagrisiyla calisiyor
 
 ## MCP
 

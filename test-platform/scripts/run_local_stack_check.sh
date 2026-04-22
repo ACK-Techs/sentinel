@@ -104,6 +104,29 @@ PY
   exit 1
 }
 
+reset_orders_stream() {
+  local redis_host="$1"
+  "$VENV_PY" - <<'PY' "$redis_host"
+import asyncio
+import sys
+from redis.asyncio import Redis
+from redis.exceptions import ResponseError
+
+async def main() -> None:
+    redis = Redis.from_url(f"redis://{sys.argv[1]}:6379/0", decode_responses=True)
+    try:
+        try:
+            await redis.xgroup_destroy("orders.events", "orders-workers")
+        except ResponseError:
+            pass
+        await redis.delete("orders.events")
+    finally:
+        await redis.aclose()
+
+asyncio.run(main())
+PY
+}
+
 start_service() {
   local workdir="$1"
   local logfile="$2"
@@ -176,11 +199,12 @@ export ORDERS_DB_URL="postgresql+asyncpg://sentinel:sentinel@${POSTGRES_HOST}:54
 export PAYMENTS_DB_URL="postgresql+asyncpg://sentinel:sentinel@${POSTGRES_HOST}:5432/payments_db"
 export INVENTORY_DB_URL="postgresql+asyncpg://sentinel:sentinel@${POSTGRES_HOST}:5432/inventory_db"
 export PAYMENTS_REDIS_URL="redis://${REDIS_HOST}:6379/1"
+reset_orders_stream "$REDIS_HOST"
 "$VENV_PY" "$ROOT/scripts/seed_db.py"
 
 log "Stopping previous local test-platform processes if any"
-pkill -f 'test-platform/services/.*/uvicorn app.main:app --host 127.0.0.1 --port 808' >/dev/null 2>&1 || true
-pkill -f 'test-platform/services/worker.*-m app.main' >/dev/null 2>&1 || true
+pkill -f 'uvicorn app.main:app --host 127.0.0.1 --port 808[0-3]' >/dev/null 2>&1 || true
+pkill -f 'python.*-m app.main' >/dev/null 2>&1 || true
 pkill -f 'uvicorn observability_gateway.main:app --host 127.0.0.1 --port 8091' >/dev/null 2>&1 || true
 sleep 1
 

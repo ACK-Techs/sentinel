@@ -29,6 +29,8 @@ Bu repo turunda 3 ayrı prompt hattı ile şu entegrasyon tamamlandı:
   - gateway health
   - configured backend listesi
   - reachable backend listesi
+- test-platform servisleri telemetry'yi dogrudan COS `otel-collector` servisine gonderiyor
+- COS zinciri Prometheus, Loki ve Tempo tarafinda smoke ile dogrulaniyor
 - `doctor` çıktısı gateway sağlığını gösteriyor
 - `test-platform/scripts/run_cos_stack_check.sh` canlı smoke akışında:
   - test-platform servislerini kaldırıyor
@@ -98,7 +100,8 @@ Doğrulama yüzeyi:
 
 - unit testler
 - CLI agent loop testleri
-- `run_cos_stack_check.sh` içinde agentik kullanım adımı
+- `run_local_stack_check.sh` ile local gateway/CLI dogrulamasi
+- `run_cos_stack_check.sh` ile tam COS zinciri
 
 Operator dostu manuel smoke:
 
@@ -115,6 +118,7 @@ Bu tur sonunda karsilanan kriterler:
 - gateway dışında doğrudan backend HTTP çağrısı eklenmemeli
 - `run` veya `repl` içinde en az bir canlı observability teşhis akışı çalışmalı
 - smoke akışında bu davranış doğrulanmalı
+- telemetry Prometheus, Loki ve Tempo'da gorunur olmali
 
 ## Korunacak Teknik Referanslar
 
