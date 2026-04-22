@@ -29,6 +29,9 @@ build/
 .env
 !.env.example
 
+# --- CLI yerel oturum / kalıcılık ---
+cli/.sentinel/
+
 # --- Sentinel test-platform yerel çalıştırma çıktıları ---
 test-platform/.runs/
 
