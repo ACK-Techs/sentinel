@@ -163,6 +163,17 @@ class GrafanaSettings(BaseModel):
     verify_ssl: bool = True
 
 
+class ObservabilityGatewaySettings(BaseModel):
+    """Optional gateway settings for CLI observability commands."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool = False
+    base_url: str | None = None
+    timeout_sec: float = 10.0
+    token_env: str | None = "SENTINEL_OBSERVABILITY_GATEWAY_TOKEN"
+
+
 class SessionSettings(BaseModel):
     """Session and trajectory persistence settings."""
 
@@ -214,6 +225,9 @@ class AppConfig(BaseModel):
     hooks: HooksSettings = Field(default_factory=HooksSettings)
     mcp: MCPSettings = Field(default_factory=MCPSettings)
     grafana: GrafanaSettings = Field(default_factory=GrafanaSettings)
+    observability_gateway: ObservabilityGatewaySettings = Field(
+        default_factory=ObservabilityGatewaySettings
+    )
     session: SessionSettings = Field(default_factory=SessionSettings)
     experimental: ExperimentalSettings = Field(default_factory=ExperimentalSettings)
 
@@ -244,6 +258,10 @@ class AppConfig(BaseModel):
             "grafana": {
                 **self.grafana.model_dump(),
                 "token_env": self.grafana.token_env,
+            },
+            "observability_gateway": {
+                **self.observability_gateway.model_dump(),
+                "token_env": self.observability_gateway.token_env,
             },
             "session": self.session.model_dump(mode="json"),
             "experimental": self.experimental.model_dump(),

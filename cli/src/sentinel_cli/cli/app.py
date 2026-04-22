@@ -25,7 +25,12 @@ from sentinel_cli.config import CliOverrides, ConfigError, load_config, resolve_
 from sentinel_cli.hooks import HookManager
 from sentinel_cli.llm.errors import LLMError
 from sentinel_cli.llm.factory import build_provider
-from sentinel_cli.observability import check_grafana_connection
+from sentinel_cli.observability import (
+    GatewayClient,
+    GatewayClientError,
+    check_gateway_connection,
+    check_grafana_connection,
+)
 from sentinel_cli.session import SessionStore, TrajectoryRecorder
 from sentinel_cli.tools import MCPClientManager
 
@@ -70,6 +75,26 @@ def build_parser() -> argparse.ArgumentParser:
 
     doctor_parser = subparsers.add_parser("doctor", help="Profil ve bagimlilik kontrolu ozetini goster.")
     _add_common_flags(doctor_parser)
+
+    obs_parser = subparsers.add_parser("obs", help="Observability gateway komutlari.")
+    _add_common_flags(obs_parser)
+    obs_subparsers = obs_parser.add_subparsers(dest="obs_command")
+
+    metric_parser = obs_subparsers.add_parser("metric", help="Gateway uzerinden metric sorgula.")
+    _add_common_flags(metric_parser)
+    metric_parser.add_argument("query", help="PromQL sorgusu.")
+
+    logs_parser = obs_subparsers.add_parser("logs", help="Gateway uzerinden log sorgula.")
+    _add_common_flags(logs_parser)
+    logs_parser.add_argument("--service", default=None, help="job etiketi icin servis adi.")
+    logs_parser.add_argument("--query", default=None, help="Ham Loki sorgusu.")
+    logs_parser.add_argument("--limit", type=int, default=20, help="Maksimum log kaydi sayisi.")
+
+    traces_parser = obs_subparsers.add_parser("traces", help="Gateway uzerinden trace ara.")
+    _add_common_flags(traces_parser)
+    traces_parser.add_argument("--service", default=None, help="service.name etiketi icin servis adi.")
+    traces_parser.add_argument("--query", default=None, help="Ham TraceQL sorgusu.")
+    traces_parser.add_argument("--limit", type=int, default=20, help="Maksimum trace sayisi.")
 
     subparsers.add_parser("version", help="Surum yazdir.")
     return parser
@@ -119,6 +144,7 @@ def _print_config(config, profile) -> int:
 def _doctor(config, profile) -> int:
     mcp = MCPClientManager(config.mcp).discover_tools()
     grafana = check_grafana_connection(config.grafana, env=os.environ)
+    gateway = check_gateway_connection(config.observability_gateway, env=os.environ)
     payload = {
         "profile": profile.name,
         "provider": profile.provider,
@@ -138,10 +164,45 @@ def _doctor(config, profile) -> int:
                 for tool in mcp.tools
             ],
         },
+        "observability_gateway": gateway.to_dict(),
         "grafana": grafana.to_dict(),
     }
     print(json.dumps(payload, indent=2, ensure_ascii=True))
     return EXIT_OK
+
+
+def _print_json(payload: dict[str, object]) -> int:
+    print(json.dumps(payload, indent=2, ensure_ascii=True, default=str))
+    return EXIT_OK
+
+
+def _obs(args: argparse.Namespace) -> int:
+    config, _, _ = _load_runtime(args)
+    client = GatewayClient(config.observability_gateway, env=dict(os.environ))
+
+    try:
+        if args.obs_command == "metric":
+            return _print_json(client.query_metric(args.query))
+        if args.obs_command == "logs":
+            return _print_json(
+                client.query_logs(
+                    service=args.service,
+                    query=args.query,
+                    limit=args.limit,
+                )
+            )
+        if args.obs_command == "traces":
+            return _print_json(
+                client.search_traces(
+                    service=args.service,
+                    query=args.query,
+                    limit=args.limit,
+                )
+            )
+    except GatewayClientError as exc:
+        raise UserFacingError(exc.message, EXIT_TOOL, detail=exc.detail) from exc
+
+    raise UserFacingError("Obs komutu gerekli.", EXIT_USAGE)
 
 
 def _build_agent(config, profile, *, input_fn=input):
@@ -255,6 +316,9 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "doctor":
             config, profile, _ = _load_runtime(args)
             return _doctor(config, profile)
+
+        if args.command == "obs":
+            return _obs(args)
 
         if args.command == "run":
             prompt = args.prompt

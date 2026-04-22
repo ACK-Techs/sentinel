@@ -36,6 +36,9 @@ Faz 2.C ile birlikte CLI aşağıdaki temel akışları destekleyecek şekilde g
 - `sentinel-cli repl`: etkileşimli REPL
 - `sentinel-cli config`: efektif config özeti
 - `sentinel-cli doctor`: profil ve MCP/bağımlılık durumu özeti
+- `sentinel-cli obs metric '<query>'`: gateway uzerinden metric sorgusu
+- `sentinel-cli obs logs --service gateway`: gateway uzerinden log sorgusu
+- `sentinel-cli obs traces --service orders`: gateway uzerinden trace aramasi
 
 Örnek:
 
@@ -140,6 +143,35 @@ Cloud + Google Gemini (OpenAI uyumlu köprü) kullanıyorsanız, araç şeması 
 
 ```bash
 python -m sentinel_cli run --profile cloud "Grafana durumunu kisa ozetle"
+```
+
+Observability komutlari artik Prometheus, Loki ve Tempo adreslerini dogrudan bilmez. Bunun yerine tek baglanti noktasi olarak `observability-gateway` servisine gider.
+
+Gateway ayarlari:
+
+```yaml
+observability_gateway:
+  enabled: true
+  base_url: http://127.0.0.1:8091
+  timeout_sec: 10
+  token_env: SENTINEL_OBSERVABILITY_GATEWAY_TOKEN
+```
+
+Env override ornekleri:
+
+```bash
+export SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL=http://127.0.0.1:8091
+export SENTINEL_OBSERVABILITY_GATEWAY_TIMEOUT_SEC=10
+export SENTINEL_OBSERVABILITY_GATEWAY_TOKEN_ENV=SENTINEL_OBSERVABILITY_GATEWAY_TOKEN
+```
+
+Ornek komutlar:
+
+```bash
+python -m sentinel_cli doctor --profile local
+python -m sentinel_cli obs metric 'up'
+python -m sentinel_cli obs logs --service gateway
+python -m sentinel_cli obs traces --service orders
 ```
 
 ## Wheel ile kurulum (iç kullanım)

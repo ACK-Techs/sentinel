@@ -85,6 +85,12 @@ grafana:
   token_env: SENTINEL_GRAFANA_TOKEN
   verify_ssl: true
 
+observability_gateway:
+  enabled: false
+  base_url: null
+  timeout_sec: 10
+  token_env: SENTINEL_OBSERVABILITY_GATEWAY_TOKEN
+
 session:
   directory: ./.sentinel/sessions
   trajectory_directory: ./.sentinel/trajectories

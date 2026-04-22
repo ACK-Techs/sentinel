@@ -122,3 +122,18 @@ def test_grafana_context_in_repl_defaults_true_and_env_can_disable() -> None:
 
     assert default_config.agent.grafana_context_in_repl is True
     assert disabled.agent.grafana_context_in_repl is False
+
+
+def test_observability_gateway_env_overlay_enables_and_configures_section() -> None:
+    config = load_config(
+        env={
+            "SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL": "https://gateway.example.test",
+            "SENTINEL_OBSERVABILITY_GATEWAY_TIMEOUT_SEC": "8",
+            "SENTINEL_OBSERVABILITY_GATEWAY_TOKEN_ENV": "CUSTOM_GATEWAY_TOKEN",
+        }
+    )
+
+    assert config.observability_gateway.enabled is True
+    assert config.observability_gateway.base_url == "https://gateway.example.test"
+    assert config.observability_gateway.timeout_sec == 8
+    assert config.observability_gateway.token_env == "CUSTOM_GATEWAY_TOKEN"

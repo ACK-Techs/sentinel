@@ -196,6 +196,26 @@ def _env_overlay(env: dict[str, str]) -> dict[str, Any]:
             grafana_verify_ssl.lower() in {"1", "true", "yes", "on"},
         )
 
+    gateway_enabled = env.get("SENTINEL_OBSERVABILITY_GATEWAY_ENABLED")
+    if gateway_enabled:
+        assign(
+            ("observability_gateway", "enabled"),
+            gateway_enabled.lower() in {"1", "true", "yes", "on"},
+        )
+
+    gateway_base_url = env.get("SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL")
+    if gateway_base_url:
+        assign(("observability_gateway", "enabled"), True)
+        assign(("observability_gateway", "base_url"), gateway_base_url)
+
+    gateway_timeout = env.get("SENTINEL_OBSERVABILITY_GATEWAY_TIMEOUT_SEC")
+    if gateway_timeout:
+        assign(("observability_gateway", "timeout_sec"), float(gateway_timeout))
+
+    gateway_token_env = env.get("SENTINEL_OBSERVABILITY_GATEWAY_TOKEN_ENV")
+    if gateway_token_env:
+        assign(("observability_gateway", "token_env"), gateway_token_env)
+
     return overlay
 
 
