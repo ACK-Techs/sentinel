@@ -90,6 +90,23 @@ python -m ruff check .
 
 Hızlı başlangıç için ayrıntılı bloklar (arşiv): [USER_QUICKSTART_PHASE2E.md](documantations/archive/USER_QUICKSTART_PHASE2E.md)
 
+### Kurulum hazırken CLI’yi başlatma
+
+Kurulum (`pip install -e ".[dev]"` vb.) bir kez yapıldıysa, her yeni terminal oturumunda şunlar yeterlidir:
+
+1. `sentinel-coming/cli` dizinine geçin (`.env` ve `config/sentinel.yaml` buradan okunur).
+2. Sanal ortamı açın: `source .venv/bin/activate` (Windows’ta `.venv\Scripts\activate`).
+
+**Sürekli sohbet (REPL):** Shell’de tek başına `run` yazmayın; etkileşimli mod için mutlaka modül veya konsol script’i ile çağırın:
+
+```bash
+cd sentinel-coming/cli
+source .venv/bin/activate
+python -m sentinel_cli repl
+```
+
+Aynı işlev, PATH’te `sentinel-cli` varsa: `sentinel-cli repl`. Bu modda oturum açık kalır; tek komutluk çalıştırma için `python -m sentinel_cli run "..."` kullanılır.
+
 ## Yapılandırma
 
 Repoda yalnızca **şablonlar** tutulur; gerçek değerler yerel dosyalarda kalır (commitlenmez).

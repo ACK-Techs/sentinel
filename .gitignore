@@ -25,10 +25,6 @@ build/
 *.egg-info/
 *.egg
 
-# --- Makineye özel ortam (yeni makine: cp cli/.env.example cli/.env) ---
-.env
-!.env.example
-
 # --- CLI yerel oturum / kalıcılık ---
 cli/.sentinel/
 
