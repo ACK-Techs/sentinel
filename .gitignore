@@ -1,0 +1,40 @@
+# --- Python / venv (asla commitlenmesin) ---
+.venv/
+venv/
+ENV/
+**/.venv/
+**/.venv-smoke/
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# --- Araç önbellekleri ---
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# --- Paketleme çıktıları ---
+dist/
+build/
+*.egg-info/
+*.egg
+
+# --- Makineye özel ortam (yeni makine: cp cli/.env.example cli/.env) ---
+.env
+!.env.example
+
+# --- Sentinel test-platform yerel çalıştırma çıktıları ---
+test-platform/.runs/
+
+# --- Yerel IDE / ajan ayarları ---
+.claude/settings.local.json
+
+# --- İsteğe bağlı: sık yanlışlıkla eklenenler ---
+*.log
+.DS_Store
