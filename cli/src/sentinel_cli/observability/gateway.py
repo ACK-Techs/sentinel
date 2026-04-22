@@ -166,13 +166,16 @@ class GatewayClient:
         query: str | None = None,
         limit: int = 20,
     ) -> dict[str, Any]:
-        resolved_query = query or (f'{{job="{service}"}}' if service else None)
-        if not resolved_query:
+        if not query and not service:
             raise GatewayClientError("Log sorgusu icin --query veya --service gerekli.")
         return self._request(
             "POST",
             "/api/v1/logs/query_range",
-            json={"query": resolved_query, "limit": limit},
+            json={
+                "query": query,
+                "service": service,
+                "limit": limit,
+            },
         )
 
     def search_traces(

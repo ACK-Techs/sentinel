@@ -27,6 +27,7 @@ Ornek `config.yaml`:
 ```yaml
 service_name: sentinel-observability-gateway
 service_version: 0.1.0
+auth_token_env: SENTINEL_OBSERVABILITY_GATEWAY_TOKEN
 http:
   timeout_sec: 10
   retry:
@@ -45,6 +46,7 @@ Desteklenen env override formati:
 
 ```bash
 export SENTINEL_OBSERVABILITY_CONFIG_PATH=./config.yaml
+export SENTINEL_OBSERVABILITY_GATEWAY_TOKEN=lab-gateway-token
 export SENTINEL_OBSERVABILITY_PROMETHEUS__BASE_URL=http://127.0.0.1:9090
 export SENTINEL_OBSERVABILITY_PROMETHEUS__TOKEN_ENV=SENTINEL_PROMETHEUS_TOKEN
 export SENTINEL_OBSERVABILITY_LOKI__BASE_URL=http://127.0.0.1:3100
@@ -78,15 +80,19 @@ cd sentinel-coming/observability-gateway
 export SENTINEL_OBSERVABILITY_PROMETHEUS__BASE_URL=http://127.0.0.1:9090
 export SENTINEL_OBSERVABILITY_LOKI__BASE_URL=http://127.0.0.1:3100
 export SENTINEL_OBSERVABILITY_TEMPO__BASE_URL=http://127.0.0.1:3200
+export SENTINEL_OBSERVABILITY_GATEWAY_TOKEN=lab-gateway-token
 uvicorn observability_gateway.main:app --host 127.0.0.1 --port 8091
 ```
 
 Hizli dogrulama:
 
 ```bash
-curl -fsS http://127.0.0.1:8091/health
-curl -fsS http://127.0.0.1:8091/api/v1/status | jq .
+curl -fsS http://127.0.0.1:8091/health \
+  -H 'Authorization: Bearer lab-gateway-token'
+curl -fsS http://127.0.0.1:8091/api/v1/status \
+  -H 'Authorization: Bearer lab-gateway-token' | jq .
 curl -fsS -X POST http://127.0.0.1:8091/api/v1/metrics/query \
+  -H 'Authorization: Bearer lab-gateway-token' \
   -H 'content-type: application/json' \
   -d '{"query":"up"}' | jq .
 ```
@@ -100,9 +106,10 @@ Run klasoru mantigi:
 ## Troubleshooting
 
 - `GET /health` gecmiyor ise once proses logunu kontrol edin: `test-platform/runs/.../observability-gateway.log`
+- 401/403 aliyorsaniz once gateway'in kendi bearer korumasini kontrol edin: `SENTINEL_OBSERVABILITY_GATEWAY_TOKEN`
 - `GET /api/v1/status` icinde backend `configured=false` gorunuyorsa ilgili `SENTINEL_OBSERVABILITY_*__BASE_URL` env degerini kontrol edin.
 - Metric geliyor ama logs/traces bos ise once `test-platform/scripts/run_cos_stack_check.sh` icindeki trafik uretim adimlarinin tamamlandigini dogrulayin.
-- 401/403 aliyorsaniz gateway token env ve gerekiyorsa upstream backend token env eslesmesini kontrol edin.
+- Gateway aciksa ama upstream 401/403 aliyorsaniz ondan sonra backend `*_TOKEN_ENV` eslesmelerini kontrol edin.
 - Bu ilk akis sadece local port-forward ve tek proses icindir; ingress, TLS ve multi-user beklentisiyle kullanmayin.
 
 ## API

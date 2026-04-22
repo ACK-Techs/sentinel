@@ -41,14 +41,42 @@ def test_load_settings_merges_yaml_and_env(tmp_path: Path) -> None:
 def test_sanitized_summary_reports_token_presence() -> None:
     settings = load_settings(
         env={
+            "SENTINEL_OBSERVABILITY_GATEWAY_TOKEN": "gateway-secret",
             "SENTINEL_OBSERVABILITY_PROMETHEUS__BASE_URL": "http://prometheus:9090",
             "SENTINEL_OBSERVABILITY_PROMETHEUS__TOKEN_ENV": "PROM_TOKEN",
             "PROM_TOKEN": "secret-value",
         }
     )
 
-    summary = settings.sanitized_summary(env={"PROM_TOKEN": "secret-value"})
+    summary = settings.sanitized_summary(
+        env={
+            "PROM_TOKEN": "secret-value",
+            "SENTINEL_OBSERVABILITY_GATEWAY_TOKEN": "gateway-secret",
+        }
+    )
 
+    assert summary["auth"]["token_env"] == "SENTINEL_OBSERVABILITY_GATEWAY_TOKEN"
+    assert summary["auth"]["token_present"] is True
     assert summary["prometheus"]["configured"] is True
     assert summary["prometheus"]["token_env"] == "PROM_TOKEN"
     assert summary["prometheus"]["token_present"] is True
+
+
+def test_load_settings_reads_utf8_yaml(tmp_path: Path) -> None:
+    config_path = tmp_path / "gateway-utf8.yaml"
+    config_path.write_text(
+        "\n".join(
+            [
+                "# Turkce yorum: gozlemleme ag gecidi",
+                "service_name: sentinel-observability-gateway",
+                "prometheus:",
+                "  base_url: http://prometheus-from-yaml:9090",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    settings = load_settings(config_path=config_path, env={})
+
+    assert settings.service_name == "sentinel-observability-gateway"
+    assert settings.prometheus.base_url == "http://prometheus-from-yaml:9090"

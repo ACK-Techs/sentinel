@@ -80,7 +80,7 @@ def test_obs_metric_command_uses_gateway_client(monkeypatch, capsys) -> None:
     assert "secret" not in captured.out
 
 
-def test_obs_logs_command_builds_service_query(monkeypatch, capsys) -> None:
+def test_obs_logs_command_sends_service_to_gateway(monkeypatch, capsys) -> None:
     class FakeGatewayClient:
         def __init__(self, settings, *, env):
             del settings, env
@@ -89,7 +89,7 @@ def test_obs_logs_command_builds_service_query(monkeypatch, capsys) -> None:
             assert service == "gateway"
             assert query is None
             assert limit == 20
-            return {"backend": "loki", "query": '{job="gateway"}', "streams": []}
+            return {"backend": "loki", "query": "gateway-managed-query", "streams": []}
 
     monkeypatch.setattr(app, "GatewayClient", FakeGatewayClient)
     monkeypatch.setenv("SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL", "http://gateway.example.test")
@@ -100,7 +100,25 @@ def test_obs_logs_command_builds_service_query(monkeypatch, capsys) -> None:
 
     assert code == 0
     assert payload["backend"] == "loki"
-    assert payload["query"] == '{job="gateway"}'
+    assert payload["query"] == "gateway-managed-query"
+
+
+def test_gateway_client_sends_service_without_loki_syntax() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        payload = json.loads(request.content.decode("utf-8"))
+        assert payload["service"] == "gateway"
+        assert payload["query"] is None
+        return httpx.Response(200, json={"backend": "loki", "query": "gateway-managed-query"})
+
+    client = GatewayClient(
+        ObservabilityGatewaySettings(base_url="https://gateway.example.test"),
+        env={},
+        transport=httpx.MockTransport(handler),
+    )
+
+    payload = client.query_logs(service="gateway")
+
+    assert payload["query"] == "gateway-managed-query"
 
 
 def test_obs_traces_command_builds_service_search(monkeypatch, capsys) -> None:

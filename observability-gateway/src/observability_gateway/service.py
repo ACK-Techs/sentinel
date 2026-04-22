@@ -85,8 +85,16 @@ class ObservabilityService:
         )
 
     async def query_logs(self, request: LogsQueryRangeRequest) -> LogsQueryRangeResponse:
+        resolved_query = request.query or _build_loki_service_query(request.service)
+        if not resolved_query:
+            raise BackendRequestError(
+                "gateway",
+                400,
+                "Logs query requires either query or service.",
+                False,
+            )
         params = {
-            "query": request.query,
+            "query": resolved_query,
             "start": request.start,
             "end": request.end,
             "limit": request.limit,
@@ -109,7 +117,7 @@ class ObservabilityService:
                 }
             )
 
-        return LogsQueryRangeResponse(query=request.query, streams=streams)
+        return LogsQueryRangeResponse(query=resolved_query, streams=streams)
 
     async def search_traces(self, request: TracesSearchRequest) -> TracesSearchResponse:
         params = {
@@ -330,6 +338,12 @@ def _sample_point(sample: list[Any]) -> dict[str, Any]:
 
 def _parse_label_string(value: str) -> dict[str, str]:
     return {match.group(1): match.group(2) for match in LABEL_PATTERN.finditer(value)}
+
+
+def _build_loki_service_query(service: str | None) -> str | None:
+    if not service:
+        return None
+    return f'{{job="{service}"}}'
 
 
 def _logfmt_tags(tags: Mapping[str, str]) -> str | None:

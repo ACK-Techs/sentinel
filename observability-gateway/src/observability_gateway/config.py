@@ -54,6 +54,7 @@ class GatewaySettings(BaseModel):
     loki: BackendSettings = Field(default_factory=BackendSettings)
     tempo: BackendSettings = Field(default_factory=BackendSettings)
     http: HttpSettings = Field(default_factory=HttpSettings)
+    auth_token_env: str | None = "SENTINEL_OBSERVABILITY_GATEWAY_TOKEN"
 
     def sanitized_summary(self, env: Mapping[str, str] | None = None) -> dict[str, Any]:
         """Return a secret-safe summary for status responses."""
@@ -63,6 +64,12 @@ class GatewaySettings(BaseModel):
             "service_name": self.service_name,
             "service_version": self.service_version,
             "http": self.http.model_dump(),
+            "auth": {
+                "token_env": self.auth_token_env,
+                "token_present": bool(
+                    self.auth_token_env and resolved_env.get(self.auth_token_env)
+                ),
+            },
             "prometheus": _backend_summary(self.prometheus, resolved_env),
             "loki": _backend_summary(self.loki, resolved_env),
             "tempo": _backend_summary(self.tempo, resolved_env),
@@ -90,7 +97,7 @@ def _load_yaml(path: Path) -> dict[str, Any]:
     if not path.exists():
         raise FileNotFoundError(f"Config file not found: {path}")
 
-    loaded = yaml.safe_load(path.read_text(encoding="ascii")) or {}
+    loaded = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(loaded, dict):
         raise ValueError("Configuration root must be a mapping.")
     return loaded
@@ -99,7 +106,10 @@ def _load_yaml(path: Path) -> dict[str, Any]:
 def _env_overrides(env: Mapping[str, str]) -> dict[str, Any]:
     overrides: dict[str, Any] = {}
     for key, value in env.items():
-        if not key.startswith(ENV_PREFIX) or key == f"{ENV_PREFIX}CONFIG_PATH":
+        if not key.startswith(ENV_PREFIX) or key in {
+            f"{ENV_PREFIX}CONFIG_PATH",
+            f"{ENV_PREFIX}GATEWAY_TOKEN",
+        }:
             continue
 
         path = key[len(ENV_PREFIX) :].lower().split("__")

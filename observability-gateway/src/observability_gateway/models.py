@@ -75,7 +75,8 @@ class LogsQueryRangeRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    query: str
+    query: str | None = None
+    service: str | None = None
     start: str | None = None
     end: str | None = None
     limit: int = Field(default=100, ge=1, le=5000)

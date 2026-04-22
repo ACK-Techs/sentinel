@@ -7,6 +7,7 @@ VENV_PY="$REPO_ROOT/.venv/bin/python"
 VENV_PIP="$REPO_ROOT/.venv/bin/pip"
 CLI_DIR="$REPO_ROOT/cli"
 OBS_GATEWAY_DIR="$REPO_ROOT/observability-gateway"
+OBS_GATEWAY_TOKEN="${OBS_GATEWAY_TOKEN:-sentinel-observability-gateway-token}"
 RUN_DIR="$ROOT/runs/cos-smoke-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$RUN_DIR"
 
@@ -217,12 +218,26 @@ wait_for_http http://127.0.0.1:8080/health gateway
 
 log "Starting observability gateway"
 start_service "$OBS_GATEWAY_DIR" "$RUN_DIR/observability-gateway.log" \
+  SENTINEL_OBSERVABILITY_GATEWAY_TOKEN="$OBS_GATEWAY_TOKEN" \
   SENTINEL_OBSERVABILITY_PROMETHEUS__BASE_URL=http://127.0.0.1:9090 \
   SENTINEL_OBSERVABILITY_LOKI__BASE_URL=http://127.0.0.1:3100 \
   SENTINEL_OBSERVABILITY_TEMPO__BASE_URL=http://127.0.0.1:3200 \
   SENTINEL_OBSERVABILITY_HTTP__TIMEOUT_SEC=10 \
   "$VENV_PY" -m uvicorn observability_gateway.main:app --host 127.0.0.1 --port 8091
-wait_for_http http://127.0.0.1:8091/health observability-gateway
+local_gateway_health_retries=60
+while (( local_gateway_health_retries > 0 )); do
+  if curl -fsS http://127.0.0.1:8091/health \
+    -H "Authorization: Bearer $OBS_GATEWAY_TOKEN" >/dev/null 2>&1; then
+    log "observability-gateway is ready"
+    break
+  fi
+  local_gateway_health_retries=$((local_gateway_health_retries - 1))
+  sleep 1
+done
+if (( local_gateway_health_retries == 0 )); then
+  echo "observability-gateway did not become ready: http://127.0.0.1:8091/health" >&2
+  exit 1
+fi
 
 log "Generating traffic"
 ORDER_RESPONSE="$(curl -fsS -X POST http://127.0.0.1:8080/api/orders -H 'content-type: application/json' -d '{"sku":"SKU-001","qty":1,"amount":25}')"
@@ -298,8 +313,10 @@ grep -q '"service.name"' "$RUN_DIR/tempo-tags.json"
 grep -q '"traceID"' "$RUN_DIR/tempo-orders.json"
 
 log "Checking observability gateway"
-curl -fsS http://127.0.0.1:8091/health >"$RUN_DIR/observability-gateway-health.json"
-curl -fsS http://127.0.0.1:8091/api/v1/status >"$RUN_DIR/observability-gateway-status.json"
+curl -fsS http://127.0.0.1:8091/health \
+  -H "Authorization: Bearer $OBS_GATEWAY_TOKEN" >"$RUN_DIR/observability-gateway-health.json"
+curl -fsS http://127.0.0.1:8091/api/v1/status \
+  -H "Authorization: Bearer $OBS_GATEWAY_TOKEN" >"$RUN_DIR/observability-gateway-status.json"
 grep -q '"status":"ok"' "$RUN_DIR/observability-gateway-health.json"
 grep -q '"prometheus"' "$RUN_DIR/observability-gateway-status.json"
 grep -q '"loki"' "$RUN_DIR/observability-gateway-status.json"
@@ -309,21 +326,25 @@ log "Checking Sentinel CLI through observability gateway"
 (
   cd "$CLI_DIR"
   SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL=http://127.0.0.1:8091 \
+  SENTINEL_OBSERVABILITY_GATEWAY_TOKEN="$OBS_GATEWAY_TOKEN" \
   "$VENV_PY" -m sentinel_cli doctor --profile local
 ) >"$RUN_DIR/cli-doctor.json"
 (
   cd "$CLI_DIR"
   SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL=http://127.0.0.1:8091 \
+  SENTINEL_OBSERVABILITY_GATEWAY_TOKEN="$OBS_GATEWAY_TOKEN" \
   "$VENV_PY" -m sentinel_cli obs metric 'app_orders_created_total'
 ) >"$RUN_DIR/cli-obs-metric.json"
 (
   cd "$CLI_DIR"
   SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL=http://127.0.0.1:8091 \
+  SENTINEL_OBSERVABILITY_GATEWAY_TOKEN="$OBS_GATEWAY_TOKEN" \
   "$VENV_PY" -m sentinel_cli obs logs --service gateway
 ) >"$RUN_DIR/cli-obs-logs.json"
 (
   cd "$CLI_DIR"
   SENTINEL_OBSERVABILITY_GATEWAY_BASE_URL=http://127.0.0.1:8091 \
+  SENTINEL_OBSERVABILITY_GATEWAY_TOKEN="$OBS_GATEWAY_TOKEN" \
   "$VENV_PY" -m sentinel_cli obs traces --service orders
 ) >"$RUN_DIR/cli-obs-traces.json"
 grep -q '"observability_gateway"' "$RUN_DIR/cli-doctor.json"
