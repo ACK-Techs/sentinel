@@ -7,11 +7,11 @@ VENV_PY="$REPO_ROOT/.venv/bin/python"
 VENV_PIP="$REPO_ROOT/.venv/bin/pip"
 CLI_DIR="$REPO_ROOT/cli"
 OBS_GATEWAY_DIR="$REPO_ROOT/observability-gateway"
+HEAL_SCRIPT="$REPO_ROOT/scripts/cos-microk8s-heal.sh"
 OBS_GATEWAY_TOKEN="${OBS_GATEWAY_TOKEN:-sentinel-observability-gateway-token}"
 RUN_DIR="$ROOT/runs/cos-smoke-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$RUN_DIR"
 
-PORT_FORWARD_PIDS=()
 SERVICE_PIDS=()
 
 log() {
@@ -21,9 +21,6 @@ log() {
 cleanup() {
   set +e
   for pid in "${SERVICE_PIDS[@]:-}"; do
-    kill "$pid" >/dev/null 2>&1 || true
-  done
-  for pid in "${PORT_FORWARD_PIDS[@]:-}"; do
     kill "$pid" >/dev/null 2>&1 || true
   done
 }
@@ -75,17 +72,11 @@ PY
     retries=$((retries - 1))
     sleep 1
   done
+  if [[ -f "$HEAL_SCRIPT" ]]; then
+    echo "Hint: sudo $HEAL_SCRIPT" >&2
+  fi
   echo "$name tcp did not become ready: $host:$port" >&2
   exit 1
-}
-
-start_pf() {
-  local namespace="$1"
-  local target="$2"
-  local ports="$3"
-  local logfile="$4"
-  microk8s kubectl -n "$namespace" port-forward "$target" "$ports" >"$logfile" 2>&1 &
-  PORT_FORWARD_PIDS+=("$!")
 }
 
 start_service() {
@@ -97,6 +88,28 @@ start_service() {
     env "$@" >"$logfile" 2>&1
   ) &
   SERVICE_PIDS+=("$!")
+}
+
+service_cluster_ip() {
+  local namespace="$1"
+  local service="$2"
+  microk8s kubectl -n "$namespace" get svc "$service" -o jsonpath='{.spec.clusterIP}'
+}
+
+resolve_service_host() {
+  local namespace="$1"
+  local service="$2"
+  local port="$3"
+  local name="$4"
+  local host
+
+  host="$(service_cluster_ip "$namespace" "$service")"
+  if [[ -z "$host" || "$host" == "None" ]]; then
+    echo "ClusterIP not found for ${namespace}/${service}" >&2
+    exit 1
+  fi
+  wait_for_tcp "$host" "$port" "$name"
+  printf '%s\n' "$host"
 }
 
 query_window_start_ns() {
@@ -154,46 +167,41 @@ pkill -f 'test-platform/services/worker.*-m app.main' >/dev/null 2>&1 || true
 pkill -f 'uvicorn observability_gateway.main:app --host 127.0.0.1 --port 8091' >/dev/null 2>&1 || true
 sleep 1
 
-log "Starting port-forwards"
-start_pf sentinel-target svc/postgres 5432:5432 "$RUN_DIR/pf-postgres.log"
-start_pf sentinel-target svc/redis 6379:6379 "$RUN_DIR/pf-redis.log"
-start_pf cos svc/otel-collector 4317:4317 "$RUN_DIR/pf-otel.log"
-start_pf cos svc/prometheus 9090:9090 "$RUN_DIR/pf-prometheus.log"
-start_pf cos svc/loki 3100:3100 "$RUN_DIR/pf-loki.log"
-start_pf cos svc/tempo 3200:3200 "$RUN_DIR/pf-tempo.log"
-wait_for_tcp 127.0.0.1 5432 postgres-port-forward
-wait_for_tcp 127.0.0.1 6379 redis-port-forward
-wait_for_tcp 127.0.0.1 4317 otel-port-forward
-wait_for_tcp 127.0.0.1 9090 prometheus-port-forward
-wait_for_tcp 127.0.0.1 3100 loki-port-forward
-wait_for_tcp 127.0.0.1 3200 tempo-port-forward
+POSTGRES_HOST="$(resolve_service_host sentinel-target postgres 5432 postgres-service)"
+REDIS_HOST="$(resolve_service_host sentinel-target redis 6379 redis-service)"
+OTEL_HOST="$(resolve_service_host sentinel-target otel-collector 4317 otel-service)"
+PROMETHEUS_HOST="$(resolve_service_host cos prometheus 9090 prometheus-service)"
+LOKI_HOST="$(resolve_service_host cos loki 3100 loki-service)"
+TEMPO_HOST="$(resolve_service_host cos tempo 3200 tempo-service)"
+
+log "Using in-cluster service IPs"
 
 log "Seeding databases"
-export ORDERS_DB_URL='postgresql+asyncpg://sentinel:sentinel@127.0.0.1:5432/orders_db'
-export PAYMENTS_DB_URL='postgresql+asyncpg://sentinel:sentinel@127.0.0.1:5432/payments_db'
-export INVENTORY_DB_URL='postgresql+asyncpg://sentinel:sentinel@127.0.0.1:5432/inventory_db'
-export PAYMENTS_REDIS_URL='redis://127.0.0.1:6379/1'
+export ORDERS_DB_URL="postgresql+asyncpg://sentinel:sentinel@${POSTGRES_HOST}:5432/orders_db"
+export PAYMENTS_DB_URL="postgresql+asyncpg://sentinel:sentinel@${POSTGRES_HOST}:5432/payments_db"
+export INVENTORY_DB_URL="postgresql+asyncpg://sentinel:sentinel@${POSTGRES_HOST}:5432/inventory_db"
+export PAYMENTS_REDIS_URL="redis://${REDIS_HOST}:6379/1"
 "$VENV_PY" "$ROOT/scripts/seed_db.py"
 
 log "Starting local services against COS"
 start_service "$ROOT/services/payments" "$RUN_DIR/payments.log" \
-  OTEL_EXPORTER_OTLP_ENDPOINT=127.0.0.1:4317 \
-  DB_URL=postgresql+asyncpg://sentinel:sentinel@127.0.0.1:5432/payments_db \
-  REDIS_URL=redis://127.0.0.1:6379/1 \
+  OTEL_EXPORTER_OTLP_ENDPOINT="${OTEL_HOST}:4317" \
+  DB_URL="postgresql+asyncpg://sentinel:sentinel@${POSTGRES_HOST}:5432/payments_db" \
+  REDIS_URL="redis://${REDIS_HOST}:6379/1" \
   CHAOS_TOKEN=sentinel-chaos-token \
   "$VENV_PY" -m uvicorn app.main:app --host 127.0.0.1 --port 8082
 
 start_service "$ROOT/services/inventory" "$RUN_DIR/inventory.log" \
-  OTEL_EXPORTER_OTLP_ENDPOINT=127.0.0.1:4317 \
-  DB_URL=postgresql+asyncpg://sentinel:sentinel@127.0.0.1:5432/inventory_db \
-  REDIS_URL=redis://127.0.0.1:6379/2 \
+  OTEL_EXPORTER_OTLP_ENDPOINT="${OTEL_HOST}:4317" \
+  DB_URL="postgresql+asyncpg://sentinel:sentinel@${POSTGRES_HOST}:5432/inventory_db" \
+  REDIS_URL="redis://${REDIS_HOST}:6379/2" \
   CHAOS_TOKEN=sentinel-chaos-token \
   "$VENV_PY" -m uvicorn app.main:app --host 127.0.0.1 --port 8083
 
 start_service "$ROOT/services/orders" "$RUN_DIR/orders.log" \
-  OTEL_EXPORTER_OTLP_ENDPOINT=127.0.0.1:4317 \
-  DB_URL=postgresql+asyncpg://sentinel:sentinel@127.0.0.1:5432/orders_db \
-  REDIS_URL=redis://127.0.0.1:6379/0 \
+  OTEL_EXPORTER_OTLP_ENDPOINT="${OTEL_HOST}:4317" \
+  DB_URL="postgresql+asyncpg://sentinel:sentinel@${POSTGRES_HOST}:5432/orders_db" \
+  REDIS_URL="redis://${REDIS_HOST}:6379/0" \
   PAYMENTS_URL=http://127.0.0.1:8082 \
   INVENTORY_URL=http://127.0.0.1:8083 \
   ORDERS_STREAM=orders.events \
@@ -201,15 +209,15 @@ start_service "$ROOT/services/orders" "$RUN_DIR/orders.log" \
   "$VENV_PY" -m uvicorn app.main:app --host 127.0.0.1 --port 8081
 
 start_service "$ROOT/services/gateway" "$RUN_DIR/gateway.log" \
-  OTEL_EXPORTER_OTLP_ENDPOINT=127.0.0.1:4317 \
+  OTEL_EXPORTER_OTLP_ENDPOINT="${OTEL_HOST}:4317" \
   ORDERS_URL=http://127.0.0.1:8081 \
   INVENTORY_URL=http://127.0.0.1:8083 \
   CHAOS_TOKEN=sentinel-chaos-token \
   "$VENV_PY" -m uvicorn app.main:app --host 127.0.0.1 --port 8080
 
 start_service "$ROOT/services/worker" "$RUN_DIR/worker.log" \
-  OTEL_EXPORTER_OTLP_ENDPOINT=127.0.0.1:4317 \
-  REDIS_URL=redis://127.0.0.1:6379/0 \
+  OTEL_EXPORTER_OTLP_ENDPOINT="${OTEL_HOST}:4317" \
+  REDIS_URL="redis://${REDIS_HOST}:6379/0" \
   ORDERS_STREAM=orders.events \
   CHAOS_TOKEN=sentinel-chaos-token \
   "$VENV_PY" -m app.main
@@ -222,9 +230,9 @@ wait_for_http http://127.0.0.1:8080/health gateway
 log "Starting observability gateway"
 start_service "$OBS_GATEWAY_DIR" "$RUN_DIR/observability-gateway.log" \
   SENTINEL_OBSERVABILITY_GATEWAY_TOKEN="$OBS_GATEWAY_TOKEN" \
-  SENTINEL_OBSERVABILITY_PROMETHEUS__BASE_URL=http://127.0.0.1:9090 \
-  SENTINEL_OBSERVABILITY_LOKI__BASE_URL=http://127.0.0.1:3100 \
-  SENTINEL_OBSERVABILITY_TEMPO__BASE_URL=http://127.0.0.1:3200 \
+  SENTINEL_OBSERVABILITY_PROMETHEUS__BASE_URL="http://${PROMETHEUS_HOST}:9090" \
+  SENTINEL_OBSERVABILITY_LOKI__BASE_URL="http://${LOKI_HOST}:3100" \
+  SENTINEL_OBSERVABILITY_TEMPO__BASE_URL="http://${TEMPO_HOST}:3200" \
   SENTINEL_OBSERVABILITY_HTTP__TIMEOUT_SEC=10 \
   "$VENV_PY" -m uvicorn observability_gateway.main:app --host 127.0.0.1 --port 8091
 local_gateway_health_retries=60
@@ -258,13 +266,14 @@ for _ in $(seq 1 5); do
 done
 
 log "Checking worker stream state"
-PENDING_JSON="$("$VENV_PY" - <<'PY'
+PENDING_JSON="$("$VENV_PY" - <<'PY' "$REDIS_HOST"
 import asyncio
 import json
+import sys
 from redis.asyncio import Redis
 
 async def main():
-    r = Redis.from_url('redis://127.0.0.1:6379/0', decode_responses=True)
+    r = Redis.from_url(f'redis://{sys.argv[1]}:6379/0', decode_responses=True)
     result = None
     for _ in range(20):
         result = await r.xpending('orders.events', 'orders-workers')
@@ -289,8 +298,8 @@ log "Waiting for metric export"
 sleep 20
 
 log "Checking Prometheus"
-curl -fsS 'http://127.0.0.1:9090/api/v1/query?query=target_info' >"$RUN_DIR/prom-target-info.json"
-curl -fsS 'http://127.0.0.1:9090/api/v1/query?query=app_orders_created_total' >"$RUN_DIR/prom-orders-created.json"
+curl -fsS "http://${PROMETHEUS_HOST}:9090/api/v1/query?query=target_info" >"$RUN_DIR/prom-target-info.json"
+curl -fsS "http://${PROMETHEUS_HOST}:9090/api/v1/query?query=app_orders_created_total" >"$RUN_DIR/prom-orders-created.json"
 grep -q '"job":"gateway"' "$RUN_DIR/prom-target-info.json"
 grep -q '"job":"orders"' "$RUN_DIR/prom-target-info.json"
 grep -q '"job":"payments"' "$RUN_DIR/prom-target-info.json"
@@ -299,19 +308,19 @@ grep -q '"job":"worker"' "$RUN_DIR/prom-target-info.json"
 grep -q '"app_orders_created_total"' "$RUN_DIR/prom-orders-created.json"
 
 log "Checking Loki"
-curl -fsS 'http://127.0.0.1:3100/loki/api/v1/label/job/values' >"$RUN_DIR/loki-job-values.json"
+curl -fsS "http://${LOKI_HOST}:3100/loki/api/v1/label/job/values" >"$RUN_DIR/loki-job-values.json"
 curl -G -fsS \
   --data-urlencode 'query={job="gateway"}' \
   --data-urlencode 'limit=5' \
   --data-urlencode "start=$(query_window_start_ns)" \
   --data-urlencode "end=$(query_window_end_ns)" \
-  http://127.0.0.1:3100/loki/api/v1/query_range >"$RUN_DIR/loki-gateway.json"
+  "http://${LOKI_HOST}:3100/loki/api/v1/query_range" >"$RUN_DIR/loki-gateway.json"
 grep -q '"gateway"' "$RUN_DIR/loki-job-values.json"
 grep -q 'HTTP Request:' "$RUN_DIR/loki-gateway.json"
 
 log "Checking Tempo"
-curl -fsS 'http://127.0.0.1:3200/api/search/tags' >"$RUN_DIR/tempo-tags.json"
-curl -fsS 'http://127.0.0.1:3200/api/search?limit=5&tags=service.name%3Dorders' >"$RUN_DIR/tempo-orders.json"
+curl -fsS "http://${TEMPO_HOST}:3200/api/search/tags" >"$RUN_DIR/tempo-tags.json"
+curl -fsS "http://${TEMPO_HOST}:3200/api/search?limit=5&tags=service.name%3Dorders" >"$RUN_DIR/tempo-orders.json"
 grep -q '"service.name"' "$RUN_DIR/tempo-tags.json"
 grep -q '"traceID"' "$RUN_DIR/tempo-orders.json"
 
