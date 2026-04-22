@@ -9,6 +9,7 @@
 ```
 sentinel-coming/
 ├── cli/                  → Ana ürün: Sentinel CLI
+├── observability-gateway/→ CLI icin Grafana'siz observability read-only gateway
 ├── agentic/              → ⚠️ Bağımsız 3 harici ürün (bkz. aşağıdaki not)
 │   ├── Pywen-dev/
 │   ├── codex-main/
@@ -41,6 +42,22 @@ Python tabanlı, agentic mimariye sahip terminal aracı. Doğal dil komutlarıyl
 - Grafana entegrasyon kontrolleri
 
 **CI:** GitHub Actions → Python 3.12, ruff lint, pytest
+
+---
+
+### `/observability-gateway` — Sentinel Observability Gateway
+
+FastAPI tabanli bagimsiz bir Python servisi. Sentinel CLI icin Prometheus, Loki ve Tempo'ya yonelik tek bir read-only HTTP giris noktasi saglar. Grafana veri kaynagi veya Grafana API bagimliligi olmadan calisir.
+
+**Teknoloji:** Python 3.11+, FastAPI, httpx, pydantic, pydantic-settings, PyYAML
+
+**Temel ozellikler:**
+- `GET /health` ve `GET /api/v1/status` ile servis ve backend durumu ozeti
+- Prometheus icin anlik metric sorgusu adapter'i
+- Loki icin `query_range` log sorgu adapter'i
+- Tempo icin trace arama ve trace detay alma adapter'i
+- Secret-safe hata modeli ve backend bagimsiz yanit sekli
+- Ortak timeout ve retry ayarlari
 
 ---
 
