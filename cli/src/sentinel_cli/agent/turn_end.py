@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import logging
 import threading
 from dataclasses import dataclass
@@ -33,14 +32,12 @@ class TurnEndContext:
     provider: ProviderLike | None
 
 
-def _pipeline_allowed(config: AppConfig, *, interactive: bool) -> bool:
-    if not config.turn_pipeline.enabled:
-        return False
+def _memory_side_effects_allowed(config: AppConfig, *, interactive: bool) -> bool:
+    """Bare / pipe runs skip persisted memory unless explicitly allowed."""
+
     if interactive:
         return True
-    if config.memory.allow_non_interactive:
-        return True
-    return False
+    return config.memory.allow_non_interactive
 
 
 def _build_away_summary(session: SessionState, config: AppConfig) -> str:
