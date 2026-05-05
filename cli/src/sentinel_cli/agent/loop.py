@@ -192,7 +192,7 @@ class AgentLoop:
         self._ensure_grafana_snapshot(session)
         self._ensure_observability_snapshot(session)
         self._active_session = session
-        session.messages = self._compactor.compact(session.messages)
+        session.messages = self._compactor.compact(session.messages, session=session)
         session.messages.append(ChatMessage(role=MessageRole.USER, content=prompt))
         self._session_store.save(session)
         self._trajectory.append(
@@ -207,6 +207,7 @@ class AgentLoop:
             try:
                 result: CompletionResult = self._provider.complete(request)
             except KeyboardInterrupt:
+                self._active_session = None
                 return AgentRunResult(
                     output_text="Islem kullanici tarafindan iptal edildi.",
                     turns_used=turn,
@@ -226,6 +227,12 @@ class AgentLoop:
 
             if not result.tool_calls:
                 self._session_store.save(session)
+                self._finalize_turn(
+                    session,
+                    cwd=cwd,
+                    interactive=interactive,
+                    stopped_reason="final_answer",
+                )
                 self._active_session = None
                 return AgentRunResult(
                     output_text=result.text or "(bos yanit)",
