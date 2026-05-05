@@ -12,8 +12,9 @@ ProviderKind = Literal["openai", "anthropic"]
 ContextStrategy = Literal["warn", "truncate"]
 LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR"]
 ApprovalMode = Literal["interactive", "auto", "deny"]
-HookPhase = Literal["pre_tool", "post_tool"]
+HookPhase = Literal["pre_tool", "post_tool", "post_turn", "pre_memory", "post_memory"]
 HookErrorMode = Literal["warn", "block"]
+MemoryPolicy = Literal["project", "user"]
 
 
 class ExperimentalSettings(BaseModel):
