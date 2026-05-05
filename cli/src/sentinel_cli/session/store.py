@@ -58,6 +58,8 @@ class SessionStore:
             "created_at": session.created_at,
             "grafana_context_snapshot": session.grafana_context_snapshot,
             "observability_context_snapshot": session.observability_context_snapshot,
+            "away_summary": session.away_summary,
+            "compaction_note": session.compaction_note,
             "messages": [message.model_dump(mode="json") for message in session.messages],
         }
         path.write_text(json.dumps(payload, ensure_ascii=True, indent=2), encoding="utf-8")
@@ -72,5 +74,7 @@ class SessionStore:
             created_at=payload["created_at"],
             grafana_context_snapshot=payload.get("grafana_context_snapshot", None),
             observability_context_snapshot=payload.get("observability_context_snapshot", None),
+            away_summary=payload.get("away_summary", None),
+            compaction_note=payload.get("compaction_note", None),
             messages=[ChatMessage.model_validate(item) for item in payload.get("messages", [])],
         )
