@@ -40,7 +40,7 @@ Python tabanlı, agentic mimariye sahip terminal aracı. Doğal dil komutlarıyl
 - Katmanlı konfigürasyon sistemi (YAML profilleri + env override)
 - Oturum kalıcılığı ve trajectory kaydı (debugging için)
 - Grafana entegrasyon kontrolleri
-- **Proje bellek sistemi** (memory extract, dream konsolidasyonu, magic docs)
+- **Proje bellek sistemi** (memory extract, dreaming, magic docs)
 - **Gizli bilgi redaksiyonu** (tüm bellek yazımlarında otomatik)
 - **Tur sonu pipeline** (hook'lar, away özeti, arka plan thread desteği)
 
@@ -56,7 +56,7 @@ Her başarılı tur sonunda agent döngüsü bir **tur sonu pipeline** çalışt
 2. **Bellek çıkarma (extract):** Tur mesajlarının özeti `.sentinel/memory/extract.jsonl` veya `~/.sentinel/projects/<hash>/memory/extract.jsonl` dosyasına eklenir.
 3. **Away özeti:** `repl` oturumlarında son kullanıcı + asistan mesajından tek satırlık özet üretilir.
 4. **Magic Docs güncelleme:** `# MAGIC DOC` başlıklı Markdown dosyalarındaki `<!-- SENTINEL_MAGIC_DOC:BEGIN -->` ... `<!-- SENTINEL_MAGIC_DOC:END -->` bloğu güncel özetle değiştirilir (varsayılan kökler: `skills/`, `documantations/`).
-5. **Dream konsolidasyonu:** Süre (min 24 saat) + oturum sayısı (min 5) eşiği sağlandığında LLM ile `index.md` güncellenir; dosya kilidi ile paralel çalışma önlenir.
+5. **Dreaming:** Süre (min 24 saat) + oturum sayısı (min 5) eşiği sağlandığında LLM ile `index.md` güncellenir; dosya kilidi ile paralel çalışma önlenir.
 
 Tüm bellek yazımları **redaksiyon filtresi**nden geçer; email, API token, Bearer header, export ifadeleri, parola atamaları, kubeconfig kimlik bilgileri, AWS AKIA anahtarları, JWT ve PEM blokları otomatik olarak temizlenir.
 
