@@ -248,6 +248,12 @@ class AgentLoop:
                 if repeated_calls[fingerprint] > self._config.agent.repeat_tool_call_limit:
                     warnings.append("Ayni tool cagrisi tekrar etti; dongu durduruldu.")
                     self._session_store.save(session)
+                    self._finalize_turn(
+                        session,
+                        cwd=cwd,
+                        interactive=interactive,
+                        stopped_reason="repeated_tool_call",
+                    )
                     return AgentRunResult(
                         output_text="Ayni tool cagrisi tekrarlandigi icin ajan durduruldu.",
                         turns_used=turn,
@@ -280,9 +286,16 @@ class AgentLoop:
                         "message": tool_result.message,
                     },
                 )
-                session.messages = self._compactor.compact(session.messages)
+                session.messages = self._compactor.compact(session.messages, session=session)
                 self._session_store.save(session)
 
+        self._session_store.save(session)
+        self._finalize_turn(
+            session,
+            cwd=cwd,
+            interactive=interactive,
+            stopped_reason="max_turns",
+        )
         self._active_session = None
         return AgentRunResult(
             output_text="Maksimum tur sinirina ulasildi.",
