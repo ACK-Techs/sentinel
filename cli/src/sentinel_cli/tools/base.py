@@ -16,6 +16,8 @@ class ToolContext:
     session_id: str
     interactive: bool
     auto_approve: bool
+    enforce_memory_write_jail: bool = False
+    memory_root_abs: str | None = None
 
 
 @dataclass(slots=True)

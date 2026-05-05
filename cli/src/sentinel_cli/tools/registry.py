@@ -10,6 +10,7 @@ from pydantic import ValidationError
 
 from sentinel_cli.config import AppConfig
 from sentinel_cli.hooks import HookManager
+from sentinel_cli.memory.paths import resolve_memory_root
 from sentinel_cli.llm.types import ToolCall, ToolDefinition
 from sentinel_cli.tools.approval import ApprovalPolicy
 from sentinel_cli.tools.base import SentinelTool, ToolContext, ToolResult

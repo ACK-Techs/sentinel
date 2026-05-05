@@ -118,6 +118,7 @@ class MemorySettings(BaseModel):
     policy: MemoryPolicy = "project"
     extract_on_turn_end: bool = True
     allow_non_interactive: bool = False
+    enforce_write_jail: bool = False
 
 
 class DreamSettings(BaseModel):
