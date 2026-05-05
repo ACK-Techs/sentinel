@@ -89,14 +89,11 @@ def run_turn_end_pipeline(
 ) -> None:
     """Execute turn-end work synchronously (caller may delegate to a thread)."""
 
-    if not _pipeline_allowed(config, interactive=ctx.interactive):
-        logger.debug(
-            "turn_pipeline_skipped",
-            extra={"interactive": ctx.interactive, "reason": "policy"},
-        )
+    if not config.turn_pipeline.enabled:
         return
 
     session = ctx.session
+    mem_ok = _memory_side_effects_allowed(config, interactive=ctx.interactive)
 
     payload = {
         "phase": "post_turn",
@@ -105,10 +102,11 @@ def run_turn_end_pipeline(
         "stopped_reason": ctx.stopped_reason,
         "profile": ctx.profile,
         "interactive": ctx.interactive,
+        "memory_side_effects": mem_ok,
     }
     hook_manager.run("post_turn", payload)
 
-    if config.memory.enabled and config.memory.extract_on_turn_end:
+    if mem_ok and config.memory.enabled and config.memory.extract_on_turn_end:
         pre = hook_manager.run(
             "pre_memory",
             {
@@ -127,7 +125,7 @@ def run_turn_end_pipeline(
                 },
             )
 
-    if config.away.enabled and ctx.interactive:
+    if mem_ok and config.away.enabled and ctx.interactive:
         summary = _build_away_summary(session, config)
         session.away_summary = summary
         _append_session_memory_file(
@@ -137,12 +135,12 @@ def run_turn_end_pipeline(
             line=f"away: {summary}",
         )
 
-    if config.magic_docs.enabled:
+    if mem_ok and config.magic_docs.enabled:
         magic_summary = session.away_summary or _build_away_summary(session, config)
         apply_magic_docs(config, cwd=ctx.cwd, summary=magic_summary)
 
     dream_payload: dict[str, Any] | None = None
-    if config.dream.enabled:
+    if mem_ok and config.dream.enabled:
         dream_payload = maybe_run_dream(
             config,
             cwd=ctx.cwd,
