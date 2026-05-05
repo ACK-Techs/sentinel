@@ -6,24 +6,30 @@ from sentinel_cli.config.loader import (
     resolve_profile,
 )
 from sentinel_cli.config.models import (
-    AppConfig,
     AgentSettings,
+    AppConfig,
+    AwaySettings,
     CliOverrides,
     ContextWindowSettings,
+    DreamSettings,
     ExperimentalSettings,
     GrafanaSettings,
     HookCommand,
     HooksSettings,
     HttpSettings,
     LoggingSettings,
+    MagicDocsSettings,
     MCPServerConfig,
     MCPSettings,
+    MemorySettings,
     ObservabilityGatewaySettings,
     ProfileSettings,
     ResolvedProfile,
     RetryPolicySettings,
+    SemanticCompactionSettings,
     SessionSettings,
     ToolExecutionSettings,
+    TurnPipelineSettings,
 )
 
 __all__ = [
