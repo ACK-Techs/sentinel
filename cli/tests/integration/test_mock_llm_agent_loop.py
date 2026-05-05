@@ -69,6 +69,7 @@ def test_mock_llm_agent_loop_reads_file_and_returns_summary(tmp_path) -> None:
         cli_overrides=CliOverrides(profile="cloud", model="mock-cloud"),
         env={"SENTINEL_API_KEY": "redacted"},
     )
+    config.profiles["cloud"].supports_tools = True
     config.tools.auto_approve = True
     config.tools.approval_mode = "auto"
     config.session.directory = tmp_path / "sessions"
