@@ -1,0 +1,31 @@
+microk8s is running
+high-availability: no
+  datastore master nodes: 127.0.0.1:19001
+  datastore standby nodes: none
+addons:
+  enabled:
+    dns                  # (core) CoreDNS
+    ha-cluster           # (core) Configure high availability on the current node
+    helm                 # (core) Helm - the package manager for Kubernetes
+    helm3                # (core) Helm 3 - the package manager for Kubernetes
+    hostpath-storage     # (core) Storage class; allocates storage from host directory
+    metallb              # (core) Loadbalancer for your Kubernetes cluster
+    storage              # (core) Alias to hostpath-storage add-on, deprecated
+  disabled:
+    cert-manager         # (core) Cloud native certificate management
+    cis-hardening        # (core) Apply CIS K8s hardening
+    community            # (core) The community addons repository
+    dashboard            # (core) The Kubernetes dashboard
+    gpu                  # (core) Alias to nvidia add-on
+    host-access          # (core) Allow Pods connecting to Host services smoothly
+    ingress              # (core) Ingress controller for external access
+    kube-ovn             # (core) An advanced network fabric for Kubernetes
+    mayastor             # (core) OpenEBS MayaStor
+    metrics-server       # (core) K8s Metrics Server for API access to service metrics
+    minio                # (core) MinIO object storage
+    nvidia               # (core) NVIDIA hardware (GPU and network) support
+    observability        # (core) A lightweight observability stack for logs, traces and metrics
+    prometheus           # (core) Prometheus operator for monitoring and logging
+    rbac                 # (core) Role-Based Access Control for authorisation
+    registry             # (core) Private image registry exposed on localhost:32000
+    rook-ceph            # (core) Distributed Ceph storage using Rook
