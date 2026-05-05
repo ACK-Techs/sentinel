@@ -65,6 +65,7 @@ tools:
 
 hooks:
   enabled: false
+  # phase: pre_tool | post_tool | post_turn | pre_memory | post_memory
   commands: []
 
 mcp:
