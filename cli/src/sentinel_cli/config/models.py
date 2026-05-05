@@ -298,6 +298,14 @@ class AppConfig(BaseModel):
         default_factory=ObservabilityGatewaySettings
     )
     session: SessionSettings = Field(default_factory=SessionSettings)
+    memory: MemorySettings = Field(default_factory=MemorySettings)
+    dream: DreamSettings = Field(default_factory=DreamSettings)
+    turn_pipeline: TurnPipelineSettings = Field(default_factory=TurnPipelineSettings)
+    semantic_compaction: SemanticCompactionSettings = Field(
+        default_factory=SemanticCompactionSettings
+    )
+    magic_docs: MagicDocsSettings = Field(default_factory=MagicDocsSettings)
+    away: AwaySettings = Field(default_factory=AwaySettings)
     experimental: ExperimentalSettings = Field(default_factory=ExperimentalSettings)
 
     def sanitized_summary(self) -> dict[str, object]:
@@ -333,6 +341,12 @@ class AppConfig(BaseModel):
                 "token_env": self.observability_gateway.token_env,
             },
             "session": self.session.model_dump(mode="json"),
+            "memory": self.memory.model_dump(mode="json"),
+            "dream": self.dream.model_dump(),
+            "turn_pipeline": self.turn_pipeline.model_dump(),
+            "semantic_compaction": self.semantic_compaction.model_dump(),
+            "magic_docs": self.magic_docs.model_dump(),
+            "away": self.away.model_dump(),
             "experimental": self.experimental.model_dump(),
             "list_merge_strategy": "replace",
         }
