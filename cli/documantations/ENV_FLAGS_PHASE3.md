@@ -32,5 +32,17 @@ Kaynak: `src/sentinel_cli/config/loader.py`, `config/models.py`. Sağlayıcı od
 | `SENTINEL_TRAJECTORY_DIR` | `./.sentinel/trajectories` | Trajectory dizini | Dosya sistemi |
 | `SENTINEL_TRAJECTORY_ENABLED` | `false` | Trajectory açık/kapalı | Yerel kayıt |
 | `SENTINEL_EXPERIMENTAL_MCP` | `false` | Deneysel MCP stdio istemcisi rezervi | Deneysel; varsayılan kapalı |
+| `SENTINEL_AUTO_MEMORY` | `false` | Otomatik bellek çıkarımı (`memory.enabled`) | Yerel dosya; içerik redakte edilir |
+| `SENTINEL_AUTO_DREAM` | `false` | Dream / konsolidasyon zamanlaması | Ek LLM çağrısı |
+| `SENTINEL_DREAM_MIN_HOURS` | `24` | Dream için minimum saat | — |
+| `SENTINEL_DREAM_MIN_SESSIONS` | `5` | Dream için minimum oturum sayacı | — |
+| `SENTINEL_MEMORY_DIR` | yok | Bellek kökü (`memory.directory`) | İstenirse mutlak yol |
+| `SENTINEL_MEMORY_POLICY` | `project` | `project` veya `user` | Kök dizin seçimi |
+| `SENTINEL_MEMORY_ALLOW_NON_INTERACTIVE` | `false` | Pipe/bare modda bellek yan etkileri | **Risk** — `true` ile gizli yazım |
+| `SENTINEL_MEMORY_ENFORCE_WRITE_JAIL` | `false` | `write_file` yalnız bellek köküne | Katı mod |
+| `SENTINEL_TURN_PIPELINE_ENABLED` | `true` | Turn sonu boru hattı (hook + dosya) | — |
+| `SENTINEL_TURN_PIPELINE_BACKGROUND` | `false` | Turn sonu işleri arka planda | Yarış riski; varsayılan senkron |
+| `SENTINEL_MAGIC_DOCS` | `false` | MAGIC DOC güncellemesi | Sadece işaretli bloklar |
+| `SENTINEL_BASH_READ_ONLY` | `false` | Bash salt okunur kısıtı | Allowlist + pipe/redirection engeli |
 
 Kod değişince bu tablo **senkron** tutulmalıdır.
