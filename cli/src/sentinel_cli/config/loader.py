@@ -254,11 +254,11 @@ def _env_overlay(env: dict[str, str]) -> dict[str, Any]:
             turn_pipeline_bg.lower() in {"1", "true", "yes", "on"},
         )
 
-    turn_pipeline_off = env.get("SENTINEL_TURN_PIPELINE_ENABLED")
-    if turn_pipeline_off is not None:
+    turn_pipeline_enabled = env.get("SENTINEL_TURN_PIPELINE_ENABLED")
+    if turn_pipeline_enabled is not None:
         assign(
             ("turn_pipeline", "enabled"),
-            turn_pipeline_off.lower() in {"1", "true", "yes", "on"},
+            turn_pipeline_enabled.lower() in {"1", "true", "yes", "on"},
         )
 
     bash_ro = env.get("SENTINEL_BASH_READ_ONLY")
