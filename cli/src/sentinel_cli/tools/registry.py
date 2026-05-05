@@ -49,6 +49,7 @@ class ToolRegistry:
             "bash": BashTool(
                 default_timeout_sec=config.tools.shell_timeout_sec,
                 max_output_chars=config.tools.max_output_chars,
+                read_only=config.tools.bash_read_only,
             ),
             "read_file": ReadFileTool(),
             "write_file": WriteFileTool(),

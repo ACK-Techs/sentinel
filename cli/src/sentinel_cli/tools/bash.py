@@ -51,9 +51,16 @@ class BashTool:
     risk_level = "shell"
     args_model = BashArgs
 
-    def __init__(self, *, default_timeout_sec: int, max_output_chars: int) -> None:
+    def __init__(
+        self,
+        *,
+        default_timeout_sec: int,
+        max_output_chars: int,
+        read_only: bool = False,
+    ) -> None:
         self._default_timeout_sec = default_timeout_sec
         self._max_output_chars = max_output_chars
+        self._read_only = read_only
 
     def definition(self):
         from sentinel_cli.llm.types import ToolDefinition
@@ -67,6 +74,10 @@ class BashTool:
     def execute(self, arguments: BashArgs, context: ToolContext) -> ToolResult:
         cwd = arguments.cwd or context.cwd
         timeout = arguments.timeout_sec or self._default_timeout_sec
+        if self._read_only:
+            violation = _bash_read_only_blocks(arguments.command)
+            if violation:
+                return ToolResult(False, "READ_ONLY", violation)
         try:
             completed = subprocess.run(
                 arguments.command,
