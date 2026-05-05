@@ -61,6 +61,7 @@ tools:
   shell_timeout_sec: 20
   file_write_timeout_sec: 10
   max_output_chars: 8000
+  bash_read_only: false
 
 hooks:
   enabled: false
@@ -96,6 +97,42 @@ session:
   trajectory_directory: ./.sentinel/trajectories
   trajectory_enabled: false
   max_history_messages: 24
+  session_memory_filename: session_memory.md
+
+memory:
+  enabled: false
+  directory: null
+  policy: project
+  extract_on_turn_end: true
+  allow_non_interactive: false
+
+dream:
+  enabled: false
+  min_hours_between: 24
+  min_sessions: 5
+  lock_stale_sec: 3600
+
+turn_pipeline:
+  enabled: true
+  run_in_background: false
+
+semantic_compaction:
+  inject_trim_notice: true
+  persist_session_memory_path: true
+
+magic_docs:
+  enabled: false
+  title_marker: MAGIC DOC
+  begin_marker: "<!-- SENTINEL_MAGIC_DOC:BEGIN -->"
+  end_marker: "<!-- SENTINEL_MAGIC_DOC:END -->"
+  roots:
+    - skills
+    - documantations
+  max_files: 32
+
+away:
+  enabled: true
+  max_chars: 200
 
 experimental:
   mcp_stdio_client: false

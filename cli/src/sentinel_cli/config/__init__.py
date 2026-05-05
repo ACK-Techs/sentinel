@@ -33,11 +33,13 @@ from sentinel_cli.config.models import (
 )
 
 __all__ = [
-    "AppConfig",
     "AgentSettings",
+    "AppConfig",
+    "AwaySettings",
     "CliOverrides",
     "ConfigError",
     "ContextWindowSettings",
+    "DreamSettings",
     "ExperimentalSettings",
     "GrafanaSettings",
     "HookCommand",
@@ -46,12 +48,16 @@ __all__ = [
     "LoggingSettings",
     "MCPServerConfig",
     "MCPSettings",
+    "MagicDocsSettings",
+    "MemorySettings",
     "ObservabilityGatewaySettings",
     "ProfileSettings",
     "ResolvedProfile",
     "RetryPolicySettings",
+    "SemanticCompactionSettings",
     "SessionSettings",
     "ToolExecutionSettings",
+    "TurnPipelineSettings",
     "load_config",
     "resolve_profile",
 ]
