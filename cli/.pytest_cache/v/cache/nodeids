@@ -21,6 +21,7 @@
   "tests/unit/test_config_loader.py::test_grafana_context_in_repl_defaults_true_and_env_can_disable",
   "tests/unit/test_config_loader.py::test_grafana_env_overlay_enables_and_configures_section",
   "tests/unit/test_config_loader.py::test_grafana_explicit_enabled_without_base_url_is_preserved",
+  "tests/unit/test_config_loader.py::test_memory_enforce_write_jail_env",
   "tests/unit/test_config_loader.py::test_observability_gateway_env_overlay_enables_and_configures_section",
   "tests/unit/test_config_loader.py::test_project_openai_base_url_wins_over_fallback",
   "tests/unit/test_config_loader.py::test_unknown_profile_has_meaningful_error",
@@ -39,6 +40,7 @@
   "tests/unit/test_mcp_optional.py::test_mcp_manager_reports_disabled_without_extra",
   "tests/unit/test_mcp_optional.py::test_mcp_namespace_mapping",
   "tests/unit/test_memory_pipeline.py::test_append_extract_redacts_and_writes_jsonl",
+  "tests/unit/test_memory_pipeline.py::test_bash_read_only_blocks_find_exec",
   "tests/unit/test_memory_pipeline.py::test_bash_read_only_blocks_pipe",
   "tests/unit/test_memory_pipeline.py::test_dream_thresholds_skip_without_completer",
   "tests/unit/test_memory_pipeline.py::test_env_overlays_memory_and_dream",
@@ -75,5 +77,6 @@
   "tests/unit/test_tool_registry.py::test_registry_exposes_observability_tools",
   "tests/unit/test_tool_registry.py::test_registry_parses_observability_tool_args",
   "tests/unit/test_tool_registry.py::test_unknown_tool_is_rejected",
-  "tests/unit/test_tool_registry.py::test_write_tool_respects_auto_approval"
+  "tests/unit/test_tool_registry.py::test_write_tool_respects_auto_approval",
+  "tests/unit/test_tool_registry.py::test_write_tool_respects_memory_write_jail"
 ]
