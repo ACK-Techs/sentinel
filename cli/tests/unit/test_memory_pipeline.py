@@ -3,8 +3,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
-
 from sentinel_cli.agent.turn_end import (
     TurnEndContext,
     _memory_side_effects_allowed,
@@ -16,7 +14,7 @@ from sentinel_cli.llm.types import ChatMessage, MessageRole
 from sentinel_cli.memory.dream import maybe_run_dream
 from sentinel_cli.memory.extract import append_extract
 from sentinel_cli.memory.paths import resolve_memory_root
-from sentinel_cli.session import SessionState, SessionStore, TrajectoryRecorder
+from sentinel_cli.session import SessionStore, TrajectoryRecorder
 from sentinel_cli.tools.bash import BashArgs, BashTool
 from sentinel_cli.tools.base import ToolContext
 
