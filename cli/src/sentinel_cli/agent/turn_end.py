@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 import threading
 from dataclasses import dataclass
 from pathlib import Path
@@ -14,8 +13,6 @@ from sentinel_cli.memory import append_extract, apply_magic_docs, maybe_run_drea
 from sentinel_cli.memory.paths import ensure_within_memory_root, resolve_memory_root
 from sentinel_cli.redaction import redact_text
 from sentinel_cli.session import SessionState, SessionStore, TrajectoryRecorder
-
-logger = logging.getLogger(__name__)
 
 
 class ProviderLike(Protocol):
