@@ -131,6 +131,8 @@ cp .env.example .env
 
 `SENTINEL_CONFIG` için önerilen yol `./config/sentinel.yaml`dır (`.env.example` ile uyumludur).
 
+Bellek (otomatik çıkarım, dream, MAGIC DOC), turn sonu boru hattı ve bash salt okunur modu için ortam anahtarları `documantations/ENV_FLAGS_PHASE3.md` dosyasında özetlenir; üretimde pipe/bare çalıştırmada bellek yan etkileri varsayılan olarak kapalıdır (`SENTINEL_MEMORY_ALLOW_NON_INTERACTIVE`).
+
 Komutları **her zaman `sentinel-coming/cli` içinden** çalıştırın; CLI başlarken bu dizindeki `.env` dosyası otomatik okunur (`source .env` gerekmez). Önce doğrulama:
 
 ```bash
