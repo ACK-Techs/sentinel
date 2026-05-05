@@ -7,11 +7,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from sentinel_cli.config import AppConfig
 from sentinel_cli.llm.types import ChatMessage, MessageRole
 from sentinel_cli.memory.paths import ensure_within_memory_root, resolve_memory_root
 from sentinel_cli.redaction import redact_text
-
-from sentinel_cli.config import AppConfig
 
 
 def _summarize_messages(messages: list[ChatMessage]) -> dict[str, Any]:
