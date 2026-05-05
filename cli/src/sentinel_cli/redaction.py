@@ -16,6 +16,12 @@ ASSIGNMENT_SECRET_RE = re.compile(
     r"(?i)(password|secret|token|api[_-]?key|authorization)\s*[:=]\s*([^\s\n]+)"
 )
 KUBECONFIG_USER_RE = re.compile(r"(client-key-data|client-certificate-data):\s*\S+")
+# AWS access key id (20 chars, starts with AKIA)
+AWS_AKIA_RE = re.compile(r"\bAKIA[0-9A-Z]{16}\b")
+# JWT-like three-segment base64url (heuristic; may false-positive on long random strings)
+JWT_LIKE_RE = re.compile(
+    r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b"
+)
 
 # PEM blocks
 PEM_RE = re.compile(
@@ -33,5 +39,7 @@ def redact_text(value: str) -> str:
     value = EXPORT_SECRET_RE.sub(r"\1[redacted-env]", value)
     value = ASSIGNMENT_SECRET_RE.sub(r"\1[redacted]", value)
     value = KUBECONFIG_USER_RE.sub(r"\1: [redacted]", value)
+    value = AWS_AKIA_RE.sub("[redacted-aws-key-id]", value)
+    value = JWT_LIKE_RE.sub("[redacted-jwt]", value)
     value = PEM_RE.sub("[redacted-pem]", value)
     return value
