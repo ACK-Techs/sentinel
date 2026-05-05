@@ -12,7 +12,7 @@ from sentinel_cli.hooks import HookManager
 from sentinel_cli.llm.errors import LLMError
 from sentinel_cli.llm.types import ChatMessage, ChatRequest, CompletionResult, MessageRole, ToolCall
 from sentinel_cli.observability import GatewayClient, GatewayClientError, check_gateway_connection, check_grafana_connection
-from sentinel_cli.session import SessionStore, TrajectoryRecorder
+from sentinel_cli.session import SessionState, SessionStore, TrajectoryRecorder
 from sentinel_cli.tools import ToolRegistry
 
 from sentinel_cli.agent.compaction import HistoryCompactor
