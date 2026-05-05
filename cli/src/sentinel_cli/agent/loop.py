@@ -80,6 +80,7 @@ class AgentLoop:
     def _tool_result_message(self, tool_call: ToolCall, result: Any) -> ChatMessage:
         return ChatMessage(
             role=MessageRole.TOOL,
+            name=tool_call.name,
             tool_call_id=tool_call.id,
             content=json.dumps(
                 {

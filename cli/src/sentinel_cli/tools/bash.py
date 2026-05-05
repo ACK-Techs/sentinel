@@ -20,11 +20,13 @@ def _bash_read_only_blocks(command: str) -> str | None:
     stripped = command.strip()
     if not stripped:
         return "Bos komut."
-    if any(symbol in stripped for symbol in (">", "`", "$(", "\n")):
+    if any(symbol in stripped for symbol in (">", "`", "$(", "${", "\n")):
         return "Yonlendirme veya komut substitution salt okunur modda engellendi."
     lowered = stripped.lower()
-    if "|" in lowered or ";" in lowered:
+    if "|" in lowered or ";" in lowered or "&&" in lowered or "||" in lowered or "|&" in lowered:
         return "Pipe veya zincir komut salt okunur modda engellendi."
+    if re.search(r"(?<![A-Za-z0-9])&(?![A-Za-z0-9])", stripped):
+        return "Arka plan veya & kullanimi salt okunur modda engellendi."
     try:
         parts = shlex.split(stripped)
     except ValueError:
@@ -34,6 +36,9 @@ def _bash_read_only_blocks(command: str) -> str | None:
     binary = parts[0].split("/")[-1].lower()
     if binary not in _READ_ONLY_ALLOWED:
         return f"'{binary}' salt okunur izin listesinde degil."
+    rest = " ".join(parts[1:]).lower()
+    if binary == "find" and ("-exec" in rest or "-delete" in rest or "-ok" in rest):
+        return "find -exec/-delete/-ok salt okunur modda engellendi."
     return None
 
 
