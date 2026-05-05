@@ -9,7 +9,6 @@ from sentinel_cli.agent.turn_end import (
     run_turn_end_pipeline,
 )
 from sentinel_cli.config import AppConfig, load_config
-from sentinel_cli.hooks import HookManager
 from sentinel_cli.llm.types import ChatMessage, MessageRole
 from sentinel_cli.memory.dream import maybe_run_dream
 from sentinel_cli.memory.extract import append_extract

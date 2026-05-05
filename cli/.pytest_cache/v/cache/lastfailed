@@ -1,3 +1,1 @@
-{
-  "tests/integration/test_mock_llm_agent_loop.py::test_mock_llm_agent_loop_reads_file_and_returns_summary": true
-}
+{}

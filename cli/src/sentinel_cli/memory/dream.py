@@ -7,7 +7,7 @@ import os
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any, Callable, Protocol
+from typing import Any, Protocol
 
 from sentinel_cli.config import AppConfig
 from sentinel_cli.llm.types import ChatMessage, ChatRequest, CompletionResult, MessageRole
