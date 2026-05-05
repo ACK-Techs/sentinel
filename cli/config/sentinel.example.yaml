@@ -106,6 +106,7 @@ memory:
   policy: project
   extract_on_turn_end: true
   allow_non_interactive: false
+  enforce_write_jail: false
 
 dream:
   enabled: false

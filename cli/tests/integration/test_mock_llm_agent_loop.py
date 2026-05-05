@@ -66,17 +66,16 @@ def test_mock_llm_agent_loop_reads_file_and_returns_summary(tmp_path) -> None:
         )
 
     config = load_config(
-        cli_overrides=CliOverrides(profile="cloud", model="mock-cloud"),
-        env={"SENTINEL_API_KEY": "redacted"},
+        cli_overrides=CliOverrides(profile="local", model="mock-local"),
+        env={},
     )
-    config.profiles["cloud"].supports_tools = True
     config.tools.auto_approve = True
     config.tools.approval_mode = "auto"
     config.session.directory = tmp_path / "sessions"
     config.session.trajectory_directory = tmp_path / "trajectories"
     config.session.trajectory_enabled = True
 
-    profile = resolve_profile(config, env={"SENTINEL_API_KEY": "redacted"})
+    profile = resolve_profile(config, env={})
     provider = build_provider(
         config,
         transport=httpx.MockTransport(handler),

@@ -247,6 +247,13 @@ def _env_overlay(env: dict[str, str]) -> dict[str, Any]:
             memory_non_interactive.lower() in {"1", "true", "yes", "on"},
         )
 
+    memory_write_jail = env.get("SENTINEL_MEMORY_ENFORCE_WRITE_JAIL")
+    if memory_write_jail is not None:
+        assign(
+            ("memory", "enforce_write_jail"),
+            memory_write_jail.lower() in {"1", "true", "yes", "on"},
+        )
+
     turn_pipeline_bg = env.get("SENTINEL_TURN_PIPELINE_BACKGROUND")
     if turn_pipeline_bg is not None:
         assign(

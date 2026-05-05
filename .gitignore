@@ -27,6 +27,8 @@ build/
 
 # --- CLI yerel oturum / kalıcılık ---
 cli/.sentinel/
+.sentinel/
+**/.sentinel/
 
 # --- Sentinel test-platform yerel çalıştırma çıktıları ---
 test-platform/.runs/
