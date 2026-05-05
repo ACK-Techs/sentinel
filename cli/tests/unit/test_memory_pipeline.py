@@ -17,7 +17,7 @@ from sentinel_cli.memory.dream import maybe_run_dream
 from sentinel_cli.memory.extract import append_extract
 from sentinel_cli.memory.paths import resolve_memory_root
 from sentinel_cli.session import SessionState, SessionStore, TrajectoryRecorder
-from sentinel_cli.tools.bash import BashTool
+from sentinel_cli.tools.bash import BashArgs, BashTool
 from sentinel_cli.tools.base import ToolContext
 
 
@@ -95,7 +95,7 @@ def test_env_overlays_memory_and_dream() -> None:
 def test_bash_read_only_blocks_pipe() -> None:
     tool = BashTool(default_timeout_sec=5, max_output_chars=100, read_only=True)
     res = tool.execute(
-        type("A", (), {"command": "cat x | wc", "cwd": None, "timeout_sec": None})(),
+        BashArgs(command="cat x | wc"),
         ToolContext(cwd="/", session_id="s", interactive=False, auto_approve=True),
     )
     assert res.ok is False
