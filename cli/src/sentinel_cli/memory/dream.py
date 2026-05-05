@@ -37,9 +37,14 @@ def load_state(memory_root: Path) -> DreamState:
     path = _state_path(memory_root)
     if not path.exists():
         return DreamState(last_run_at=None, sessions_since_dream=0)
-    raw = json.loads(path.read_text(encoding="utf-8"))
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return DreamState(last_run_at=None, sessions_since_dream=0)
+    if not isinstance(raw, dict):
+        return DreamState(last_run_at=None, sessions_since_dream=0)
     return DreamState(
-        last_run_at=raw.get("last_run_at"),
+        last_run_at=raw.get("last_run_at") if isinstance(raw.get("last_run_at"), str) else None,
         sessions_since_dream=int(raw.get("sessions_since_dream", 0)),
     )
 
