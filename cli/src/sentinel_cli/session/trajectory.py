@@ -3,19 +3,10 @@
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
 from typing import Any
 
-
-EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
-TOKEN_RE = re.compile(r"\b(?:sk|api|token)[A-Za-z0-9._-]{8,}\b", re.IGNORECASE)
-
-
-def redact_text(value: str) -> str:
-    value = EMAIL_RE.sub("[redacted-email]", value)
-    value = TOKEN_RE.sub("[redacted-token]", value)
-    return value
+from sentinel_cli.redaction import redact_text
 
 
 class TrajectoryRecorder:
