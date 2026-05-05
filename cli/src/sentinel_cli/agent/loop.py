@@ -16,6 +16,7 @@ from sentinel_cli.session import SessionStore, TrajectoryRecorder
 from sentinel_cli.tools import ToolRegistry
 
 from sentinel_cli.agent.compaction import HistoryCompactor
+from sentinel_cli.agent.turn_end import TurnEndContext, schedule_turn_end_pipeline
 
 
 @dataclass(slots=True)
@@ -46,8 +47,35 @@ class AgentLoop:
         self._provider = provider
         self._session_store = session_store
         self._trajectory = trajectory
-        self._registry = ToolRegistry(config=config, hook_manager=hook_manager, prompt_input=prompt_input)
+        self._hook_manager = hook_manager or HookManager(config.hooks)
+        self._registry = ToolRegistry(config=config, hook_manager=self._hook_manager, prompt_input=prompt_input)
         self._compactor = HistoryCompactor(config)
+
+    def _finalize_turn(
+        self,
+        session: SessionState,
+        *,
+        cwd: str,
+        interactive: bool,
+        stopped_reason: str,
+    ) -> None:
+        if stopped_reason == "interrupted":
+            return
+        ctx = TurnEndContext(
+            session=session,
+            cwd=cwd,
+            interactive=interactive,
+            stopped_reason=stopped_reason,
+            profile=self._profile.name,
+            provider=self._provider,
+        )
+        schedule_turn_end_pipeline(
+            self._config,
+            hook_manager=self._hook_manager,
+            session_store=self._session_store,
+            trajectory=self._trajectory,
+            ctx=ctx,
+        )
 
     def _tool_result_message(self, tool_call: ToolCall, result: Any) -> ChatMessage:
         return ChatMessage(
