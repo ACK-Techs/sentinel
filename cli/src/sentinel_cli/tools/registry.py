@@ -108,6 +108,12 @@ class ToolRegistry:
         if pre.blocked:
             return ToolResult(False, "HOOK_BLOCKED", pre.message or "Pre hook engelledi.")
 
+        jail = False
+        mem_root: str | None = None
+        if self._config.memory.enabled and self._config.memory.enforce_write_jail:
+            jail = True
+            mem_root = str(resolve_memory_root(self._config.memory, cwd=cwd).resolve())
+
         result = parsed.tool.execute(
             parsed.arguments,
             ToolContext(
@@ -115,6 +121,8 @@ class ToolRegistry:
                 session_id=session_id,
                 interactive=interactive,
                 auto_approve=self._config.tools.auto_approve,
+                enforce_memory_write_jail=jail,
+                memory_root_abs=mem_root,
             ),
         )
         self._hook_manager.run(

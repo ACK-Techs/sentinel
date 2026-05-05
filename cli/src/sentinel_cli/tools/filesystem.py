@@ -100,6 +100,14 @@ class WriteFileTool:
         root = Path(context.cwd).resolve()
         try:
             path = _resolve_within_root(root, arguments.path, must_exist=False)
+            if context.enforce_memory_write_jail and context.memory_root_abs:
+                mem = Path(context.memory_root_abs).resolve()
+                if not str(path.resolve()).startswith(str(mem)):
+                    return ToolResult(
+                        False,
+                        "MEMORY_JAIL",
+                        "write_file yalnizca Sentinel bellek kokune izinlidir (memory.enforce_write_jail).",
+                    )
             if ".git" in path.parts:
                 return ToolResult(False, "GIT_PROTECTED", ".git altina yazma varsayilan olarak engellendi.")
             if arguments.create_dirs:
