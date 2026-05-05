@@ -216,6 +216,65 @@ def _env_overlay(env: dict[str, str]) -> dict[str, Any]:
     if gateway_token_env:
         assign(("observability_gateway", "token_env"), gateway_token_env)
 
+    auto_memory = env.get("SENTINEL_AUTO_MEMORY")
+    if auto_memory is not None:
+        assign(("memory", "enabled"), auto_memory.lower() in {"1", "true", "yes", "on"})
+
+    auto_dream = env.get("SENTINEL_AUTO_DREAM")
+    if auto_dream is not None:
+        assign(("dream", "enabled"), auto_dream.lower() in {"1", "true", "yes", "on"})
+
+    dream_hours = env.get("SENTINEL_DREAM_MIN_HOURS")
+    if dream_hours:
+        assign(("dream", "min_hours_between"), int(dream_hours))
+
+    dream_sessions = env.get("SENTINEL_DREAM_MIN_SESSIONS")
+    if dream_sessions:
+        assign(("dream", "min_sessions"), int(dream_sessions))
+
+    memory_dir = env.get("SENTINEL_MEMORY_DIR")
+    if memory_dir:
+        assign(("memory", "directory"), memory_dir)
+
+    memory_policy = env.get("SENTINEL_MEMORY_POLICY")
+    if memory_policy:
+        assign(("memory", "policy"), memory_policy.strip())
+
+    memory_non_interactive = env.get("SENTINEL_MEMORY_ALLOW_NON_INTERACTIVE")
+    if memory_non_interactive is not None:
+        assign(
+            ("memory", "allow_non_interactive"),
+            memory_non_interactive.lower() in {"1", "true", "yes", "on"},
+        )
+
+    turn_pipeline_bg = env.get("SENTINEL_TURN_PIPELINE_BACKGROUND")
+    if turn_pipeline_bg is not None:
+        assign(
+            ("turn_pipeline", "run_in_background"),
+            turn_pipeline_bg.lower() in {"1", "true", "yes", "on"},
+        )
+
+    turn_pipeline_off = env.get("SENTINEL_TURN_PIPELINE_ENABLED")
+    if turn_pipeline_off is not None:
+        assign(
+            ("turn_pipeline", "enabled"),
+            turn_pipeline_off.lower() in {"1", "true", "yes", "on"},
+        )
+
+    bash_ro = env.get("SENTINEL_BASH_READ_ONLY")
+    if bash_ro is not None:
+        assign(
+            ("tools", "bash_read_only"),
+            bash_ro.lower() in {"1", "true", "yes", "on"},
+        )
+
+    magic_docs = env.get("SENTINEL_MAGIC_DOCS")
+    if magic_docs is not None:
+        assign(
+            ("magic_docs", "enabled"),
+            magic_docs.lower() in {"1", "true", "yes", "on"},
+        )
+
     return overlay
 
 
