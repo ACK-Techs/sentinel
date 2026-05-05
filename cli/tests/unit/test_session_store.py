@@ -51,3 +51,4 @@ def test_trajectory_redacts_tokens(tmp_path) -> None:
     assert "[redacted-email]" in content
     assert "[redacted-token]" in content
     assert "[redacted-token]" in redact_text("sk-secret-12345678")
+    assert "[redacted-aws-key-id]" in redact_text("AKIA0123456789ABCDEF")

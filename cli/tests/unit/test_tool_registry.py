@@ -28,6 +28,42 @@ def test_invalid_tool_json_is_rejected() -> None:
         raise AssertionError("ValueError bekleniyordu")
 
 
+def test_write_tool_respects_memory_write_jail(tmp_path) -> None:
+    config = AppConfig()
+    config.tools.auto_approve = True
+    config.tools.approval_mode = "auto"
+    config.memory.enabled = True
+    config.memory.enforce_write_jail = True
+    (tmp_path / ".sentinel" / "memory").mkdir(parents=True)
+    registry = ToolRegistry(config=config, hook_manager=HookManager(config.hooks))
+
+    bad = registry.execute_tool_call(
+        ToolCall(
+            id="1",
+            name="write_file",
+            arguments_json=json.dumps({"path": "evil.txt", "content": "no"}),
+        ),
+        cwd=str(tmp_path),
+        session_id="sess",
+        interactive=False,
+    )
+    assert bad.ok is False
+    assert bad.code == "MEMORY_JAIL"
+
+    good = registry.execute_tool_call(
+        ToolCall(
+            id="2",
+            name="write_file",
+            arguments_json=json.dumps({"path": ".sentinel/memory/note.txt", "content": "ok"}),
+        ),
+        cwd=str(tmp_path),
+        session_id="sess",
+        interactive=False,
+    )
+    assert good.ok is True
+    assert (tmp_path / ".sentinel" / "memory" / "note.txt").read_text(encoding="utf-8") == "ok"
+
+
 def test_write_tool_respects_auto_approval(tmp_path) -> None:
     config = AppConfig()
     config.tools.auto_approve = True

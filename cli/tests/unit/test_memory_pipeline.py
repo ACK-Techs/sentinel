@@ -50,6 +50,7 @@ def test_append_extract_redacts_and_writes_jsonl(tmp_path: Path) -> None:
     blob = json.dumps(payload["summary"])
     assert "curl" in blob or "curl" in payload["summary"].get("assistant", [])
     assert "sk-" not in blob
+    assert "tools" in payload["summary"]
 
 
 def test_dream_thresholds_skip_without_completer(tmp_path: Path) -> None:
@@ -87,6 +88,16 @@ def test_env_overlays_memory_and_dream() -> None:
     assert config.dream.min_sessions == 2
     assert config.memory.allow_non_interactive is True
     assert config.tools.bash_read_only is True
+
+
+def test_bash_read_only_blocks_find_exec() -> None:
+    tool = BashTool(default_timeout_sec=5, max_output_chars=100, read_only=True)
+    res = tool.execute(
+        BashArgs(command='find . -name "*.txt" -delete'),
+        ToolContext(cwd="/", session_id="s", interactive=False, auto_approve=True),
+    )
+    assert res.ok is False
+    assert res.code == "READ_ONLY"
 
 
 def test_bash_read_only_blocks_pipe() -> None:

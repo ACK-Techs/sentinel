@@ -150,3 +150,10 @@ def test_observability_gateway_env_overlay_enables_and_configures_section() -> N
     assert config.observability_gateway.base_url == "https://gateway.example.test"
     assert config.observability_gateway.timeout_sec == 8
     assert config.observability_gateway.token_env == "CUSTOM_GATEWAY_TOKEN"
+
+
+def test_memory_enforce_write_jail_env() -> None:
+    on = load_config(env={"SENTINEL_MEMORY_ENFORCE_WRITE_JAIL": "true"})
+    off = load_config(env={"SENTINEL_MEMORY_ENFORCE_WRITE_JAIL": "false"})
+    assert on.memory.enforce_write_jail is True
+    assert off.memory.enforce_write_jail is False
