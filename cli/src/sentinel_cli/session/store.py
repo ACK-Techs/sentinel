@@ -42,6 +42,8 @@ class SessionStore:
             created_at=datetime.now(UTC).isoformat(),
             grafana_context_snapshot=None,
             observability_context_snapshot=None,
+            away_summary=None,
+            compaction_note=None,
         )
         self.save(session)
         return session

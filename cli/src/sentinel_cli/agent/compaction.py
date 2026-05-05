@@ -5,6 +5,7 @@ from __future__ import annotations
 from sentinel_cli.config import AppConfig
 from sentinel_cli.llm.context import ContextWindowPolicy
 from sentinel_cli.llm.types import ChatMessage, MessageRole
+from sentinel_cli.session import SessionState
 
 
 class HistoryCompactor:
@@ -14,7 +15,12 @@ class HistoryCompactor:
         self._config = config
         self._policy = ContextWindowPolicy(config.context_window)
 
-    def compact(self, messages: list[ChatMessage]) -> list[ChatMessage]:
+    def compact(
+        self,
+        messages: list[ChatMessage],
+        *,
+        session: SessionState | None = None,
+    ) -> list[ChatMessage]:
         result = self._policy.apply(messages)
         if not result.trimmed:
             return messages[-self._config.session.max_history_messages :]
@@ -24,11 +30,15 @@ class HistoryCompactor:
         compacted: list[ChatMessage] = []
         if first_user and first_user not in preserved:
             compacted.append(first_user)
-        compacted.append(
-            ChatMessage(
-                role=MessageRole.ASSISTANT,
-                content="Eski mesajlar baglam siniri nedeniyle ozetlenmeden kirpildi.",
+        if self._config.semantic_compaction.inject_trim_notice:
+            compacted.append(
+                ChatMessage(
+                    role=MessageRole.ASSISTANT,
+                    content="Eski mesajlar baglam siniri nedeniyle ozetlenmeden kirpildi.",
+                )
             )
-        )
         compacted.extend(preserved)
-        return compacted[-self._config.session.max_history_messages :]
+        trimmed = compacted[-self._config.session.max_history_messages :]
+        if session is not None and self._config.semantic_compaction.inject_trim_notice:
+            session.compaction_note = "Baglam siniri nedeniyle eski mesajlar kirpildi; son tur korunur."
+        return trimmed
