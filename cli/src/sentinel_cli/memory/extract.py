@@ -28,11 +28,13 @@ def _summarize_messages(messages: list[ChatMessage]) -> dict[str, Any]:
             text = message.content or ""
             assistant_snippets.append(redact_text(text[:400]))
         elif message.role == MessageRole.TOOL:
-            tool_names.append("tool")
+            label = message.name if message.name else "tool"
+            tool_names.append(redact_text(label)[:128])
 
     return {
         "user": user_snippets[-3:] if user_snippets else [],
         "assistant": assistant_snippets[-3:] if assistant_snippets else [],
+        "tools": tool_names[-12:] if tool_names else [],
         "tool_turns": len(tool_names),
     }
 
