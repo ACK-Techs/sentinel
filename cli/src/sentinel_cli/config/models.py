@@ -105,6 +105,72 @@ class ToolExecutionSettings(BaseModel):
     shell_timeout_sec: int = 20
     file_write_timeout_sec: int = 10
     max_output_chars: int = 8000
+    bash_read_only: bool = False
+
+
+class MemorySettings(BaseModel):
+    """Project memory directory, extraction, and non-interactive policy."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool = False
+    directory: Path | None = None
+    policy: MemoryPolicy = "project"
+    extract_on_turn_end: bool = True
+    allow_non_interactive: bool = False
+
+
+class DreamSettings(BaseModel):
+    """Conditional consolidation (dream) scheduling."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool = False
+    min_hours_between: int = 24
+    min_sessions: int = 5
+    lock_stale_sec: int = 3600
+
+
+class TurnPipelineSettings(BaseModel):
+    """Turn-end background pipeline (extract, away, magic docs, dream)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool = True
+    run_in_background: bool = False
+
+
+class SemanticCompactionSettings(BaseModel):
+    """Session compaction helpers beyond token trimming."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    inject_trim_notice: bool = True
+    persist_session_memory_path: bool = True
+
+
+class MagicDocsSettings(BaseModel):
+    """Controlled MAGIC DOC marker updates under configured roots."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool = False
+    title_marker: str = "MAGIC DOC"
+    begin_marker: str = "<!-- SENTINEL_MAGIC_DOC:BEGIN -->"
+    end_marker: str = "<!-- SENTINEL_MAGIC_DOC:END -->"
+    roots: list[str] = Field(
+        default_factory=lambda: [".cursor", "documantations", "cli/skills"]
+    )
+    max_files: int = 32
+
+
+class AwaySettings(BaseModel):
+    """One-line away summary for long REPL sessions."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool = True
+    max_chars: int = 200
 
 
 class HookCommand(BaseModel):
@@ -184,6 +250,7 @@ class SessionSettings(BaseModel):
     trajectory_directory: Path = Path(".sentinel/trajectories")
     trajectory_enabled: bool = False
     max_history_messages: int = 24
+    session_memory_filename: str = "session_memory.md"
 
 
 class AppConfig(BaseModel):
