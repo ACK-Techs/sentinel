@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import shlex
 import subprocess
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -10,6 +11,30 @@ from pydantic import BaseModel, ConfigDict, Field
 from sentinel_cli.tools.base import ToolContext, ToolResult
 
 CONTROL_CHARS = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
+_READ_ONLY_ALLOWED = frozenset(
+    {"ls", "cat", "head", "tail", "grep", "find", "pwd", "echo", "wc", "stat", "sort", "uniq", "git"}
+)
+
+
+def _bash_read_only_blocks(command: str) -> str | None:
+    stripped = command.strip()
+    if not stripped:
+        return "Bos komut."
+    if any(symbol in stripped for symbol in (">", "`", "$(", "\n")):
+        return "Yonlendirme veya komut substitution salt okunur modda engellendi."
+    lowered = stripped.lower()
+    if "|" in lowered or ";" in lowered:
+        return "Pipe veya zincir komut salt okunur modda engellendi."
+    try:
+        parts = shlex.split(stripped)
+    except ValueError:
+        return "Komut ayrıştırılamadı."
+    if not parts:
+        return "Bos komut."
+    binary = parts[0].split("/")[-1].lower()
+    if binary not in _READ_ONLY_ALLOWED:
+        return f"'{binary}' salt okunur izin listesinde degil."
+    return None
 
 
 class BashArgs(BaseModel):
