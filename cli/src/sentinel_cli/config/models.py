@@ -159,7 +159,7 @@ class MagicDocsSettings(BaseModel):
     begin_marker: str = "<!-- SENTINEL_MAGIC_DOC:BEGIN -->"
     end_marker: str = "<!-- SENTINEL_MAGIC_DOC:END -->"
     roots: list[str] = Field(
-        default_factory=lambda: [".cursor", "documantations", "cli/skills"]
+        default_factory=lambda: ["skills", "documantations"]
     )
     max_files: int = 32
 

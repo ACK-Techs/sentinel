@@ -21,6 +21,8 @@ class SessionState:
     created_at: str
     grafana_context_snapshot: str | None = None
     observability_context_snapshot: str | None = None
+    away_summary: str | None = None
+    compaction_note: str | None = None
 
 
 class SessionStore:
