@@ -1,18 +1,37 @@
 ---
 name: obs-loki-label-strategy
-description: Loki label tasarımı, high-cardinality önleme ve index boyutu optimizasyonu yaparken kullan. Kullanıcı “obs-loki-label-strategy”, “obs loki label strategy”, “loki” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Loki’de hangi alanların **label** olacağına karar vermek (index maliyeti), high‑cardinality’i önlemek ve sorgulanabilirlik/performans dengesini kurmak gerektiğinde kullan. “Bu alan label mı olmalı?”, “index şişiyor”, “çok stream var” gibi durumlar için.
 ---
 
 ## Purpose
-Loki label tasarımı, high-cardinality önleme ve index boyutu optimizasyonu yaparken kullan
+Bu skill’in çıktısı:
+- Loki stream label set’i için kısa “allowed/forbidden” kontratı
+- High-cardinality risk listesi (Loki’de label = index → maliyet)
+- Promtail/OTel Collector tarafında “field olarak bırak / parse ile filtrele” önerisi
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Loki’de temel kural:
+  - Label’lar **index**’e gider; “çok değer” → çok stream → maliyet + yavaş sorgu.
+- Etiketleri üç sınıfa ayır:
+  - **Stabil routing label**: `cluster`, `namespace`, `app`, `job` (az değer, query başlangıcı)
+  - **Sınıflandırma** (dikkat): `level`, `service` (kontrollü değer seti)
+  - **Yasak/tehlikeli**: `pod`, `container_id`, `trace_id`, `request_id`, `path`, `user_id`, dynamic hostname
+- Sorgu ihtiyaçlarını çıkar:
+  - Kullanıcılar en çok neyi filtreleyecek? (namespace/app/level)
+  - “Drilldown” için gereken şey label mı olmalı, yoksa LogQL parse sonrası field filter mı?
+- Label set’ini minimal tasarla:
+  - 5–8 label’ı geçmemeyi hedefle.
+  - “Tenant” ihtiyacı varsa `X-Scope-OrgID` (multi-tenancy) ile karıştırma: label ayrı, tenant ayrı.
+- Uygulama yeri:
+  - Promtail pipeline stages / OTel Collector processors ile **field** üret ve LogQL’de parse ederek filtrele.
+  - Sadece routing gerekenler label olsun.
+- Doğrulama:
+  - “Stream sayısı” ve sorgu latency artıyorsa ilk şüpheli label set’idir.
+
+## Common mistakes
+- Kubernetes pod adını label yapmak: churn yüzünden index’i şişirir.
+- “Her alan label olsun”: Loki’yi Prometheus gibi kullanmaya çalışmak.
 
 ## References
 - `skills/cos-deploy-loki`
-- `skills/cos-relation-loki-grafana`
-- `cli/skills/agentic-troubleshoot-loki`
+- `skills/obs-loki-query-logql`
