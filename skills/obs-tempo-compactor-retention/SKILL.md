@@ -1,17 +1,36 @@
 ---
 name: obs-tempo-compactor-retention
-description: Tempo compactor ve trace retention politikasını uygularken kullan. Kullanıcı “obs-tempo-compactor-retention”, “obs tempo compactor retention”, “tempo” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Tempo’da trace retention (kaç gün/saklama süresi) uygulamak ve compactor davranışını doğru anlamlandırmak gerektiğinde kullan. “retention çalışmıyor”, “eski trace silinmiyor/erken silindi”, “compactor ne yapar?” gibi saklama politikası odaklıdır.
 ---
 
 ## Purpose
-Tempo compactor ve trace retention politikasını uygularken kullan
+Bu skill’in çıktısı:
+- Retention hedefi ve bunun Tempo’da nasıl uygulandığına dair netlik (compactor + storage)
+- “Silme gecikmesi” beklentisi (anlık değil, periyodik işler)
+- Retention sorunlarında kısa teşhis checklist’i (config drift, storage izinleri, clock)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Retention hedefini yaz:
+  - Kaç gün/saat? (maliyet ve incident ihtiyacı)
+  - Legal/compliance gereksinimi var mı?
+- Storage backend ile birlikte düşün:
+  - Local vs object storage; izinler/lifecycle retention davranışını etkiler.
+- Compactor’ın rolü:
+  - Trace blok/segment yönetimi ve retention cleanup işleri.
+  - İşler periyodiktir; “hemen sil” beklentisi gerçekçi değildir.
+- “Silinmiyor” teşhisi:
+  - Compactor çalışıyor mu? (log/metric)
+  - Yanlış config yüklendi mi? (drift)
+  - Storage erişim/izin sorunu var mı?
+- “Erken siliniyor” teşhisi:
+  - Timestamp/clock drift (özellikle collector/agent)
+  - Yanlış retention süresi
+- Doğrulama:
+  - Bilerek eski bir zaman penceresinden trace araması yap; retention sonrası dönmemesi beklenir.
+
+## Common mistakes
+- Retention’ı sadece storage lifecycle’a bırakmak: Tempo tarafında beklentiyle uyuşmayabilir.
+- Clock drift’i ihmal etmek: “çok eski/çok yeni” trace’ler elenebilir.
 
 ## References
-- `skills/target-app-fastapi-otel-bootstrap`
-- `skills/target-app-observability-lib`
+- `skills/obs-tempo-storage-backend`
