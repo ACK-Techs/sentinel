@@ -1,17 +1,36 @@
 ---
 name: obs-grafana-trace-panel
-description: Grafana trace panel ile trace görselleştirmesi ve span detayı yapılandırmasını yaparken kullan. Kullanıcı “obs-grafana-trace-panel”, “obs grafana trace panel”, “grafana” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Grafana dashboard’unda Trace paneli kurgulamak (Tempo datasource, traceId değişkeni, span detayları, drilldown) gerektiğinde kullan. “Latency panelinden trace’e geç”, “traceId ile panel”, “span detayını göster” gibi trace‑odaklı dashboard deneyimine odaklanır.
 ---
 
 ## Purpose
-Grafana trace panel ile trace görselleştirmesi ve span detayı yapılandırmasını yaparken kullan
+Bu skill’in çıktısı:
+- Trace panel yerleşimi: metrik panel → exemplar/traceId → trace panel drilldown akışı
+- Dashboard variable tasarımı: `trace_id`, `service`, `env` (minimum)
+- Doğrulama: bir incident örneğinde panelden doğru trace açılabiliyor mu?
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Giriş yolu seç:
+  - Exemplar üzerinden “tıkla → trace aç” (tercih).
+  - Log satırındaki trace id’den “tıkla → trace aç”.
+  - Manuel: dashboard variable `trace_id`.
+- Dashboard variable:
+  - `trace_id` için textbox değişkeni (boşsa panel gizle/placeholder).
+  - Bağlam değişkenleri: `service`, `env` (panel sorgularında ortak).
+- Panel davranışı:
+  - `trace_id` doluysa tek trace’i göster.
+  - `trace_id` yoksa kullanıcıya “nasıl bulunur” yönlendirmesi (exemplar/log link).
+- Span detayları:
+  - Kritik attribute’lar: route, status, db, peer.service (gürültüyü azalt).
+  - PII/secrets olabilecek attribute’ları göstermemeye dikkat et.
+- Doğrulama:
+  - Metrik panelde yüksek latency anında exemplar tıklayınca aynı aralıkta trace açılıyor mu?
+
+## Common mistakes
+- Trace paneli “arama paneli” gibi kullanmak: dashboard’da pahalı ve UX kötü; Explore’a yönlendir.
+- Her span attribute’unu göstermek: PII riski ve okunabilirlik kaybı.
 
 ## References
 - `skills/cos-deploy-grafana`
-- `cli/skills/agentic-troubleshoot-grafana`
+- `skills/obs-tempo-exemplars-grafana`
+- `skills/obs-grafana-tempo-explore`
