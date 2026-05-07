@@ -1,17 +1,33 @@
 ---
 name: obs-grafana-loki-explore
-description: Grafana Explore'da Loki log sorgusu, log context ve live tail kullanımını yaparken kullan. Kullanıcı “obs-grafana-loki-explore”, “obs grafana loki explore”, “grafana” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Grafana Explore’da Loki ile log araştırması yapmak, Live tail kullanmak veya bir log satırından context (öncesi/sonrası) ve trace linkine gitmek gerektiğinde kullan. “Explore’da log bul”, “live tail”, “log context” gibi operatör akışına odaklanır.
 ---
 
 ## Purpose
-Grafana Explore'da Loki log sorgusu, log context ve live tail kullanımını yaparken kullan
+Bu skill’in çıktısı:
+- Explore’da hızlı “daraltma” stratejisi (label selector → filtre → parse)
+- Live tail’i güvenli kullanma (yük ve gürültü kontrolü)
+- Context + korelasyon: aynı label set’te önce/sonra log ve trace linki
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Explore’da başlangıç:
+  - Zaman aralığını incident penceresine çek (son 15–60 dk).
+  - Label selector ile daralt (`namespace`, `app`, `level`).
+- Query’yi büyüt:
+  - Önce `|= "error"` gibi basit filter.
+  - Sonra gerekirse `| json`/`| logfmt` ile field filtresi.
+- Live tail:
+  - Canlı tail’i sadece dar selector ile aç (aksi halde gürültü ve maliyet).
+  - Kısa süreli kullan; canary/incident doğrulaması için.
+- Context:
+  - Bir satırı seçip aynı stream’de “öncesi/sonrası”nı gör.
+  - Aynı request/trace id varsa derived field linkiyle trace’e git.
+
+## Common mistakes
+- Live tail’i geniş selector ile açmak: hem okunmaz hem sistemi zorlar.
+- Label yokken içerikte regex ile aramak: yavaş ve pahalı.
 
 ## References
 - `skills/cos-deploy-grafana`
-- `cli/skills/agentic-troubleshoot-grafana`
+- `skills/obs-loki-query-logql`
+- `skills/obs-loki-grafana-datasource`
