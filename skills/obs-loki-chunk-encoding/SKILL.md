@@ -1,18 +1,35 @@
 ---
 name: obs-loki-chunk-encoding
-description: Loki sıkıştırma formatları (gzip, snappy, lz4, zstd) ve performans trade-off'larını seçerken kullan. Kullanıcı “obs-loki-chunk-encoding”, “obs loki chunk encoding”, “loki” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Loki’de chunk compression/encoding seçimi yapmak veya “disk maliyeti vs query CPU” dengesini ayarlamak gerektiğinde kullan. gzip/snappy/lz4/zstd gibi seçeneklerde hangi workload’a hangi tercihin daha uygun olacağını dar kapsamda değerlendirir.
 ---
 
 ## Purpose
-Loki sıkıştırma formatları (gzip, snappy, lz4, zstd) ve performans trade-off'larını seçerken kullan
+Bu skill’in çıktısı:
+- Encoding seçimi için karar (CPU mı disk mi öncelik?)
+- Değişiklik yapmadan önce/sonra ölçüm planı (query latency, CPU, storage büyümesi)
+- “Ne zaman değiştirmemeli?” uyarısı (prod’da ani format değişimi riskleri)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Önce darboğazı belirle:
+  - Disk/obj storage maliyeti mi yüksek?
+  - Query CPU mu yüksek? (decompress maliyeti)
+  - Ingest CPU mu yüksek? (compress maliyeti)
+- Encoding seçimini hedefe göre yap:
+  - Disk kazanımı öncelikse daha agresif sıkıştırma (CPU pahasına).
+  - Hız öncelikse daha hızlı codec (daha büyük veri pahasına).
+- Değişiklik stratejisi:
+  - Prod’da aniden tüm cluster’da değiştirme; küçük kapsamda dene ve ölç.
+  - Retention/compactor davranışıyla birlikte düşün (eski chunk’lar ne olacak?).
+- Ölç ve doğrula:
+  - Aynı dashboard sorgularında p95/p99 latency.
+  - Ingester/querier CPU.
+  - Storage büyüme hızı.
+
+## Common mistakes
+- “Daha iyi sıkıştırma”yı kör seçmek: query CPU’yu patlatabilir.
+- Ölçmeden değiştirmek: kazanç mı zarar mı anlaşılmaz.
 
 ## References
 - `skills/cos-deploy-loki`
-- `skills/cos-relation-loki-grafana`
-- `cli/skills/agentic-troubleshoot-loki`
+- `skills/obs-loki-ingester-config`
+- `skills/obs-loki-storage-backend`
