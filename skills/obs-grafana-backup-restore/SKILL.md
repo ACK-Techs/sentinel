@@ -1,17 +1,38 @@
 ---
 name: obs-grafana-backup-restore
-description: Grafana dashboard/datasource backup ve geri yükleme prosedürünü uygularken kullan. Kullanıcı “obs-grafana-backup-restore”, “obs grafana backup restore”, “grafana” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Grafana’yı felaket senaryosuna hazırlamak için dashboard/datasource/izinler gibi varlıkların backup’ını almak ve kontrollü restore yapmak gerektiğinde kullan. “Grafana çöktü, neyi nasıl geri alacağız?” playbook’u üretmeye odaklanır.
 ---
 
 ## Purpose
-Grafana dashboard/datasource backup ve geri yükleme prosedürünü uygularken kullan
+Bu skill’in çıktısı:
+- Backup kapsamı listesi: DB, provisioning dosyaları, plugin’ler, secret’lar (nerede?)
+- RPO/RTO’ya göre backup yöntemi önerisi
+- Restore adımları + doğrulama checklist’i (UI’da nesneler, query’ler çalışıyor mu?)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Envanter ve veri kaynağı:
+  - Grafana DB türü: sqlite mı, Postgres/MySQL mi?
+  - Provisioning kullanılıyor mu? (dashboards/datasources/alerts dosya ile)
+- Backup kapsamı:
+  - DB dump/snapshot (dashboards, users, orgs, permissions).
+  - Provisioning dizinleri ve dashboard JSON kaynakları.
+  - Plugin sürümleri (deterministik restore için).
+  - Secret’lar: datasource credential’ları (ayrı secret store; backup stratejisi farklı).
+- Sıklık ve saklama:
+  - RPO/RTO hedeflerini yaz; günlük/saatsel gereksinime göre planla.
+- Restore prosedürü:
+  - Aynı Grafana sürümü + aynı plugin set’i ile ayağa kaldır.
+  - DB restore et / provisioning’i mount et (hangisi source of truth ise).
+  - Datasource bağlantı testi.
+- Doğrulama:
+  - Kritik dashboard listesi açılıyor mu?
+  - 1–2 kritik panel query’si “no data” vermiyor mu?
+
+## Common mistakes
+- Secret’ları “backup” sanmak: çoğu zaman dış sistemdedir (Vault/K8s Secret); restore planında ayrı ele al.
+- Provisioning + DB aynı anda source of truth gibi davranmak: drift ve çakışma.
 
 ## References
 - `skills/cos-deploy-grafana`
-- `cli/skills/agentic-troubleshoot-grafana`
+- `skills/obs-grafana-provisioning`
+- `skills/obs-grafana-plugin-install`
