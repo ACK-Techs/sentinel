@@ -1,17 +1,35 @@
 ---
 name: obs-tempo-resource-sizing
-description: Tempo bileşen hafıza/CPU boyutlandırması ve disk büyüme tahmini yaparken kullan. Kullanıcı “obs-tempo-resource-sizing”, “obs tempo resource sizing”, “tempo” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Tempo bileşenlerini (distributor/ingester/query) CPU/RAM ve storage açısından boyutlandırmak veya “trace volumü artıyor, ne kadar kaynak gerekir?” sorusunu yanıtlamak gerektiğinde kullan. Ölçüm‑tabanlı sizing ve büyüme tahmini odaklıdır.
 ---
 
 ## Purpose
-Tempo bileşen hafıza/CPU boyutlandırması ve disk büyüme tahmini yaparken kullan
+Bu skill’in çıktısı:
+- Sizing için ölçüm listesi (ingest rate, spans/s, block yazımı, query concurrency)
+- Hangi bileşen hangi yükten etkilenir (ingest vs query vs compaction)
+- Kapasite planı: “önce ölç → sonra knob değiştir/ölçekle” kısa aksiyon listesi
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Önce workload’ı tanımla:
+  - Ingest: spans/s, trace boyutu, sampling oranı
+  - Query: kaç kullanıcı, hangi zaman aralıkları, TraceQL karmaşıklığı
+  - Retention: kaç gün/saat
+- Ölç (tahminin tabanı):
+  - Ingest throughput ve reject/dropped sinyalleri
+  - Query latency p95/p99 ve concurrent query
+  - Storage büyüme trendi (object store bytes/day)
+- Bileşen bazlı kaldıraçlar:
+  - Distributor: protokol/ingress, burst kontrolü
+  - Ingester: bellek baskısı, WAL/replay, block flush davranışı
+  - Querier/query-frontend: shard/caching, tail latency
+  - Compactor: retention iş yükü ve storage I/O
+- Çıktı üret:
+  - “Şimdi” durum özeti (3 satır) + risk (OOM, throttle, storage) + öneri (scale up/out).
+
+## Common mistakes
+- Query darboğazını ingest ölçekleyerek çözmeye çalışmak (katmanı ayır).
+- Sampling/attribute patlaması varken sadece kaynak büyütmek (maliyeti katlar).
 
 ## References
-- `skills/target-app-fastapi-otel-bootstrap`
-- `skills/target-app-observability-lib`
+- `skills/obs-tempo-sampling-strategy`
+- `skills/obs-tempo-storage-backend`
