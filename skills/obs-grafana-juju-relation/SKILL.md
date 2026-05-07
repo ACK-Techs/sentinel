@@ -1,17 +1,35 @@
 ---
 name: obs-grafana-juju-relation
-description: Juju grafana-source relation ile datasource otomatik kaydını kurarken kullan. Kullanıcı “obs-grafana-juju-relation”, “obs grafana juju relation”, “grafana” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Juju/COS ortamında `grafana-source` relation ile Prometheus/Loki/Tempo datasource’larının Grafana’ya otomatik kaydolmasını kurmak veya “relation var ama datasource gelmiyor” sorununu çözmek gerektiğinde kullan. Charm relation modeline odaklanır (API/provisioning değil).
 ---
 
 ## Purpose
-Juju grafana-source relation ile datasource otomatik kaydını kurarken kullan
+Bu skill’in çıktısı:
+- Juju relation komutları ve beklenen sonuçlar (datasource’lar görünmeli)
+- Troubleshooting akışı: relation → unit status → config → Grafana tarafı doğrulama
+- Doğrulama: Explore’da her datasource ile basit bir sorgu çalıştırma
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Bağlam:
+  - Hangi charm’lar var? (grafana-k8s, prometheus-k8s, loki-k8s, tempo-k8s vb.)
+- Relation kur:
+  - Datasource sağlayan charm ile Grafana arasında `grafana-source` relation oluştur.
+- Beklenen davranış:
+  - Grafana UI’da datasource otomatik oluşmalı (isim/UID charm tarafından).
+- “Datasource gelmiyor” teşhisi:
+  - `juju status` ile unit’ler blocked/waiting mi?
+  - Relation gerçekten kurulu mu? yanlış endpoint mi?
+  - Grafana unit log/leader durumu (relation data publish/consume).
+- Doğrulama:
+  - Grafana Explore’da Prometheus için basit `up` sorgusu.
+  - Loki için dar selector’la log getir.
+  - Tempo için kısa aralıkta trace araması (en azından datasource reachable).
+
+## Common mistakes
+- Yanlış relation endpoint adıyla bağlamak (benzer isimli relation’lar karışır).
+- Grafana’yı çok erken test etmek: relation data henüz yayılmamış olabilir; unit status’a bak.
 
 ## References
 - `skills/cos-deploy-grafana`
-- `cli/skills/agentic-troubleshoot-grafana`
+- `skills/cos-relation-loki-grafana`
+- `skills/cos-relation-prometheus-grafana`
