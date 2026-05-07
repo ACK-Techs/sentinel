@@ -1,17 +1,34 @@
 ---
 name: obs-tempo-troubleshoot-query
-description: Tempo sorgu hatası, boş trace ve timeout durumlarında teşhis adımlarını uygularken kullan. Kullanıcı “obs-tempo-troubleshoot-query”, “obs tempo troubleshoot query”, “tempo” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Tempo’da trace araması boş dönüyor, TraceQL timeout oluyor veya Grafana Explore trace açamıyorsa kullan. Semptomu (empty/slow/error) sınıflandırıp; zaman penceresi, service.name, tenant header, sampling ve datasource bağlantısını adım adım izole eder.
 ---
 
 ## Purpose
-Tempo sorgu hatası, boş trace ve timeout durumlarında teşhis adımlarını uygularken kullan
+Bu skill’in çıktısı:
+- Minimal arama stratejisi (tek servis + kısa zaman penceresi) ve büyütme adımları
+- En sık boş sonuç nedenleri için kontrol listesi (sampling, service.name, retention, tenant)
+- Timeout için daraltma önerileri (query scope, attribute filtreleri)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- 1) Semptomu sınıflandır:
+  - Empty mi, slow/timeout mı, error mı?
+- 2) Minimal arama ile başla:
+  - Tek `service.name` + son 30–60 dk.
+  - Sonra attribute filtreleri ekle (status/route), en sona regex.
+- 3) Boş sonuç teşhisi:
+  - Service adı yanlış mı? (resource attribute)
+  - Sampling yüzünden trace düşüyor mu?
+  - Retention dışında mı arıyorsun?
+  - Tenant mismatch var mı? (multi-tenancy)
+- 4) Timeout teşhisi:
+  - Aramayı daralt (zaman, servis, limit).
+  - Advanced TraceQL’e geçmeden önce scope’u küçült.
+- 5) Grafana datasource:
+  - Grafana’dan Tempo endpoint’e erişim var mı? auth/tenant header doğru mu?
+- 6) Doğrulama:
+  - Bulduğun bir trace’i aç; span’lar eksik/boş ise ingest tarafına dön.
 
 ## References
-- `skills/target-app-fastapi-otel-bootstrap`
-- `skills/target-app-observability-lib`
+- `skills/obs-tempo-trace-query`
+- `skills/obs-tempo-grafana-datasource`
+- `skills/obs-tempo-multi-tenancy`
