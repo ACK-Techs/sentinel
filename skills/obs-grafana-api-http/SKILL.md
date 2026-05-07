@@ -1,17 +1,35 @@
 ---
 name: obs-grafana-api-http
-description: Grafana HTTP API ile dashboard CRUD, alert ve datasource yönetimini yaparken kullan. Kullanıcı “obs-grafana-api-http”, “obs grafana api http”, “grafana” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Grafana HTTP API ile otomasyon yapmak (dashboard import/export, klasör arama, datasource yönetimi) veya “UI yerine API ile yönet” ihtiyacı olduğunda kullan. Amacı API çağrısı örnekleri ve güvenli auth kalıbı üretmektir; provisioning/GitOps ayrı skill’dir.
 ---
 
 ## Purpose
-Grafana HTTP API ile dashboard CRUD, alert ve datasource yönetimini yaparken kullan
+Bu skill’in çıktısı:
+- Güvenli API kullanım kalıbı (token’ı yazmadan header şablonu)
+- En sık otomasyon senaryoları için `curl` örnekleri: search → export → import
+- Doğrulama: API yanıtı ve Grafana UI’da görünürlük kontrolü
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Bağlamı sabitle:
+  - Grafana base URL (örn. `https://grafana.example`), org/tenant var mı?
+  - Auth türü: service account token mı, basic auth mı?
+- Güvenli auth şablonu:
+  - Token değerini asla yapıştırma; `Authorization: Bearer $GRAFANA_TOKEN` gibi ENV üzerinden.
+- Tipik akışlar (ihtiyaca göre seç):
+  - Dashboard arama: UID/title bul.
+  - Dashboard export: JSON al.
+  - Dashboard import/update: folder UID ile yaz.
+  - Datasource listele/oluştur: isim/UID yönetimi.
+- Çakışma/drift:
+  - Aynı dashboard UI’dan da değişiyorsa sürüm/UID stratejisini yaz.
+- Doğrulama:
+  - HTTP status + body kontrolü.
+  - UI’da folder/dashboard gerçekten görünüyor mu?
+
+## Common mistakes
+- Token’ı log’lara/CI çıktısına sızdırmak.
+- Import’ta UID/folder id karışıklığı yüzünden aynı dashboard’u çoğaltmak.
 
 ## References
 - `skills/cos-deploy-grafana`
-- `cli/skills/agentic-troubleshoot-grafana`
+- `skills/obs-grafana-provisioning`
