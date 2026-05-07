@@ -1,16 +1,34 @@
 ---
 name: obs-otel-collector-pipeline
-description: OTEL Collector receiver/processor/exporter pipeline mimarisini kurarken kullan. Kullanıcı “obs-otel-collector-pipeline”, “obs otel collector pipeline”, “otel” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: OpenTelemetry Collector’da metrics/logs/traces için pipeline tasarlamak (receiver→processor→exporter zinciri, fanout, tenant/env ayrımı) veya “sinyal bir yerde kayboluyor” problemini çözmek gerektiğinde kullan. Amaç tek bir çalışır YAML pipeline iskeleti ve doğrulama adımı üretmektir.
 ---
 
 ## Purpose
-OTEL Collector receiver/processor/exporter pipeline mimarisini kurarken kullan
+Bu skill’in çıktısı:
+- Sinyal bazlı pipeline iskeleti (metrics/logs/traces ayrı) ve bileşen seçimi gerekçesi
+- Fanout/routing kararı (aynı sinyali birden çok backend’e gönderme)
+- Doğrulama: Collector metrics/log’larıyla “alıyor → işliyor → export ediyor” kanıtı
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Bağlamı sabitle:
+  - Hangi sinyaller var? (metrics/logs/traces)
+  - Hedef backends: Prometheus remote-write, Loki, Tempo/OTLP, başka?
+- Pipeline’ı sinyal bazlı kur:
+  - `receivers`: OTLP gRPC/HTTP gibi girişler.
+  - `processors`: minimum set (batch + memory limiter), sonra enrichment/filter.
+  - `exporters`: her backend için bir exporter.
+  - `service.pipelines`: her sinyal için ayrı liste.
+- Fanout/routing:
+  - Aynı trace’i hem Tempo’ya hem debug exporter’a göndermek gibi senaryoları açık yaz.
+- Güvenlik ve maliyet:
+  - PII içeren attribute/log alanlarını filtreleme ihtiyacı var mı?
+  - Sampling/attribute drop kararlarını not et (bu skill pipeline iskeleti üretir).
+- Doğrulama:
+  - Collector’ın kendi telemetry metriklerinden receiver accepted / exporter sent değerlerini kontrol et.
+
+## Common mistakes
+- Metrics/logs/traces’i tek pipeline’da karıştırmak: debug zorlaşır.
+- Processor ekleyip doğrulamamak: sinyal sessizce düşebilir (drop/filter).
 
 ## References
 - `skills/target-app-fastapi-otel-bootstrap`
