@@ -1,17 +1,40 @@
 ---
 name: obs-grafana-table-panel
-description: Grafana table panel ile transform, field override ve link yapılandırmasını yaparken kullan. Kullanıcı “obs-grafana-table-panel”, “obs grafana table panel”, “grafana” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Grafana Table panelinde çoklu query sonucunu okunabilir bir tabloya çevirmek (transform’lar, field override’lar, drilldown linkleri) gerektiğinde kullan. “Top N endpoint tablosu”, “kolonları birleştir/sırala”, “satıra tıklayınca log/trace’e git” gibi ihtiyaçlara odaklanır.
 ---
 
 ## Purpose
-Grafana table panel ile transform, field override ve link yapılandırmasını yaparken kullan
+Bu skill’in çıktısı:
+- Table panel “recipe”: query → transform → field override → link zinciri
+- Drilldown tasarımı: bir satırdan ilgili dashboard / Explore (logs/traces) linkleri
+- Anti-pattern’leri engelleyen kararlar: kolon şişmesi, yanlış sort, anlamsız join
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Tablo hedefini netleştir:
+  - Satır anahtarı nedir? (örn. `service`, `route`, `status_code`)
+  - Kolonlar: KPI’lar (error rate, p95, RPS) ve “son görüldü” gibi yardımcı alanlar.
+- Query stratejisi:
+  - Tek query ile tüm kolonlar mümkün mü? (tercih)
+  - Birden fazla query gerekiyorsa join anahtarını sabitle.
+- Transform seçimi (ihtiyaca göre):
+  - “Organize fields”: kolon sırası, gizleme, rename.
+  - “Join by field”: aynı anahtarda KPI’ları birleştirme.
+  - “Group by” / “Reduce”: satır başına tek değer çıkarma.
+  - “Sort by” + “Limit”: Top N tablolar.
+- Field overrides:
+  - Unit/decimals, threshold renkleri, value mapping.
+  - Link: kolona veya satıra tıklanınca drilldown URL.
+- Drilldown linkleri:
+  - Link’e zaman aralığını ve satır anahtarlarını geçir (örn. `service=<value>`).
+  - Logs/Traces için label/attribute isimleriyle uyumlu olduğundan emin ol.
+- Doğrulama:
+  - Top N sıralaması beklenen mi?
+  - Aynı KPI time series paneliyle tutarlı mı?
+
+## Common mistakes
+- Join anahtarını stabil tutmamak: satırlar çoğalır (cartesian join etkisi).
+- “Her şeyi tabloya koymak”: tablo okunmaz olur; 5–8 kolon üstüne çıkma.
 
 ## References
 - `skills/cos-deploy-grafana`
-- `cli/skills/agentic-troubleshoot-grafana`
+- `skills/obs-grafana-dashboard-design`
