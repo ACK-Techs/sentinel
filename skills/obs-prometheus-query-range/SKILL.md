@@ -1,18 +1,33 @@
 ---
 name: obs-prometheus-query-range
-description: PromQL query_range API parametrelerini ve sonuç yapısını kullanırken kullan. Kullanıcı “obs-prometheus-query-range”, “obs prometheus query range”, “prometheus” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Prometheus HTTP API `GET /api/v1/query_range` çağrısı tasarlamak, doğru `start/end/step` seçmek veya “neden timeout/çok büyük sonuç dönüyor?” sorunlarını çözmek gerektiğinde kullan. PromQL yazımı değil; **query_range API parametreleri ve sonuç şekli** odaklıdır.
 ---
 
 ## Purpose
-PromQL query_range API parametrelerini ve sonuç yapısını kullanırken kullan
+Bu skill’in çıktısı:
+- `query_range` için doğru parametre seti (zaman aralığı + step) ve örnek `curl/http` isteği
+- Dönen JSON’da `matrix` sonuç tipini okuma (series + [ts,value] çiftleri)
+- Sık hata modları için çözüm: 400/422, timeout, “çok seri” (cardinality)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Girdileri sabitle:
+  - PromQL: tek satır `query=...`
+  - Zaman: `start`, `end` (RFC3339 veya unix seconds) ve **timezone** netliği
+  - Örnekleme: `step` (kaç saniyede bir nokta istiyorsun?)
+- `step` seçimi (grafik + maliyet dengesi):
+  - Panel 6h/24h/7d gibi aralıklarda “piksel yoğunluğu” hedefle (çok küçük step → büyük payload).
+  - Kural: `((end-start)/step)` nokta sayısı makul olmalı; binlerce seri varsa step’i büyüt.
+- Sonuç tipini doğru bekle:
+  - `query_range` genelde `resultType=matrix` döner.
+  - Her seri: `metric` (label map) + `values` (timestamp,value dizisi).
+- Hata modlarına göre teşhis:
+  - **Timeout**: step’i büyüt, filtreyi daralt (`{job="..."}`), recording rule kullan.
+  - **Çok seri**: label patlaması var; önce `count(...) by (...)` ile cardinality’i ölç.
+  - **Boş sonuç**: zaman aralığı yanlış, label filtresi yanlış, scrape yok (up kontrolü).
+- Çıktı üret:
+  - İstek örneği (URL encode + parametreler)
+  - “Beklenen” `resultType` ve bir seri örnek şeması (tam veri dump etme)
 
 ## References
-- `skills/cos-deploy-prometheus`
-- `skills/cos-relation-prometheus-grafana`
-- `cli/skills/agentic-troubleshoot-prometheus`
+- `skills/obs-prometheus-instant-query`
+- `skills/obs-prometheus-recording-rules`
