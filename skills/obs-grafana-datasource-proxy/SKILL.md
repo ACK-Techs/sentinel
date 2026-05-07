@@ -1,16 +1,32 @@
 ---
 name: obs-grafana-datasource-proxy
-description: Grafana datasource proxy güvenliği ve auth forward kurallarını uygularken kullan. Kullanıcı “obs-grafana-datasource-proxy”, “obs grafana datasource proxy”, “grafana” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Grafana’nın datasource proxy davranışını güvenli hale getirmek (auth forward, allowlist, SSRF riskleri) veya “datasource çalışıyor ama auth/header bozuluyor” sorununu çözmek gerektiğinde kullan. Özellikle reverse proxy arkasında header/policy kurgusuna odaklanır.
 ---
 
 ## Purpose
-Grafana datasource proxy güvenliği ve auth forward kurallarını uygularken kullan
+Bu skill’in çıktısı:
+- Datasource proxy için güvenlik kontrol listesi (SSRF, ağ sınırı, header maskeleme)
+- Auth forward stratejisi (hangi header geçecek / hangisi strip edilecek)
+- Doğrulama: Grafana’dan datasource’a istek gidiyor mu ve yetkiler doğru mu?
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Tehdit modelini yaz:
+  - Grafana kullanıcıları datasource üzerinden hangi ağlara erişebilir? (SSRF riski)
+- Ağ sınırı:
+  - Datasource URL’lerini internal allowlist’e indir (private IP/metadata endpoint erişimini engelle).
+- Auth stratejisi:
+  - Grafana server → datasource arasında: basic/bearer/mTLS hangisi?
+  - Kullanıcı header’larını upstream’e taşımak istiyor musun? (genelde hayır; server-side credential daha güvenli)
+- Header hijyen:
+  - `Authorization` gibi header’ları log’larda maskele.
+  - Reverse proxy kullanıyorsan hangi header’lar strip edilecek açık yaz.
+- Doğrulama:
+  - Grafana “Test & Save” başarılı mı?
+  - Explore/query ekranında gerçek sorgu dönüyor mu?
+
+## Common mistakes
+- Datasource proxy’yi “genel HTTP proxy” gibi açmak (SSRF).
+- User auth header’larını upstream’e aynen forward etmek (sızıntı ve yetki karmaşası).
 
 ## References
 - `skills/cos-deploy-grafana`
