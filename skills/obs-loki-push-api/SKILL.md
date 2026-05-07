@@ -1,18 +1,32 @@
 ---
 name: obs-loki-push-api
-description: Loki push API'sine log gönderme payload ve label formatını kurarken kullan. Kullanıcı “obs-loki-push-api”, “obs loki push api”, “loki” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Loki’ye HTTP ile log göndermek için `POST /loki/api/v1/push` payload’ı hazırlamak, label string formatını doğru kurmak veya push sırasında 400/429/timeout hatalarını gidermek gerektiğinde kullan.
 ---
 
 ## Purpose
-Loki push API'sine log gönderme payload ve label formatını kurarken kullan
+Bu skill’in çıktısı:
+- Minimal `push` JSON örneği (streams/labels/entries) ve `curl` isteği
+- Timestamp formatı ve en sık hata modları için teşhis (out-of-order, too old, rate limit)
+- Label set’i için guardrail: high-cardinality’den kaçınma
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Payload şemasını doğru kur:
+  - `streams[]`: her stream = tek label set’i
+  - `streams[].labels`: Prometheus label string biçimi (`{key="value",...}`)
+  - `streams[].entries[]`: `ts` + `line`
+- Timestamp kararı:
+  - `ts` genelde RFC3339Nano/ISO benzeri; client tarafında tek standardı seç.
+  - Saat drift’i varsa “future timestamp” / out-of-order hatası çıkar.
+- Label set’i:
+  - Routing için küçük bir set: `cluster/namespace/app/level` gibi.
+  - `trace_id`, `request_id`, `path` gibi alanları label yapma; line içinde kalsın.
+- Hata modları:
+  - 400: labels string parse hatası, timestamp formatı, out-of-order.
+  - 429: ingest rate limit / tenant limit (backoff + batch küçült).
+  - Timeout: batch boyutu/stream sayısı çok büyük; parçala.
+- Doğrulama:
+  - Push sonrası aynı label selector ile LogQL sorgusu yap: `{app="..."} |= "canary"`
 
 ## References
 - `skills/cos-deploy-loki`
-- `skills/cos-relation-loki-grafana`
-- `cli/skills/agentic-troubleshoot-loki`
+- `skills/obs-loki-label-strategy`
