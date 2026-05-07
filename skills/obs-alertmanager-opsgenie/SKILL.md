@@ -1,17 +1,36 @@
 ---
 name: obs-alertmanager-opsgenie
-description: Alertmanager OpsGenie entegrasyonu ve responder mapping yaparken kullan. Kullanıcı “obs-alertmanager-opsgenie”, “obs alertmanager opsgenie”, “alertmanager” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Alertmanager’dan OpsGenie’ye alert/incident açmak (API key, responder/team mapping, priority/severity) veya “duplicate açıyor / kapanmıyor / yanlış ekibe gidiyor” sorununu çözmek gerektiğinde kullan. OpsGenie’ye özgü responder ve lifecycle semantiğine odaklanır.
 ---
 
 ## Purpose
-Alertmanager OpsGenie entegrasyonu ve responder mapping yaparken kullan
+Bu skill’in çıktısı:
+- OpsGenie receiver YAML snippet’i (API key maskeli) + responder mapping kararı
+- Dedup/lifecycle stratejisi: firing → create, resolved → close
+- Doğrulama: test alert’i ile doğru team’e düşen ve kapanan incident kanıtı
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- OpsGenie hedefini netleştir:
+  - Hangi team/schedule? hangi integration key?
+- Secret hijyen:
+  - API key’i config’e düz yazma; secret store/ENV referansı kullan.
+- Responder mapping:
+  - Alert label’larından (`team`, `service`) OpsGenie responder’a map kuralını yaz.
+  - Fall-back responder belirle (label eksikse).
+- Priority/severity:
+  - `severity=page` → yüksek öncelik; notify kanalı ayrı.
+- Dedup ve close:
+  - Tekilleştirme anahtarını sabitle (fingerprint/group key).
+  - Resolved event’in aynı anahtarla close yapabildiğini doğrula.
+- Doğrulama:
+  - Test alert’i ile incident oluştur; responder doğru mu?
+  - Alert resolved olunca incident kapanıyor mu?
+
+## Common mistakes
+- Responder mapping’i label kontratı olmadan yapmak: yanlış ekip/schedule.
+- Dedup anahtarını sabitlememek: aynı issue için çok incident.
 
 ## References
 - `skills/cos-deploy-alertmanager`
 - `cli/skills/agentic-troubleshoot-alertmanager`
+- `skills/obs-alertmanager-receivers`
