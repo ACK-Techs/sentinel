@@ -1,17 +1,34 @@
 ---
 name: obs-alertmanager-msteams
-description: Alertmanager Microsoft Teams entegrasyonu ve adaptive card template yaparken kullan. Kullanıcı “obs-alertmanager-msteams”, “obs alertmanager msteams”, “alertmanager” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Alertmanager’dan Microsoft Teams’e bildirim göndermek ve Adaptive Card içeriğini “okunabilir + aksiyon alınabilir” hale getirmek gerektiğinde kullan. Odak: Teams webhook, kart alanları, linkler ve delivery hata modları.
 ---
 
 ## Purpose
-Alertmanager Microsoft Teams entegrasyonu ve adaptive card template yaparken kullan
+Bu skill’in çıktısı:
+- Teams receiver/webhook entegrasyon planı (webhook URL maskeli)
+- Adaptive Card içerik şablonu: başlık/özet/alert listesi/linkler
+- Doğrulama: test alert’i ile Teams’te kart render ve linklerin çalışması
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Kanal ve gürültü politikasını belirle:
+  - Page mı notify mı? Teams genelde notify; page için ayrı kanal kullan.
+- Secret hijyen:
+  - Teams webhook URL’sini config’e düz yazma; secret store/ENV ile yönet.
+- Kart içeriği:
+  - Başlık: severity + service + durum.
+  - Gövde: ilk 3–5 alert özeti + “+N more”.
+  - Linkler: runbook, dashboard, silence.
+- Hata modu:
+  - 4xx: webhook/format hatası.
+  - 429: rate limit; grouping’i güçlendir.
+- Doğrulama:
+  - Test alert’i ile kartı gönder; render bozuluyor mu kontrol et.
+
+## Common mistakes
+- Teams’i page kanalı gibi kullanmak: rate limit ve gürültü.
+- Uzun label dump’ı: kart taşar, okunmaz olur.
 
 ## References
 - `skills/cos-deploy-alertmanager`
 - `cli/skills/agentic-troubleshoot-alertmanager`
+- `skills/obs-alertmanager-receivers`
