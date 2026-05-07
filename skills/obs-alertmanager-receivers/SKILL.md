@@ -1,16 +1,34 @@
 ---
 name: obs-alertmanager-receivers
-description: Alertmanager receiver (email, Slack, PagerDuty, webhook) yapılandırmasını kurarken kullan. Kullanıcı “obs-alertmanager-receivers”, “obs alertmanager receivers”, “alertmanager” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Alertmanager’da receiver tanımlamak (Slack/email/webhook/PagerDuty/Opsgenie) veya “bildirim gitmiyor/format bozuk” sorununu çözmek gerektiğinde kullan. Routing değil; **delivery ve message formatı** odaklıdır.
 ---
 
 ## Purpose
-Alertmanager receiver (email, Slack, PagerDuty, webhook) yapılandırmasını kurarken kullan
+Bu skill’in çıktısı:
+- Seçilen kanal için receiver YAML snippet’i (secret’lar maskeli/ENV referanslı)
+- Mesaj/başlık şablonu önerisi (kısa, aksiyon odaklı; runbook linkli)
+- Doğrulama: test alert’i ile delivery ve template’in doğru çalıştığını kanıt
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Kanalı ve beklentiyi seç:
+  - “Page” (7/24) mı “Notify” (iş saati) mi? Aynı receiver olmasın.
+- Secret hijyen:
+  - Webhook URL/token/SMTP password değerlerini dosyaya düz yazma.
+  - Nereden gelecek? (K8s Secret / Juju secret / ENV) açık belirt.
+- Payload tasarımı:
+  - Minimum alanlar: özet, service, severity, env, fingerprint, runbook link.
+  - Grup bildiriminde “kaç alert var?” bilgisini ekle.
+- Hata modu teşhisi:
+  - 401/403 → auth.
+  - Timeout → ağ/DNS/proxy.
+  - 429 → rate limit/backoff.
+- Doğrulama:
+  - Test alert’i ile receiver’a delivery.
+  - UI/receiver log’larında template render hatası var mı kontrol et.
+
+## Common mistakes
+- Aynı receiver’ı hem page hem notify için kullanmak: yanlış zamanda yanlış kanaldan uyarı.
+- Secret’ı config’e gömmek: sızıntı ve rotasyon zorluğu.
 
 ## References
 - `skills/cos-deploy-alertmanager`
