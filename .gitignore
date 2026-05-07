@@ -30,6 +30,43 @@ cli/.sentinel/
 .sentinel/
 **/.sentinel/
 
+# --- Secret / key dosyaları (public repo için asla commitlenmesin) ---
+.env
+.env.*
+**/.env
+**/.env.*
+!.env.example
+!.env.*.example
+!**/.env.example
+!**/.env.*.example
+
+*.pem
+*.key
+*.p8
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+
+*credentials*.json
+*credential*.json
+*secrets*.json
+*secret*.json
+service-account*.json
+firebase-adminsdk*.json
+
+.aws/
+.azure/
+.gcloud/
+.npmrc
+.pypirc
+.netrc
+.envrc
+
 # --- Sentinel test-platform yerel çalıştırma çıktıları ---
 test-platform/.runs/
 
