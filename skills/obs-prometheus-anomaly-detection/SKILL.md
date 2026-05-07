@@ -1,18 +1,39 @@
 ---
 name: obs-prometheus-anomaly-detection
-description: PromQL ile z-score ve ratio trend tabanlı anomali tespiti yazarken kullan. Kullanıcı “obs-prometheus-anomaly-detection”, “obs prometheus anomaly detection”, “prometheus” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Prometheus verisiyle “beklenmeyen sapma” tespiti yapmak gerektiğinde kullan. Özellikle z‑score (mean/stddev) veya “şimdi vs geçmiş baseline” ratio yaklaşımıyla anomali alarmı yazmak, false-positive’i azaltmak ve düşük trafik/gürültü durumlarını ele almak için.
 ---
 
 ## Purpose
-PromQL ile z-score ve ratio trend tabanlı anomali tespiti yazarken kullan
+Bu skill’in çıktısı:
+- Seçilen anomali yöntemine uygun PromQL şablonu (z‑score veya ratio-to-baseline)
+- “Ne zaman anlamlı?” koşulları (min trafik / min örnek sayısı / pencere)
+- Alarm eşiği ve stabilizasyon notu (for/window, clamp, outlier etkisi)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Önce “anomali”yi tanımla (metrik adı değil, davranış):
+  - Spike mı (ani artış), drop mu (ani düşüş), drift mi (yavaş kayma)?
+  - Hangi sinyal: error rate, latency, saturation, traffic?
+- Yöntemi seç:
+  - **Ratio-to-baseline**: şimdi ile geçmişin aynı dilimini kıyasla (günlük/haftalık pattern varsa).
+  - **Z‑score**: kısa pencerede ortalamadan kaç std sapma? (noise düşükse iyi çalışır).
+- Trafik/gürültü guardrail’i ekle:
+  - Low traffic’te oranlar patlar: `requests_total` gibi bir “min volume” koşulu ekle.
+  - `clamp_min` ile bölme/0 hatalarını önle.
+- PromQL şablonları (kısa, uyarlanabilir):
+  - Ratio: `(now / baseline)` gibi bir oran üret ve eşik belirle (örn. >1.5 veya <0.5).
+  - Z‑score: `(x - avg_over_time(x[W])) / stddev_over_time(x[W])`
+  - Baseline için `offset` kullan (örn. 1w) ve pencereyi stabil seç.
+- Alarm tasarımı:
+  - “Anomali” genelde semptomdur; severity’yi düşük başlat (`ticket`) ve gözlemle.
+  - `for:` ile kısa spike’ları filtrele.
+- Doğrulama:
+  - Grafikte şimdi + baseline + skor/ratio’yu aynı panelde göster.
+  - Son 7/14 gün üzerinde geçmişte sürekli tetikleniyor mu? (threshold’u revize et)
+
+## Common mistakes
+- Volume koşulu olmadan ratio alarmı: 0→1 geçişlerinde “sonsuz” görünür.
+- Sezonlukluk varken z‑score kullanmak: düzenli günlük/haftalık pattern false-positive üretir.
 
 ## References
-- `skills/cos-deploy-prometheus`
-- `skills/cos-relation-prometheus-grafana`
-- `cli/skills/agentic-troubleshoot-prometheus`
+- `skills/obs-prometheus-alerting-rules`
+- `skills/obs-prometheus-recording-rules`
