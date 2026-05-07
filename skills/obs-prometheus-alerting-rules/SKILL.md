@@ -1,18 +1,42 @@
 ---
 name: obs-prometheus-alerting-rules
-description: Prometheus alerting rule sözdizimi ve threshold belirleme kurallarını yazarken kullan. Kullanıcı “obs-prometheus-alerting-rules”, “obs prometheus alerting rules”, “prometheus” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Prometheus’ta yeni bir alerting rule yazmak veya mevcut alert’te false-positive / kaçırma (false-negative) sorununu düzeltmek gerektiğinde kullan. “alert rule”, “expr”, “for”, “severity”, “runbook_url”, “flapping” veya “eşik (threshold) nasıl seçilir?” gibi sorularda dar kapsamlı yol gösterir.
 ---
 
 ## Purpose
-Prometheus alerting rule sözdizimi ve threshold belirleme kurallarını yazarken kullan
+Bu skill’in çıktısı, doğrudan kullanılabilir bir **alerting rule** (YAML) ve kısa bir **tasarım gerekçesi**dir:
+- Kural yapısı: `alert`, `expr`, `for`, `labels`, `annotations`
+- Operasyonel kontrat: hangi semptomu yakalar, ne zaman “firing” olur, ne zaman “resolved” olur
+- Runbook bağlantısı ve sahiplik (owner/team) label’ları (varsa)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Semptomu tanımla (kuralı metrikten değil, semptomdan başlat):
+  - “Ne kötü?”: latency mi, error rate mi, saturation mı, down mı?
+  - Kapsam: hangi service/job/namespace? (label filtresi)
+- İyi bir `expr` yaz:
+  - Ham metrik yerine oran/percentile kullan (örn. `rate()`/`histogram_quantile()` gibi) ve pencereyi açık yaz.
+  - Label kardinalitesini kontrol et: alert 10k seriye bölünmesin (örn. `pod` bazında istemiyorsan `sum by (...)`).
+  - Eşik mantığını not et: mutlak eşik mi, baseline’a göre oran mı, SLO türevi mi?
+- Flapping’i azalt:
+  - `for:` süresi ile “geçici spike” vs “kalıcı sorun” ayrımı yap.
+  - Gerekirse `clamp_min`, `min_over_time/max_over_time` gibi stabilizasyon araçlarını düşün; ama okunabilirlikten ödün verme.
+- Routing için gerekli metadata’yı ekle:
+  - `labels.severity` (örn. `page|ticket|info`) ve ekip/sahiplik label’ı (varsa).
+  - `annotations.summary` (1 satır), `annotations.description` (kısa, aksiyon odaklı), `annotations.runbook_url` (varsa).
+- Deploy formatını seç:
+  - Bare Prometheus: rule dosyası + `rule_files` referansı
+  - COS/Juju: Prometheus’un rule mekanizmasına uyacak şekilde (bu repoda kuralın içeriğini üret, yerleştirme kullanıcı akışına kalabilir)
+- Validasyon (self-check):
+  - PromQL’i önce grafikte çalıştır: beklenen label seti ve değer aralığı doğru mu?
+  - “Eşik üstünde” senaryosunu simüle et (geçmiş veriyle) ve `for` etkisini düşün.
+  - Mümkünse `promtool check rules` / unit test (ayrı skill) ile syntax + mantık testi öner.
+
+## Common mistakes
+- “Neden” yerine “semptom” alert’i: CPU yüksek diye page atmak yerine kullanıcı etkisini yakalayan sinyali öncele.
+- `for` yok: kısa spike’lar paging’e dönüşür.
+- Annotation yok: alert geldiğinde ne yapılacağı belirsiz kalır.
 
 ## References
 - `skills/cos-deploy-prometheus`
-- `skills/cos-relation-prometheus-grafana`
-- `cli/skills/agentic-troubleshoot-prometheus`
+- `skills/cos-deploy-alertmanager`
+- `skills/obs-prometheus-unit-testing`
