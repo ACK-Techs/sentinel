@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Service Graph"
+  short_description: "Tempo service graph metriklerini Prometheus'a aktararak topol…"
+  default_prompt: "Use $obs-tempo-service-graph to complete this task."
+
+policy:
+  allow_implicit_invocation: true

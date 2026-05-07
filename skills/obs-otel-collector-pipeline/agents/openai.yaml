@@ -1,0 +1,7 @@
+interface:
+  display_name: "Otel: Collector Pipeline"
+  short_description: "OTEL Collector receiver/processor/exporter pipeline mimarisin…"
+  default_prompt: "Use $obs-otel-collector-pipeline to complete this task."
+
+policy:
+  allow_implicit_invocation: true

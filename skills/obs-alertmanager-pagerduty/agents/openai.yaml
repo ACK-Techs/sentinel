@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Pagerduty"
+  short_description: "Alertmanager PagerDuty entegrasyonu ve severity mapping yapıl…"
+  default_prompt: "Use $obs-alertmanager-pagerduty to complete this task."
+
+policy:
+  allow_implicit_invocation: true

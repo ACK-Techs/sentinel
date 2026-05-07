@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Heatmap Panel"
+  short_description: "Grafana heatmap panel ile histogram dağılımı ve latency band…"
+  default_prompt: "Use $obs-grafana-heatmap-panel to complete this task."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Tempo Explore"
+  short_description: "Grafana Explore'da Tempo trace sorgusu ve service graph kulla…"
+  default_prompt: "Use $obs-grafana-tempo-explore to complete this task."
+
+policy:
+  allow_implicit_invocation: true

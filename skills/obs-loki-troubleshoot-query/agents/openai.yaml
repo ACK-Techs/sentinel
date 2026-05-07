@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki: Troubleshoot Query"
+  short_description: "Loki sorgu hatası, timeout ve boş sonuç durumlarında teşhis a…"
+  default_prompt: "Use $obs-loki-troubleshoot-query to complete this task."
+
+policy:
+  allow_implicit_invocation: true

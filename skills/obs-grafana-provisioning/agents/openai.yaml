@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Provisioning"
+  short_description: "YAML dosyaları ile dashboard/datasource/alert otomatik yüklem…"
+  default_prompt: "Use $obs-grafana-provisioning to complete this task."
+
+policy:
+  allow_implicit_invocation: true

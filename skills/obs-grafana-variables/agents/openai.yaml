@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Variables"
+  short_description: "Template değişkenleri (query, custom, interval, datasource) o…"
+  default_prompt: "Use $obs-grafana-variables to complete this task."
+
+policy:
+  allow_implicit_invocation: true

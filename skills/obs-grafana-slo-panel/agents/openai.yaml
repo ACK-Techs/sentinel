@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Slo Panel"
+  short_description: "Grafana'da SLO/SLI paneli ve error budget görselleştirmesini…"
+  default_prompt: "Use $obs-grafana-slo-panel to complete this task."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Troubleshoot Ingest"
+  short_description: "Tempo'ya trace gelmiyor durumunda ingestion sorunlarını teşhi…"
+  default_prompt: "Use $obs-tempo-troubleshoot-ingest to complete this task."
+
+policy:
+  allow_implicit_invocation: true

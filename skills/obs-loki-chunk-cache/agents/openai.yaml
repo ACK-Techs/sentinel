@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki: Chunk Cache"
+  short_description: "Loki chunk cache (memcached/redis) entegrasyonu ile sorgu per…"
+  default_prompt: "Use $obs-loki-chunk-cache to complete this task."
+
+policy:
+  allow_implicit_invocation: true

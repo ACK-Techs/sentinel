@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Rbac"
+  short_description: "Grafana RBAC ile rol, team ve folder izin yönetimini yaparken"
+  default_prompt: "Use $obs-grafana-rbac to complete this task."
+
+policy:
+  allow_implicit_invocation: true

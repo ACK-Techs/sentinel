@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Plugin Install"
+  short_description: "Grafana plugin kurulumu, offline install ve version kilitleme…"
+  default_prompt: "Use $obs-grafana-plugin-install to complete this task."
+
+policy:
+  allow_implicit_invocation: true

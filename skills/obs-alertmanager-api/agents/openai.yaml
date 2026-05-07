@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Api"
+  short_description: "Alertmanager v2 API ile alert listeleme ve silence CRUD yaparken"
+  default_prompt: "Use $obs-alertmanager-api to complete this task."
+
+policy:
+  allow_implicit_invocation: true

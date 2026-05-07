@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Api Http"
+  short_description: "Grafana HTTP API ile dashboard CRUD, alert ve datasource yöne…"
+  default_prompt: "Use $obs-grafana-api-http to complete this task."
+
+policy:
+  allow_implicit_invocation: true

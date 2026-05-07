@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Multi Tenancy"
+  short_description: "Tempo tenant header ile çok kiracılı trace izolasyonu yaparken"
+  default_prompt: "Use $obs-tempo-multi-tenancy to complete this task."
+
+policy:
+  allow_implicit_invocation: true

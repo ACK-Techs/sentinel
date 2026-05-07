@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Annotations"
+  short_description: "Grafana annotation oluşturma ve event-driven annotation yaparken"
+  default_prompt: "Use $obs-grafana-annotations to complete this task."
+
+policy:
+  allow_implicit_invocation: true

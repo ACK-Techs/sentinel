@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Storage Backend"
+  short_description: "Tempo depolama backend seçimi (local, S3, GCS) ve parça yönet…"
+  default_prompt: "Use $obs-tempo-storage-backend to complete this task."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Receivers"
+  short_description: "Alertmanager receiver (email, Slack, PagerDuty, webhook) yapı…"
+  default_prompt: "Use $obs-alertmanager-receivers to complete this task."
+
+policy:
+  allow_implicit_invocation: true

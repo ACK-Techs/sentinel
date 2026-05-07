@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Juju Relation"
+  short_description: "Juju alertmanager relation ile Prometheus→Alertmanager bağlan…"
+  default_prompt: "Use $obs-alertmanager-juju-relation to complete this task."
+
+policy:
+  allow_implicit_invocation: true

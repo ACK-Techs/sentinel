@@ -1,10 +1,10 @@
 ---
-name: obs-prometheus-scrape-config
-description: Prometheus scrape job ve hedef keşif kurallarını yapılandırırken kullan. Kullanıcı “obs-prometheus-scrape-config”, “obs prometheus scrape config”, “prometheus” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+name: obs-prometheus-labels-strategy
+description: Metrik label tasarımı, kardinalite riski ve normalleştirme kurallarını belirlerken kullan. Kullanıcı “obs-prometheus-labels-strategy”, “obs prometheus labels strategy”, “prometheus” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
 ---
 
 ## Purpose
-Prometheus scrape job ve hedef keşif kurallarını yapılandırırken kullan
+Metrik label tasarımı, kardinalite riski ve normalleştirme kurallarını belirlerken kullan
 
 ## Workflow
 - Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).

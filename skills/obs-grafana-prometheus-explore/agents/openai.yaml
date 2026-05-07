@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Prometheus Explore"
+  short_description: "Grafana Explore ile PromQL sorgusu ve metric browser kullanım…"
+  default_prompt: "Use $obs-grafana-prometheus-explore to complete this task."
+
+policy:
+  allow_implicit_invocation: true

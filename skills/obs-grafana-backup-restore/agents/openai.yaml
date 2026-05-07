@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Backup Restore"
+  short_description: "Grafana dashboard/datasource backup ve geri yükleme prosedürü…"
+  default_prompt: "Use $obs-grafana-backup-restore to complete this task."
+
+policy:
+  allow_implicit_invocation: true

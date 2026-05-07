@@ -1,10 +1,10 @@
 ---
-name: obs-prometheus-scrape-config
-description: Prometheus scrape job ve hedef keşif kurallarını yapılandırırken kullan. Kullanıcı “obs-prometheus-scrape-config”, “obs prometheus scrape config”, “prometheus” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+name: obs-prometheus-service-discovery
+description: Kubernetes SD, file SD ve static_config ile hedef keşfi yapılandırırken kullan. Kullanıcı “obs-prometheus-service-discovery”, “obs prometheus service discovery”, “prometheus” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
 ---
 
 ## Purpose
-Prometheus scrape job ve hedef keşif kurallarını yapılandırırken kullan
+Kubernetes SD, file SD ve static_config ile hedef keşfi yapılandırırken kullan
 
 ## Workflow
 - Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).

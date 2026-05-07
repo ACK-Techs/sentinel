@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Hot Cold Storage"
+  short_description: "Tempo hot/cold storage katmanlaması ve object storage migrati…"
+  default_prompt: "Use $obs-tempo-hot-cold-storage to complete this task."
+
+policy:
+  allow_implicit_invocation: true

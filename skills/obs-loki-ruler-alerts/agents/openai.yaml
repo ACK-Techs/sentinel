@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki: Ruler Alerts"
+  short_description: "Loki ruler ile log tabanlı alerting kuralı yazarken"
+  default_prompt: "Use $obs-loki-ruler-alerts to complete this task."
+
+policy:
+  allow_implicit_invocation: true

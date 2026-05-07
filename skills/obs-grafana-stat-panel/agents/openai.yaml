@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Stat Panel"
+  short_description: "Grafana stat ve gauge panel konfigürasyonu ve threshold renk…"
+  default_prompt: "Use $obs-grafana-stat-panel to complete this task."
+
+policy:
+  allow_implicit_invocation: true

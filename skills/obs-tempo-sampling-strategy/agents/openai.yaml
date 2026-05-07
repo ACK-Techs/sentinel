@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Sampling Strategy"
+  short_description: "Head-based ve tail-based sampling stratejisi ve OTEL Collecto…"
+  default_prompt: "Use $obs-tempo-sampling-strategy to complete this task."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Unit Testing"
+  short_description: "promtool ile alerting/recording kural birim testini yazarken"
+  default_prompt: "Use $obs-prometheus-unit-testing to complete this task."
+
+policy:
+  allow_implicit_invocation: true

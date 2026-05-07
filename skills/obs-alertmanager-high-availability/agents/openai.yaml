@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: High Availability"
+  short_description: "Alertmanager HA cluster kurulumu ve duplicate supression yapa…"
+  default_prompt: "Use $obs-alertmanager-high-availability to complete this task."
+
+policy:
+  allow_implicit_invocation: true

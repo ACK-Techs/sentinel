@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki: Troubleshoot Ingest"
+  short_description: "Loki'ye log gelmiyor durumunda ingestion pipeline sorunlarını…"
+  default_prompt: "Use $obs-loki-troubleshoot-ingest to complete this task."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Alerting Rules"
+  short_description: "Prometheus alerting rule sözdizimi ve threshold belirleme kur…"
+  default_prompt: "Use $obs-prometheus-alerting-rules to complete this task."
+
+policy:
+  allow_implicit_invocation: true

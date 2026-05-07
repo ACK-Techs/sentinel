@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Webhook Integration"
+  short_description: "Alertmanager webhook receiver ile özel alert handler entegras…"
+  default_prompt: "Use $obs-alertmanager-webhook-integration to complete this task."
+
+policy:
+  allow_implicit_invocation: true

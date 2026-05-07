@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki: Multi Tenancy"
+  short_description: "X-Scope-OrgID header ile çok kiracılı log izolasyonu yaparken"
+  default_prompt: "Use $obs-loki-multi-tenancy to complete this task."
+
+policy:
+  allow_implicit_invocation: true

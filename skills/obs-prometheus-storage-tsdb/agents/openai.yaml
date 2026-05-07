@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Storage Tsdb"
+  short_description: "TSDB retention politikası ve disk büyüme tahmini yaparken"
+  default_prompt: "Use $obs-prometheus-storage-tsdb to complete this task."
+
+policy:
+  allow_implicit_invocation: true

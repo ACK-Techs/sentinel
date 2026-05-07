@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki: Query Logql"
+  short_description: "LogQL filtre, parser ve metric query sözdizimini yazarken"
+  default_prompt: "Use $obs-loki-query-logql to complete this task."
+
+policy:
+  allow_implicit_invocation: true

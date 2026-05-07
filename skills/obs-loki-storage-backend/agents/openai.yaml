@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki: Storage Backend"
+  short_description: "Loki depolama backend seçimi (filesystem, S3, BoltDB) ve yapı…"
+  default_prompt: "Use $obs-loki-storage-backend to complete this task."
+
+policy:
+  allow_implicit_invocation: true

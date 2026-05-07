@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Troubleshoot"
+  short_description: "Alertmanager'da bildirim gitmiyor ve route eşleşmiyor sorunla…"
+  default_prompt: "Use $obs-alertmanager-troubleshoot to complete this task."
+
+policy:
+  allow_implicit_invocation: true

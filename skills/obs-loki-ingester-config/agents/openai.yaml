@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki: Ingester Config"
+  short_description: "Loki ingester flush interval, chunk encoding ve WAL ayarların…"
+  default_prompt: "Use $obs-loki-ingester-config to complete this task."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Multi Tenancy"
+  short_description: "Label tabanlı izolasyon ve tenant-aware sorgulama kurallarını…"
+  default_prompt: "Use $obs-prometheus-multi-tenancy to complete this task."
+
+policy:
+  allow_implicit_invocation: true

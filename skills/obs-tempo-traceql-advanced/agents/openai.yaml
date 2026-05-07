@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Traceql Advanced"
+  short_description: "TraceQL span attribute filtresi ve structural operator kullan…"
+  default_prompt: "Use $obs-tempo-traceql-advanced to complete this task."
+
+policy:
+  allow_implicit_invocation: true

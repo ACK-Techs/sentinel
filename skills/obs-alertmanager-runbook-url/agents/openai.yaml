@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Runbook Url"
+  short_description: "Alert runbook URL alanı kullanımı ve otomatik runbook oluştur…"
+  default_prompt: "Use $obs-alertmanager-runbook-url to complete this task."
+
+policy:
+  allow_implicit_invocation: true

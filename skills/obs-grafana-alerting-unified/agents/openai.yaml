@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Alerting Unified"
+  short_description: "Grafana unified alerting, contact point ve notification polic…"
+  default_prompt: "Use $obs-grafana-alerting-unified to complete this task."
+
+policy:
+  allow_implicit_invocation: true

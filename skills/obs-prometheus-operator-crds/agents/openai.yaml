@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Operator Crds"
+  short_description: "ServiceMonitor/PodMonitor/PrometheusRule CRD'leri ile k8s-nat…"
+  default_prompt: "Use $obs-prometheus-operator-crds to complete this task."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Labels Strategy"
+  short_description: "Metrik label tasarımı, kardinalite riski ve normalleştirme ku…"
+  default_prompt: "Use $obs-prometheus-labels-strategy to complete this task."
+
+policy:
+  allow_implicit_invocation: true

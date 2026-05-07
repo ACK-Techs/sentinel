@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Loki Explore"
+  short_description: "Grafana Explore'da Loki log sorgusu, log context ve live tail…"
+  default_prompt: "Use $obs-grafana-loki-explore to complete this task."
+
+policy:
+  allow_implicit_invocation: true

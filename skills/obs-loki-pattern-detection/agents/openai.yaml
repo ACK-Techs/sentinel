@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki: Pattern Detection"
+  short_description: "Loki pattern sorguları ile log anomalisi ve hata kümeleme ana…"
+  default_prompt: "Use $obs-loki-pattern-detection to complete this task."
+
+policy:
+  allow_implicit_invocation: true

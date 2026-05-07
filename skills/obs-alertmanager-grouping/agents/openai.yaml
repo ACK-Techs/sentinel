@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Grouping"
+  short_description: "Alert gruplama stratejisi (group_by, wait, interval, repeat)…"
+  default_prompt: "Use $obs-alertmanager-grouping to complete this task."
+
+policy:
+  allow_implicit_invocation: true

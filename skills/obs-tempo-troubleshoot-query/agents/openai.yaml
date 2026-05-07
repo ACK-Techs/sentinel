@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Troubleshoot Query"
+  short_description: "Tempo sorgu hatası, boş trace ve timeout durumlarında teşhis…"
+  default_prompt: "Use $obs-tempo-troubleshoot-query to complete this task."
+
+policy:
+  allow_implicit_invocation: true

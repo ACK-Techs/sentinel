@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Histogram Summary"
+  short_description: "Histogram ve Summary farkını, bucket tasarımını ve quantile h…"
+  default_prompt: "Use $obs-prometheus-histogram-summary to complete this task."
+
+policy:
+  allow_implicit_invocation: true

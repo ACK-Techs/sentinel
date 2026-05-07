@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Backup Restore"
+  short_description: "TSDB snapshot alma ve geri yükleme prosedürünü uygularken"
+  default_prompt: "Use $obs-prometheus-backup-restore to complete this task."
+
+policy:
+  allow_implicit_invocation: true

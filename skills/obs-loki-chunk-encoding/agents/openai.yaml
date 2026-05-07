@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki: Chunk Encoding"
+  short_description: "Loki sıkıştırma formatları (gzip, snappy, lz4, zstd) ve perfo…"
+  default_prompt: "Use $obs-loki-chunk-encoding to complete this task."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,10 +1,10 @@
 ---
-name: obs-prometheus-scrape-config
-description: Prometheus scrape job ve hedef keşif kurallarını yapılandırırken kullan. Kullanıcı “obs-prometheus-scrape-config”, “obs prometheus scrape config”, “prometheus” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+name: obs-prometheus-remote-write
+description: Prometheus remote_write ve uzak depolama entegrasyonunu kurarken kullan. Kullanıcı “obs-prometheus-remote-write”, “obs prometheus remote write”, “prometheus” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
 ---
 
 ## Purpose
-Prometheus scrape job ve hedef keşif kurallarını yapılandırırken kullan
+Prometheus remote_write ve uzak depolama entegrasyonunu kurarken kullan
 
 ## Workflow
 - Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).

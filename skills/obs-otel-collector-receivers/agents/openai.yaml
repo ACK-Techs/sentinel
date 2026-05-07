@@ -1,0 +1,7 @@
+interface:
+  display_name: "Otel: Collector Receivers"
+  short_description: "OTEL Collector receiver'ları (OTLP, Prometheus, Filelog, Jaeg…"
+  default_prompt: "Use $obs-otel-collector-receivers to complete this task."
+
+policy:
+  allow_implicit_invocation: true

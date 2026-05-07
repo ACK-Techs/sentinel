@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Remote Write"
+  short_description: "Prometheus remote_write ve uzak depolama entegrasyonunu kurarken"
+  default_prompt: "Use $obs-prometheus-remote-write to complete this task."
+
+policy:
+  allow_implicit_invocation: true

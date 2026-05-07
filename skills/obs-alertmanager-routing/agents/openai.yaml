@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Routing"
+  short_description: "Alertmanager route ağacı, matchers ve continue flag yapılandı…"
+  default_prompt: "Use $obs-alertmanager-routing to complete this task."
+
+policy:
+  allow_implicit_invocation: true

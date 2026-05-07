@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Juju Charm Metrics"
+  short_description: "Juju charm'larının sunduğu metrikleri ve scrape relation yapı…"
+  default_prompt: "Use $obs-prometheus-juju-charm-metrics to complete this task."
+
+policy:
+  allow_implicit_invocation: true

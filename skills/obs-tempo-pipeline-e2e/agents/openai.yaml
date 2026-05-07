@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Pipeline E2e"
+  short_description: "OTEL SDK → Collector → Tempo → Grafana zincirini uçtan uca do…"
+  default_prompt: "Use $obs-tempo-pipeline-e2e to complete this task."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Distributor Config"
+  short_description: "Tempo distributor ve receiver protokolleri (OTLP, Jaeger, Zip…"
+  default_prompt: "Use $obs-tempo-distributor-config to complete this task."
+
+policy:
+  allow_implicit_invocation: true

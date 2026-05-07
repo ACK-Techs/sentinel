@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Recording Rules"
+  short_description: "Sık sorgulanan metrikleri önceden hesaplayan recording rule y…"
+  default_prompt: "Use $obs-prometheus-recording-rules to complete this task."
+
+policy:
+  allow_implicit_invocation: true

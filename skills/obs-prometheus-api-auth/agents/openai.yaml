@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Api Auth"
+  short_description: "Prometheus HTTP API'ye basic auth, TLS veya reverse proxy eri…"
+  default_prompt: "Use $obs-prometheus-api-auth to complete this task."
+
+policy:
+  allow_implicit_invocation: true

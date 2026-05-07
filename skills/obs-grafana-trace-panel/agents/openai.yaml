@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Trace Panel"
+  short_description: "Grafana trace panel ile trace görselleştirmesi ve span detayı…"
+  default_prompt: "Use $obs-grafana-trace-panel to complete this task."
+
+policy:
+  allow_implicit_invocation: true

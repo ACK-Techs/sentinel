@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Msteams"
+  short_description: "Alertmanager Microsoft Teams entegrasyonu ve adaptive card te…"
+  default_prompt: "Use $obs-alertmanager-msteams to complete this task."
+
+policy:
+  allow_implicit_invocation: true

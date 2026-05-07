@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Service Discovery"
+  short_description: "Kubernetes SD, file SD ve static_config ile hedef keşfi yapıl…"
+  default_prompt: "Use $obs-prometheus-service-discovery to complete this task."
+
+policy:
+  allow_implicit_invocation: true

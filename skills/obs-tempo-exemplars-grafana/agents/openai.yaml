@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Exemplars Grafana"
+  short_description: "Tempo-Prometheus exemplar köprüsünü Grafana explore'da kurarken"
+  default_prompt: "Use $obs-tempo-exemplars-grafana to complete this task."
+
+policy:
+  allow_implicit_invocation: true

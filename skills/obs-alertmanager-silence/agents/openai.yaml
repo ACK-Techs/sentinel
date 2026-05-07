@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Silence"
+  short_description: "Alertmanager silence oluşturma ve API ile programatik bastırm…"
+  default_prompt: "Use $obs-alertmanager-silence to complete this task."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Table Panel"
+  short_description: "Grafana table panel ile transform, field override ve link yap…"
+  default_prompt: "Use $obs-grafana-table-panel to complete this task."
+
+policy:
+  allow_implicit_invocation: true

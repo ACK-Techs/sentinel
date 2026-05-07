@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Instant Query"
+  short_description: "PromQL anlık sorgu endpoint'ini ve dönen veri modelini anlama…"
+  default_prompt: "Use $obs-prometheus-instant-query to complete this task."
+
+policy:
+  allow_implicit_invocation: true

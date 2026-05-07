@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Inhibit"
+  short_description: "Alertmanager inhibit_rules ile gereksiz alert bastırma mantığ…"
+  default_prompt: "Use $obs-alertmanager-inhibit to complete this task."
+
+policy:
+  allow_implicit_invocation: true

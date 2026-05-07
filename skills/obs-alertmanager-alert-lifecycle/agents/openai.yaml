@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Alert Lifecycle"
+  short_description: "Alert firing→resolved yaşam döngüsü ve flapping önleme kurall…"
+  default_prompt: "Use $obs-alertmanager-alert-lifecycle to complete this task."
+
+policy:
+  allow_implicit_invocation: true

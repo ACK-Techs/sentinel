@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Federation"
+  short_description: "Çok-küme senaryolarında Prometheus federation ile merkezi met…"
+  default_prompt: "Use $obs-prometheus-federation to complete this task."
+
+policy:
+  allow_implicit_invocation: true

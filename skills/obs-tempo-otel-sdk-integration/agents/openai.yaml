@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Otel Sdk Integration"
+  short_description: "Uygulama tarafında OTEL SDK ile trace üretimi ve Tempo export…"
+  default_prompt: "Use $obs-tempo-otel-sdk-integration to complete this task."
+
+policy:
+  allow_implicit_invocation: true

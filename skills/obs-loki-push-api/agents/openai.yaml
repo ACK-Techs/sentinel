@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki: Push Api"
+  short_description: "Loki push API'sine log gönderme payload ve label formatını ku…"
+  default_prompt: "Use $obs-loki-push-api to complete this task."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Jaeger Compat"
+  short_description: "Jaeger UI uyumluluğu gereken ortamlarda Tempo jaeger receiver…"
+  default_prompt: "Use $obs-tempo-jaeger-compat to complete this task."
+
+policy:
+  allow_implicit_invocation: true

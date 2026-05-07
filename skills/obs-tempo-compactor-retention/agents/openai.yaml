@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Compactor Retention"
+  short_description: "Tempo compactor ve trace retention politikasını uygularken"
+  default_prompt: "Use $obs-tempo-compactor-retention to complete this task."
+
+policy:
+  allow_implicit_invocation: true

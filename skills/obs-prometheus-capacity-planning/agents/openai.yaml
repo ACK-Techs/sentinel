@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Capacity Planning"
+  short_description: "Metrik sayısı ve scrape interval'e göre kaynak kapasitesi pla…"
+  default_prompt: "Use $obs-prometheus-capacity-planning to complete this task."
+
+policy:
+  allow_implicit_invocation: true

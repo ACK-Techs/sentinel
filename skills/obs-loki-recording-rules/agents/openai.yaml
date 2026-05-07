@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki: Recording Rules"
+  short_description: "Loki recording rules ile log metriği türeterek Prometheus'a b…"
+  default_prompt: "Use $obs-loki-recording-rules to complete this task."
+
+policy:
+  allow_implicit_invocation: true

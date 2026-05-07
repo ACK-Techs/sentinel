@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Anomaly Detection"
+  short_description: "PromQL ile z-score ve ratio trend tabanlı anomali tespiti yaz…"
+  default_prompt: "Use $obs-prometheus-anomaly-detection to complete this task."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Trace Query"
+  short_description: "Tempo trace arama API'si ve TraceQL sorgu sözdizimini kullanı…"
+  default_prompt: "Use $obs-tempo-trace-query to complete this task."
+
+policy:
+  allow_implicit_invocation: true

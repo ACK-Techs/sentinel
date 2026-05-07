@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Resource Sizing"
+  short_description: "Tempo bileşen hafıza/CPU boyutlandırması ve disk büyüme tahmi…"
+  default_prompt: "Use $obs-tempo-resource-sizing to complete this task."
+
+policy:
+  allow_implicit_invocation: true

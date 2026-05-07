@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Image Renderer"
+  short_description: "Grafana image renderer kurulumu ve dashboard ekran görüntüsü…"
+  default_prompt: "Use $obs-grafana-image-renderer to complete this task."
+
+policy:
+  allow_implicit_invocation: true

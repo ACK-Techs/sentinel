@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Logs Panel"
+  short_description: "Grafana logs panel konfigürasyonu ve label filtresi ayarların…"
+  default_prompt: "Use $obs-grafana-logs-panel to complete this task."
+
+policy:
+  allow_implicit_invocation: true

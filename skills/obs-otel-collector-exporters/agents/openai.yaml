@@ -1,0 +1,7 @@
+interface:
+  display_name: "Otel: Collector Exporters"
+  short_description: "OTEL Collector exporter'ları (OTLP, Prometheus, Loki, debug)…"
+  default_prompt: "Use $obs-otel-collector-exporters to complete this task."
+
+policy:
+  allow_implicit_invocation: true

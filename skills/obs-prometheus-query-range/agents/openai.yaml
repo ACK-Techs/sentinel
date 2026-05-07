@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Query Range"
+  short_description: "PromQL query_range API parametrelerini ve sonuç yapısını kull…"
+  default_prompt: "Use $obs-prometheus-query-range to complete this task."
+
+policy:
+  allow_implicit_invocation: true

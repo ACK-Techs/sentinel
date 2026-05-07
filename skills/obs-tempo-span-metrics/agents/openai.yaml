@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Span Metrics"
+  short_description: "Tempo span metrics pipeline ile RED metriklerini türetirken"
+  default_prompt: "Use $obs-tempo-span-metrics to complete this task."
+
+policy:
+  allow_implicit_invocation: true

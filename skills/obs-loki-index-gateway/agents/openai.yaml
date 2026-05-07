@@ -1,0 +1,7 @@
+interface:
+  display_name: "Loki: Index Gateway"
+  short_description: "Loki index gateway bileşenini ayrı node olarak konuşlandırırken"
+  default_prompt: "Use $obs-loki-index-gateway to complete this task."
+
+policy:
+  allow_implicit_invocation: true

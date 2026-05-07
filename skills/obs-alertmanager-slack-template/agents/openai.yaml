@@ -1,0 +1,7 @@
+interface:
+  display_name: "Alertmanager: Slack Template"
+  short_description: "Alertmanager Slack mesaj template özelleştirmesi ve rich form…"
+  default_prompt: "Use $obs-alertmanager-slack-template to complete this task."
+
+policy:
+  allow_implicit_invocation: true

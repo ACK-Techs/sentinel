@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Ai Plugin"
+  short_description: "Grafana LLM plugin ile doğal dil sorgulama entegrasyonunu yap…"
+  default_prompt: "Use $obs-grafana-ai-plugin to complete this task."
+
+policy:
+  allow_implicit_invocation: true

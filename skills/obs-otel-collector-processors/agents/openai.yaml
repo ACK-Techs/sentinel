@@ -1,0 +1,7 @@
+interface:
+  display_name: "Otel: Collector Processors"
+  short_description: "OTEL Collector processor'ları (batch, memory_limiter, attribu…"
+  default_prompt: "Use $obs-otel-collector-processors to complete this task."
+
+policy:
+  allow_implicit_invocation: true

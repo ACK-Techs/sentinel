@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Dashboard Design"
+  short_description: "Grafana dashboard panel seçimi, layout ve değişken tasarımı k…"
+  default_prompt: "Use $obs-grafana-dashboard-design to complete this task."
+
+policy:
+  allow_implicit_invocation: true

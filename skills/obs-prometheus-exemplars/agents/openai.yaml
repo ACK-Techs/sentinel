@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Exemplars"
+  short_description: "Trace-metric köprüsü için exemplar yapılandırması ve Grafana…"
+  default_prompt: "Use $obs-prometheus-exemplars to complete this task."
+
+policy:
+  allow_implicit_invocation: true

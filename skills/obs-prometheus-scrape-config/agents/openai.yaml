@@ -1,0 +1,7 @@
+interface:
+  display_name: "Prometheus: Scrape Config"
+  short_description: "Prometheus scrape job ve hedef keşif kurallarını yapılandırırken"
+  default_prompt: "Use $obs-prometheus-scrape-config to complete this task."
+
+policy:
+  allow_implicit_invocation: true

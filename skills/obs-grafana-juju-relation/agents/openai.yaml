@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Juju Relation"
+  short_description: "Juju grafana-source relation ile datasource otomatik kaydını…"
+  default_prompt: "Use $obs-grafana-juju-relation to complete this task."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Grafana: Datasource Proxy"
+  short_description: "Grafana datasource proxy güvenliği ve auth forward kuralların…"
+  default_prompt: "Use $obs-grafana-datasource-proxy to complete this task."
+
+policy:
+  allow_implicit_invocation: true

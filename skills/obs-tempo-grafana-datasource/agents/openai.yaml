@@ -1,0 +1,7 @@
+interface:
+  display_name: "Tempo: Grafana Datasource"
+  short_description: "Grafana'da Tempo datasource, trace-log korelasyonu ve service…"
+  default_prompt: "Use $obs-tempo-grafana-datasource to complete this task."
+
+policy:
+  allow_implicit_invocation: true
