@@ -1,17 +1,38 @@
 ---
 name: obs-alertmanager-api
-description: Alertmanager v2 API ile alert listeleme ve silence CRUD yaparken kullan. Kullanıcı “obs-alertmanager-api”, “obs alertmanager api”, “alertmanager” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Alertmanager v2 HTTP API ile otomasyon yapmak (alerts/silences listeleme, silence create/expire, status/health kontrolü) gerektiğinde kullan. Hedef, güvenli `curl` kalıpları ve hata modu teşhisidir.
 ---
 
 ## Purpose
-Alertmanager v2 API ile alert listeleme ve silence CRUD yaparken kullan
+Bu skill’in çıktısı:
+- API çağrı şablonları: status → alerts → silences (CRUD)
+- Güvenli auth yaklaşımı (token’ı yazmadan ENV üzerinden)
+- Doğrulama: beklenen alert/silence objesinin gerçekten oluştuğunu kontrol
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Baz URL ve erişim:
+  - Alertmanager endpoint (ingress/internal), TLS/proxy var mı?
+- Auth:
+  - Varsa `Authorization: Bearer $AM_TOKEN` şeklinde kullan; token’ı metne yazma.
+- Okuma akışı:
+  - `status`/health ile instance çalışıyor mu?
+  - `alerts` ile aktif alert’leri filtrele (label matcher).
+  - `silences` ile etkin silences listesini al.
+- Yazma akışı (silence):
+  - En dar matcher set’iyle create.
+  - Expire (end time) güncelleme veya delete senaryosu.
+- Hata modu:
+  - 401/403: auth.
+  - 5xx: backend/HA split.
+  - Timeout: ağ/DNS/proxy.
+- Doğrulama:
+  - Create sonrası silence ID ile getir; eşleşen alert’lerde “silenced” etkisini gözle.
+
+## Common mistakes
+- Regex matcher ile aşırı geniş silence yaratmak.
+- API üzerinden yapılan silence’larda sahiplik/comment tutmamak: audit kaybı.
 
 ## References
 - `skills/cos-deploy-alertmanager`
 - `cli/skills/agentic-troubleshoot-alertmanager`
+- `skills/obs-alertmanager-silence`
