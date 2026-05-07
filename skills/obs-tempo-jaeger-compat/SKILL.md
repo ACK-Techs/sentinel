@@ -1,17 +1,31 @@
 ---
 name: obs-tempo-jaeger-compat
-description: Jaeger UI uyumluluğu gereken ortamlarda Tempo jaeger receiver kullanımını yaparken kullan. Kullanıcı “obs-tempo-jaeger-compat”, “obs tempo jaeger compat”, “tempo” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Jaeger istemcileri/SDK’ları veya Jaeger UI ile uyumluluk gerektiğinde Tempo’yu Jaeger receiver üzerinden ingest edecek şekilde kurmak ve “Jaeger gönderiyor ama Tempo almıyor” sorununu gidermek için kullan. OTLP yerine Jaeger protokol uyumluluğuna odaklanır.
 ---
 
 ## Purpose
-Jaeger UI uyumluluğu gereken ortamlarda Tempo jaeger receiver kullanımını yaparken kullan
+Bu skill’in çıktısı:
+- Jaeger receiver’ın ne zaman gerekli olduğuna dair karar (mevcut agent/SDK kısıtları)
+- Client’ın kullanacağı endpoint/port/protocol netliği (thrift/grpc gibi)
+- Canary doğrulama: Jaeger tarafında gönder → Tempo’da trace’i bul
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Karar:
+  - Yeni enstrümantasyonda OTLP tercih edilir; ama mevcut sistem Jaeger’e kilitliyse receiver aç.
+- Protokol uyumluluğu:
+  - Jaeger exporter hangi protokolü kullanıyor? (agent/collector vs direct)
+  - Tempo tarafında aynı receiver açık mı?
+- Ağ/ingress:
+  - gRPC/TCP protokolü ingress tarafından bozuluyor mu?
+  - Auth/TLS gerekiyorsa secret’ları düz metin yazma.
+- Doğrulama:
+  - Jaeger ile canary trace üret.
+  - Tempo’da service.name + kısa zaman penceresiyle trace’i ara.
+
+## Common mistakes
+- Jaeger exporter protokolü ile Tempo receiver protokolünü karıştırmak.
+- Ingress’in gRPC/TCP trafiğini HTTP gibi ele alması.
 
 ## References
-- `skills/target-app-fastapi-otel-bootstrap`
-- `skills/target-app-observability-lib`
+- `skills/obs-tempo-distributor-config`
+- `skills/obs-tempo-trace-query`
