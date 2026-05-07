@@ -26,5 +26,5 @@ Bu skill’in çıktısı:
 - Rotation ihtiyacı olan credential’ı statik Secret’a gömmek.
 
 ## References
-- `skills/sec-secrets-vault`
+- `cli/skills/agentic-secrets-handling`
 - `skills/k8s-core-configmap-secret`

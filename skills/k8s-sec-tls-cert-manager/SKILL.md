@@ -27,4 +27,4 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/k8s-net-traefik-tls`
-- `skills/sec-tls-mtls-design`
+- `skills/cos-ingress-config`

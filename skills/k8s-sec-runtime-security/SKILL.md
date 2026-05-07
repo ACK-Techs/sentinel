@@ -26,5 +26,5 @@ Bu skill’in çıktısı:
 - Tetiklenen alarm için runbook tanımlamamak.
 
 ## References
-- `skills/sec-incident-response`
+- `cli/skills/agentic-threat-model`
 - `skills/obs-alertmanager-routing`

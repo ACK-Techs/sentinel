@@ -27,4 +27,4 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/k8s-core-events-audit`
-- `skills/sec-log-integrity`
+- `cli/skills/agentic-threat-model`

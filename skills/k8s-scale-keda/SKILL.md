@@ -28,4 +28,4 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/k8s-scale-hpa`
-- `skills/test-load-k6`
+- `skills/target-app-load-generator`

@@ -29,4 +29,4 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/k8s-net-ingress-controller`
-- `skills/platform-api-gateway`
+- `skills/cos-ingress-config`

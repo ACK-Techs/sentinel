@@ -29,5 +29,5 @@ Bu skill’in çıktısı:
 - MetalLB kurup `LoadBalancer` service’i test etmemek.
 
 ## References
-- `skills/microk8s-addon-metallb`
+- `skills/microk8s-install-base`
 - `skills/k8s-net-service-types`

@@ -27,4 +27,4 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/k8s-storage-csi-driver`
-- `skills/platform-capacity-review`
+- `skills/k8s-storage-backup-velero`

@@ -26,5 +26,5 @@ Bu skill’in çıktısı:
 - Fix olmayan CVE’lerle pipeline’ı kullanılamaz hale getirmek.
 
 ## References
-- `skills/sec-static-analysis`
+- `cli/skills/agentic-dependency-licensing`
 - `skills/k8s-sec-supply-chain`

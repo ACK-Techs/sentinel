@@ -31,5 +31,5 @@ Bu skill’in çıktısı:
 - `describe` yerine sadece `logs` bakmak: scheduler/image pull hatası kaçabilir.
 
 ## References
-- `skills/debug-k8s-pod`
-- `skills/debug-k8s-network`
+- `cli/skills/agentic-microk8s-ops-reference`
+- `cli/skills/agentic-juju-ops-reference`

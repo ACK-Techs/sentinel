@@ -27,4 +27,4 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/k8s-core-service-account`
-- `skills/sec-api-key-lifecycle`
+- `cli/skills/agentic-secrets-handling`

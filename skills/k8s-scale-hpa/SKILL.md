@@ -26,5 +26,5 @@ Bu skill’in çıktısı:
 - HPA’yı request/limit ayarlarından bağımsız düşünmek.
 
 ## References
-- `skills/k8s-scale-custom-metrics-api`
+- `skills/obs-prometheus-recording-rules`
 - `skills/k8s-core-resource-requests-limits`

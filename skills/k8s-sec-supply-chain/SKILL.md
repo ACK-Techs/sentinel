@@ -26,5 +26,5 @@ Bu skill’in çıktısı:
 - SBOM üretip hiç kullanmamak.
 
 ## References
-- `skills/sec-supply-chain-integrity`
 - `skills/k8s-sec-image-scanning`
+- `cli/skills/agentic-dependency-licensing`

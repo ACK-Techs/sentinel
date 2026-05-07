@@ -30,4 +30,4 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/k8s-core-kustomize`
-- `skills/gitops-helm-release`
+- `skills/target-app-k8s-manifests`

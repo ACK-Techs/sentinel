@@ -27,4 +27,4 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/k8s-scale-hpa`
-- `skills/perf-memory-leak-detection`
+- `skills/k8s-core-resource-requests-limits`

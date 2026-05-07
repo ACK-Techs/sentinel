@@ -29,4 +29,4 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/k8s-core-helm-chart`
-- `skills/gitops-monorepo-strategy`
+- `skills/target-app-k8s-manifests`

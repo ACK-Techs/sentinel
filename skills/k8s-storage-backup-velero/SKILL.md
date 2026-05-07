@@ -27,4 +27,4 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/k8s-storage-volume-snapshot`
-- `skills/docs-runbook-template`
+- `skills/k8s-storage-data-migration`

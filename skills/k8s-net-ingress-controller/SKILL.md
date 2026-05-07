@@ -30,4 +30,4 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/k8s-net-traefik-tls`
-- `skills/microk8s-addon-ingress`
+- `skills/cos-ingress-config`

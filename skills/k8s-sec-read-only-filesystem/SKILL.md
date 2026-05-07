@@ -27,4 +27,4 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/k8s-sec-pod-security-standards`
-- `skills/sec-container-hardening`
+- `skills/k8s-sec-seccomp-apparmor`
