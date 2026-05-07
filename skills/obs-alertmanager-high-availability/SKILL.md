@@ -1,16 +1,34 @@
 ---
 name: obs-alertmanager-high-availability
-description: Alertmanager HA cluster kurulumu ve duplicate supression yaparken kullan. Kullanıcı “obs-alertmanager-high-availability”, “obs alertmanager high availability”, “alertmanager” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Alertmanager’ı HA modunda çalıştırmak (cluster/peers, gossip mesh, dedup) veya “HA var ama duplicate bildirim gidiyor” sorununu çözmek gerektiğinde kullan. Amaç doğru cluster üyeliği ve tekil bildirim davranışıdır.
 ---
 
 ## Purpose
-Alertmanager HA cluster kurulumu ve duplicate supression yaparken kullan
+Bu skill’in çıktısı:
+- HA topolojisi kararı (kaç replica, peer keşfi, servis/ingress)
+- Duplicate suppression’ın çalışması için gerekli koşullar checklist’i
+- Doğrulama: aynı alert iki Prometheus’tan gelse bile tek bildirim kanıtı
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- HA hedefini yaz:
+  - Neyi koruyoruz? (Alertmanager pod ölümü, node ölümü, zone)
+  - RPO: silences/notification state kaybı kabul edilebilir mi?
+- Peer keşfi:
+  - Replica’lar birbirini nasıl bulacak? (stable DNS, headless service, static peer list)
+- Ağ gereksinimi:
+  - Cluster portları/mesh erişimi açık mı? (network policy, firewall)
+- Dedup koşulları:
+  - Prometheus’lar aynı alert’i aynı label set’iyle mi gönderiyor?
+  - Alertmanager’lar aynı cluster’ın üyesi mi? (split brain var mı?)
+- Operasyonel kontroller:
+  - Rolling restart sırasında cluster küçülürken duplicate olmamalı.
+  - Time drift (NTP) kontrolü.
+- Doğrulama:
+  - İki farklı kaynaktan aynı alert’i gönder; notification sayısı tek mi ölç.
+
+## Common mistakes
+- Peers yanlış/eksik: cluster oluşmaz → her replica ayrı bildirim yollar.
+- Split brain (iki ayrı cluster): dedup bozulur.
 
 ## References
 - `skills/cos-deploy-alertmanager`
