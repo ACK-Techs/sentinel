@@ -1,18 +1,37 @@
 ---
 name: obs-prometheus-multi-tenancy
-description: Label tabanlı izolasyon ve tenant-aware sorgulama kurallarını uygularken kullan. Kullanıcı “obs-prometheus-multi-tenancy”, “obs prometheus multi tenancy”, “prometheus” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Prometheus metriklerinde tenant/ekip/ortam izolasyonu tasarlamak gerektiğinde kullan. “tek Prometheus’ta çok tenant”, “tenant label standardı”, “kimin neyi sorgulayacağı”, “yanlış tenant verisi karışıyor” gibi konularda **label ve erişim modeli** üretir.
 ---
 
 ## Purpose
-Label tabanlı izolasyon ve tenant-aware sorgulama kurallarını uygularken kullan
+Bu skill’in çıktısı:
+- Tenant kimliği için **tek bir label kontratı** (örn. `tenant`, `team`, `env`)
+- İzolasyon yaklaşımı seçimi: tek Prometheus + label, ayrı Prometheus per tenant, veya remote backend’de gerçek multi-tenancy
+- Tenant-aware sorgu ve dashboard guardrail’leri (yanlışlıkla cross-tenant görünmesin)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Önce “izolasyon seviyesi”ni seç (Prometheus’un sınırlarını açık tut):
+  - **Soft izolasyon**: tek Prometheus + `tenant=` label + dashboard/query kuralları.
+  - **Hard izolasyon**: tenant başına ayrı Prometheus (veri fiziksel ayrılır).
+  - **Gerçek multi-tenancy**: remote backend (Cortex/Mimir vb.) tenant header/namespace ile.
+- Tenant label kontratı yaz:
+  - Label adı(ları): 1–2 adet; çoğaltma.
+  - Değer kaynağı: instrumentation mı, scrape relabel mı? (tercihen instrumentation)
+  - Boş/unknown değeri nasıl ele alınacak? (reject/drop)
+- Karışmayı önle (en çok hata burada):
+  - Scrape tarafında tenant label’ı garanti et (yoksa “drop” et).
+  - Federation/remote_write kullanıyorsan, upstream/downstream label çakışmasını ele al.
+- Sorgu ve dashboard guardrail’leri:
+  - Her dashboard’da tenant değişkeni zorunlu olsun (varsayılan “all” yapma).
+  - Recording rule’ları tenant label’ı düşürmeyecek şekilde tasarla (aksi halde çapraz tenant birleşir).
+- Doğrulama:
+  - Aynı metriği iki tenant için çek: label ayrımı gerçekten var mı?
+  - “Tenant yok” seriler düşüyor mu yoksa sızıyor mu?
+
+## Common mistakes
+- Tenant’ı namespace ile “varsaymak”: cross-namespace scrape/relabel durumlarında karışır.
+- Recording rule’larda tenant label’ını düşürmek: veri kalıcı olarak birleşir.
 
 ## References
-- `skills/cos-deploy-prometheus`
-- `skills/cos-relation-prometheus-grafana`
-- `cli/skills/agentic-troubleshoot-prometheus`
+- `skills/obs-prometheus-remote-write`
+- `skills/obs-prometheus-federation`
