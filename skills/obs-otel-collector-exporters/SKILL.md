@@ -1,16 +1,36 @@
 ---
 name: obs-otel-collector-exporters
-description: OTEL Collector exporter'ları (OTLP, Prometheus, Loki, debug) yapılandırırken kullan. Kullanıcı “obs-otel-collector-exporters”, “obs otel collector exporters”, “otel” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: OpenTelemetry Collector exporter’larını hedef backend’lere göre yapılandırmak (OTLP/Tempo, Loki, Prometheus remote_write, debug/logging) veya “exporter hata veriyor, kuyruk doluyor” sorununu çözmek gerektiğinde kullan. Odak: endpoint/auth, retry/queue ve backpressure.
 ---
 
 ## Purpose
-OTEL Collector exporter'ları (OTLP, Prometheus, Loki, debug) yapılandırırken kullan
+Bu skill’in çıktısı:
+- Backend’e göre exporter YAML snippet’i (endpoint + auth/TLS + retry/queue)
+- Backpressure stratejisi: kuyruk, retry ve drop risklerinin yazımı
+- Doğrulama: exporter sent/failed metrikleri ile “çıktı gidiyor” kanıtı
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Hedef backend’leri listele:
+  - Traces: Tempo/OTLP?
+  - Logs: Loki?
+  - Metrics: Prometheus remote_write?
+- Exporter seçimi:
+  - Backend’in beklediği protokolü seç (OTLP gRPC/HTTP, remote_write).
+  - Debug exporter’ı sadece geçici kullan (prod’da gürültü).
+- Auth/TLS:
+  - Token/username/password değerlerini config’e gömme; secret store/ENV kullan.
+  - mTLS gerekiyorsa sertifika kaynaklarını belirt.
+- Retry/queue/backpressure:
+  - Geçici hatalarda retry; kalıcı 4xx’lerde hızlı fail.
+  - Kuyruk boyutu ve concurrency’yi hedef throughput’a göre ayarla.
+  - Hedef down ise “ne olur?” (kuyruk dolar mı drop olur mu) açık yaz.
+- Doğrulama:
+  - Collector telemetry’de exporter sent/failed değerlerini izle.
+  - Backend tarafında veri görünüyor mu? (Grafana’da basit sorgu)
+
+## Common mistakes
+- Exporter’ı pipeline’a eklemeyi unutmak: config var ama veri çıkmaz.
+- Hedef endpoint’i yanlış (http/https, path, port): sürekli retry ile kuyruk şişer.
 
 ## References
 - `skills/target-app-fastapi-otel-bootstrap`
