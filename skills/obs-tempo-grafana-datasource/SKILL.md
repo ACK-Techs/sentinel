@@ -1,17 +1,32 @@
 ---
 name: obs-tempo-grafana-datasource
-description: Grafana'da Tempo datasource, trace-log korelasyonu ve service graph kurarken kullan. Kullanıcı “obs-tempo-grafana-datasource”, “obs tempo grafana datasource”, “tempo” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Grafana’da Tempo datasource eklemek/düzeltmek, Explore’da trace bulamama sorununu gidermek veya logs↔traces korelasyonunu (traceID linkleri) çalışır hale getirmek gerektiğinde kullan. Datasource URL/auth/tenant header ve doğrulama adımlarına odaklanır.
 ---
 
 ## Purpose
-Grafana'da Tempo datasource, trace-log korelasyonu ve service graph kurarken kullan
+Bu skill’in çıktısı:
+- Tempo datasource bağlantı bilgisi (URL, auth, gerekiyorsa tenant header)
+- Trace arama/doğrulama adımı: service.name + zaman penceresi ile canary trace bulma
+- Logs↔traces korelasyonu için minimum gereksinim (trace_id taşıma ve linkleme)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Bağlantıyı netleştir:
+  - Grafana’nın erişebildiği Tempo endpoint’i (network/ingress).
+  - Auth/TLS ve gerekiyorsa tenant header (multi-tenancy).
+- “Trace yok” teşhisi:
+  - Zaman aralığı yanlış mı? (retention)
+  - service.name doğru mu? (OTel resource)
+  - Sampling yüzünden trace düşüyor mu?
+  - Tenant mismatch var mı? (header)
+- Explore doğrulaması:
+  - Basit arama: tek servis + kısa aralık (30–60 dk).
+  - Bulunan trace’i aç; span’lar geliyor mu?
+- Logs↔Traces korelasyonu:
+  - Log line veya structured field içinde trace_id var mı?
+  - Grafana Loki datasource’da derived field ile Tempo’ya link var mı?
+- Doğrulama:
+  - Log satırından trace linkine tıkla → aynı trace açılıyor mu?
 
 ## References
-- `skills/target-app-fastapi-otel-bootstrap`
-- `skills/target-app-observability-lib`
+- `skills/obs-loki-grafana-datasource`
+- `skills/obs-tempo-sampling-strategy`
