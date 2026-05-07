@@ -1,18 +1,36 @@
 ---
 name: obs-prometheus-api-auth
-description: Prometheus HTTP API'ye basic auth, TLS veya reverse proxy erişim güvenliği sağlarken kullan. Kullanıcı “obs-prometheus-api-auth”, “obs prometheus api auth”, “prometheus” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Prometheus HTTP API’yi (özellikle `/api/v1/query*`) güvenli şekilde erişime açmak gerektiğinde kullan. Basic auth, mTLS, reverse proxy ve “read-only erişim” modeli kurulumunda; header/credential sızıntısı ve yanlış yetkilendirme risklerini azaltmaya odaklanır.
 ---
 
 ## Purpose
-Prometheus HTTP API'ye basic auth, TLS veya reverse proxy erişim güvenliği sağlarken kullan
+Bu skill’in çıktısı:
+- Seçilen modele göre erişim taslağı: **doğrudan Prometheus** mu, yoksa **reverse proxy/gateway** üzerinden mi?
+- Auth/TLS gereksinimleri ve client çağrısı örneği (secret değerleri olmadan)
+- Güvenlik kontrol listesi: “read-only”, ağ sınırı, log’larda credential maskeleme
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Erişim modelini seç:
+  - **En güvenlisi**: Prometheus’u private tut + sadece cluster içinden eriş.
+  - Dış erişim gerekiyorsa: reverse proxy veya repo’daki **observability-gateway** gibi read-only katman tercih et.
+- Auth seçimi (kısıtlı hedef):
+  - Basic auth: hızlı ama credential yönetimi şart (rotasyon, maskeleme).
+  - mTLS: service-to-service için en güçlü; client sertifika yönetimi gerektirir.
+  - Bearer token: header taşınır; log/trace’de sızma riski yüksek → maskeleme şart.
+- “Read-only” kuralını uygula:
+  - İzin verilen path’leri allowlist yap (`/api/v1/query`, `/api/v1/query_range`, `/api/v1/labels` vb.).
+  - Admin/debug endpoint’lerini dışarı açma (ör. flags/config gibi).
+- Reverse proxy üzerinden geçiriyorsan:
+  - TLS termination nerede? (proxy mi, Prometheus mu)
+  - Header forward/strip kuralları: `Authorization` log’lanmasın; upstream’e gerektiği kadar geçsin.
+- Doğrulama:
+  - Auth olmadan 401/403 bekleniyor mu?
+  - Doğru kimlikle `query` çalışıyor mu?
+  - Yetkisiz path’ler gerçekten engelleniyor mu?
+
+## Common mistakes
+- Token’ı curl komutunda örnekleyip ticket/Slack’e yapıştırmak (kalıcı sızıntı).
+- Proxy log’larında `Authorization` header’ını maskelemeden bırakmak.
 
 ## References
-- `skills/cos-deploy-prometheus`
-- `skills/cos-relation-prometheus-grafana`
-- `cli/skills/agentic-troubleshoot-prometheus`
+- `documantations/INTEGRATION_SENTINEL_CLI_FROM_CLI_CLAUDE.md`
