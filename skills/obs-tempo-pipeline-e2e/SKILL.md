@@ -1,17 +1,36 @@
 ---
 name: obs-tempo-pipeline-e2e
-description: OTEL SDK → Collector → Tempo → Grafana zincirini uçtan uca doğrularken kullan. Kullanıcı “obs-tempo-pipeline-e2e”, “obs tempo pipeline e2e”, “tempo” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: OTEL SDK → OTEL Collector → Tempo → Grafana zincirinin uçtan uca çalıştığını kanıtlamak gerektiğinde kullan. “Trace üretildi mi?”, “collector export ediyor mu?”, “Tempo’da bulunuyor mu?”, “Grafana’da açılıyor mu?” adımlarını canary ile doğrular.
 ---
 
 ## Purpose
-OTEL SDK → Collector → Tempo → Grafana zincirini uçtan uca doğrularken kullan
+Bu skill’in çıktısı:
+- Uçtan uca canary senaryosu (tek request) ve her hop için doğrulama sinyali
+- Hangi noktada kopuyor? (SDK, collector, tempo ingest, tempo query, grafana datasource) hızlı ayrım
+- “Başarılı” kriteri: Tempo’da trace bulunur ve Grafana’da açılır
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- 1) SDK doğrulaması:
+  - Uygulamada `service.name` net mi?
+  - Canary request üret (tek endpoint).
+- 2) Collector doğrulaması:
+  - Receiver log/metric: canary trace geldi mi?
+  - Exporter log/metric: Tempo’ya gönderim hatasız mı?
+- 3) Tempo ingest doğrulaması:
+  - Tempo/distributor loglarında reject var mı? (protokol, auth, tenant)
+  - Storage yazımı sorunlu mu?
+- 4) Tempo query doğrulaması:
+  - `service.name` + kısa zaman penceresiyle trace ara; bir trace id elde et.
+  - Trace get ile trace’i aç (span’lar var mı?).
+- 5) Grafana doğrulaması:
+  - Tempo datasource bağlantısı sağlıklı mı?
+  - Explore’da aynı trace id açılıyor mu?
+
+## Common mistakes
+- Sampling yüzünden canary trace’in düşmesi (testte sampling’i geçici yükselt).
+- OTLP protocol mismatch (client HTTP, server gRPC).
 
 ## References
-- `skills/target-app-fastapi-otel-bootstrap`
-- `skills/target-app-observability-lib`
+- `skills/obs-tempo-otel-sdk-integration`
+- `skills/obs-tempo-troubleshoot-ingest`
+- `skills/obs-tempo-grafana-datasource`
