@@ -1,18 +1,35 @@
 ---
 name: obs-loki-storage-backend
-description: Loki depolama backend seçimi (filesystem, S3, BoltDB) ve yapılandırmasını kurarken kullan. Kullanıcı “obs-loki-storage-backend”, “obs loki storage backend”, “loki” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Loki için storage backend seçmek (filesystem vs object storage) ve bunun operasyonel sonuçlarını (retention, compactor, dayanıklılık) tasarlamak gerektiğinde kullan. “Hangi storage?”, “prod vs lab”, “index/chunk nerede”, “disk doluyor” gibi sorular için.
 ---
 
 ## Purpose
-Loki depolama backend seçimi (filesystem, S3, BoltDB) ve yapılandırmasını kurarken kullan
+Bu skill’in çıktısı:
+- Seçim kararı: **deneme** (filesystem) mi, **prod** (object storage) mı?
+- Operasyonel trade-off notu: durability, maliyet, compactor/retention bağımlılığı
+- Storage katmanlarının nerede tutulacağına dair netlik (chunk vs index)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Önce hedefi belirle:
+  - Retention kaç gün? Sorgu yükü ne kadar? HA gerekir mi?
+- Basit karar:
+  - **Filesystem**: hızlı kurulur; tek node/lab için uygun; node kaybında veri riski yüksek.
+  - **Object storage (S3/GCS/MinIO)**: prod için daha doğru; compactor/retention ile birlikte düşün.
+- “Index maliyeti” ve label stratejisi:
+  - Label set’i kötü ise backend ne olursa olsun ölçeklenmez (önce label stratejisini düzelt).
+- Operasyonel riskleri yaz:
+  - Disk tabanlı: disk dolması ve inode baskısı.
+  - Object storage: latency + erişim hatası; retry ve cache ihtiyacı.
+- Retention/compactor ilişkisi:
+  - Retention istiyorsan compactor planı gerekir (aksi halde eski veri kalır veya silinemez).
+- Doğrulama:
+  - Küçük bir canary log gönder, query ile geri çek; “write→read” zinciri çalışıyor mu?
+
+## Common mistakes
+- Prod’da filesystem ile başlamak: ilk node sorunu “tüm geçmiş gitti”ye dönüşür.
+- Label cardinality’i düzeltmeden storage’ı büyütmek: sadece daha pahalı hale getirir.
 
 ## References
 - `skills/cos-deploy-loki`
-- `skills/cos-relation-loki-grafana`
-- `cli/skills/agentic-troubleshoot-loki`
+- `skills/obs-loki-label-strategy`
+- `skills/obs-loki-compactor`
