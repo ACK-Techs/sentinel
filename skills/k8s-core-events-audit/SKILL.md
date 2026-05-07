@@ -30,4 +30,4 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/k8s-sec-audit-logging`
-- `skills/debug-log-correlation`
+- `cli/skills/agentic-trajectory-recording`
