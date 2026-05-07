@@ -1,18 +1,34 @@
 ---
 name: obs-loki-structured-metadata
-description: OTel log attribute ile zenginleştirilmiş Loki sorguları yaparken kullan. Kullanıcı “obs-loki-structured-metadata”, “obs loki structured metadata”, “loki” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: OTel/Promtail üzerinden log’lara eklenen structured alanları (attributes/fields) Loki’de LogQL ile parse edip alan bazlı filtrelemek veya bu alanların label olmaması gerektiğine karar vermek için kullan. “json field ile filtre”, “attributes nasıl sorgulanır?”, “label mı field mı?” gibi sorularda.
 ---
 
 ## Purpose
-OTel log attribute ile zenginleştirilmiş Loki sorguları yaparken kullan
+Bu skill’in çıktısı:
+- Structured log alanlarını sorgulamak için LogQL pipeline örnekleri (json/logfmt parse + field filter)
+- “Label vs structured field” karar notu (index maliyeti vs sorgu esnekliği)
+- Enstrümantasyon/collector tarafı için minimum öneri: hangi alanlar mutlaka taşınmalı
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Structured alanın kaynağını belirle:
+  - Log line JSON mu, logfmt mi, yoksa düz metin mi?
+  - Alanlar OTel attributes olarak mı, promtail stage ile mi ekleniyor?
+- Sorgu yaz (label → parse → field):
+  - Önce label selector ile stream’i daralt: `{app="..."}`
+  - Sonra parse: `| json` veya `| logfmt`
+  - Sonra field filtresi: `level="error"`, `status=~"5.."`, `route="/checkout"` gibi
+- Label mı field mı kararını ver:
+  - Routing/partition için stabil alanlar label olabilir (namespace/app).
+  - Sık değişen/çok değerli alanlar **field** kalmalı (request_id, user_id, trace_id).
+- Doğrulama:
+  - Parse sonrası alan gerçekten geliyor mu? (örnek 1–2 log satırıyla kontrol)
+  - Parse maliyeti: her sorguda ağır parse gerekiyorsa ingestion tarafında normalizasyon düşün.
+
+## Common mistakes
+- JSON parse’ı olmayan düz metinde `| json` beklemek (boş sonuç).
+- Field’ları label’a taşımak (index şişer) yerine sorguda parse etmek daha güvenlidir.
 
 ## References
 - `skills/cos-deploy-loki`
-- `skills/cos-relation-loki-grafana`
-- `cli/skills/agentic-troubleshoot-loki`
+- `skills/obs-loki-label-strategy`
+- `skills/obs-loki-query-logql`
