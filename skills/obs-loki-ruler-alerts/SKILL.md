@@ -1,18 +1,33 @@
 ---
 name: obs-loki-ruler-alerts
-description: Loki ruler ile log tabanlı alerting kuralı yazarken kullan. Kullanıcı “obs-loki-ruler-alerts”, “obs loki ruler alerts”, “loki” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Loki Ruler ile log tabanlı alert yazmak gerektiğinde kullan. LogQL metric query (rate/count_over_time) ile eşik belirleme, gürültüyü azaltma ve Alertmanager’a yönlendirme (routing için label/annotation) konularına odaklanır.
 ---
 
 ## Purpose
-Loki ruler ile log tabanlı alerting kuralı yazarken kullan
+Bu skill’in çıktısı:
+- Bir Ruler alert kuralı (adı, LogQL expr, `for`, labels, annotations)
+- “Neden bu eşik?” ve “gürültü kontrolü” notu (regex/filter, min volume, grouping)
+- Doğrulama adımı: Loki query ile tetikleyici senaryoyu geçmişte kanıtlama
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Semptomu seç:
+  - “error log sayısı arttı”, “panic görüldü”, “auth failed spike” gibi net tanım.
+- LogQL’i metric query’ye çevir:
+  - Stream selector dar: `{app="...", namespace="..."}`
+  - İçerik filtresi: `|=`, `|~` (regex’i minimal)
+  - Metrik: `sum(rate(<log query> [5m]))` veya `count_over_time(...)`
+- Gürültü kontrolü ekle:
+  - Low traffic’te oranlar gürültülü: gerekiyorsa min volume koşulu.
+  - `for:` ile kısa spike’ları filtrele.
+  - Çok fazla label ile alert’i parçalama (pod bazında istemiyorsan aggregate et).
+- Alert metadata:
+  - `labels.severity` ve sahiplik label’ı (varsa)
+  - `annotations.summary` + aksiyon odaklı `description`
+- Doğrulama:
+  - Son 24h/7d üzerinde query çalıştır; ne sıklıkla tetikler?
+  - “False-positive” örnekleri varsa filter/threshold’u revize et.
 
 ## References
 - `skills/cos-deploy-loki`
-- `skills/cos-relation-loki-grafana`
-- `cli/skills/agentic-troubleshoot-loki`
+- `skills/cos-deploy-alertmanager`
+- `skills/obs-loki-query-logql`
