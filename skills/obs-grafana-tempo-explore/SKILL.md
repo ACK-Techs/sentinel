@@ -1,17 +1,33 @@
 ---
 name: obs-grafana-tempo-explore
-description: Grafana Explore'da Tempo trace sorgusu ve service graph kullanımını yaparken kullan. Kullanıcı “obs-grafana-tempo-explore”, “obs grafana tempo explore”, “grafana” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Grafana Explore’da Tempo ile trace aramak (TraceQL), bir trace’i açıp span’ları incelemek veya “Grafana’da trace bulunmuyor” sorununu hızlı teşhis etmek gerektiğinde kullan. Explore kullanım akışına odaklanır (kurulum değil).
 ---
 
 ## Purpose
-Grafana Explore'da Tempo trace sorgusu ve service graph kullanımını yaparken kullan
+Bu skill’in çıktısı:
+- Explore’da trace bulmak için daraltma stratejisi (service + kısa aralık + attribute)
+- Trace inceleme checklist’i (root span, error span, en yavaş span, critical path)
+- Boş sonuç/timeout için hızlı teşhis (service.name, sampling, tenant, aralık)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Explore başlangıcı:
+  - Tempo datasource seç.
+  - Zaman aralığını incident penceresine çek (son 30–60 dk).
+- Sorgu yaz:
+  - Önce `service.name` ile daralt.
+  - Sonra attribute filtreleri ekle (status, route, duration).
+  - Regex’i en sona bırak.
+- Trace aç ve analiz et:
+  - Root span: request kapsamı.
+  - Error span: status=ERROR ve hata mesajı.
+  - En yavaş span: latency kaynağı.
+  - Span attribute’ları: route, db statement gibi alanlar (sızıntı riskine dikkat).
+- Boş sonuç/timeout:
+  - Aralığı daralt.
+  - Sampling oranını kontrol et.
+  - Multi-tenancy varsa tenant header doğru mu kontrol et.
 
 ## References
 - `skills/cos-deploy-grafana`
-- `cli/skills/agentic-troubleshoot-grafana`
+- `skills/obs-tempo-trace-query`
+- `skills/obs-tempo-troubleshoot-query`
