@@ -1,18 +1,33 @@
 ---
 name: obs-loki-recording-rules
-description: Loki recording rules ile log metriği türeterek Prometheus'a bridge yaparken kullan. Kullanıcı “obs-loki-recording-rules”, “obs loki recording rules”, “loki” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Loki’de LogQL metric query’lerini recording rule olarak kaydedip (ör. error rate, auth fail rate) dashboard/alert’lerde tekrar kullanmak veya Prometheus benzeri metrik tüketimine “bridge” etmek gerektiğinde kullan. “log’dan metrik üret”, “record adı”, “label set’i sabitle” gibi sorular için.
 ---
 
 ## Purpose
-Loki recording rules ile log metriği türeterek Prometheus'a bridge yaparken kullan
+Bu skill’in çıktısı:
+- Loki recording rule(lar)ı: `record` adı + LogQL metric `expr`
+- İsimlendirme ve label set kontratı (cardinality kontrolü)
+- Kullanım notu: panel/alert sorgusu “ham LogQL” yerine kaydı nasıl kullanır
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Kaynağı belirle:
+  - Ham log query: `{app="..."} |= "error"` gibi
+  - Metric query’ye çevir: `rate(...)`, `count_over_time(...)`, `sum by (...) (...)`
+- “Metrik kontratı” tasarla:
+  - `record` adı: ölçtüğü şeyi anlatan ve stable bir isim (rastgele değil).
+  - Label set: dashboard/alert’in ihtiyacından fazlasını bırakma (pod bazında istemiyorsan aggregate et).
+- Gürültü kontrolü:
+  - Regex/parse maliyetini minimize et; mümkünse ingestion tarafında normalize et.
+  - Low traffic’te oranlar gürültülü olabilir; pencereyi ve threshold’u not et.
+- Doğrulama:
+  - Kaydın üretildiğini doğrula: record adıyla sorgu dönüyor mu?
+  - Ham sorgu ile kaydın trendi “yaklaşık” uyumlu mu?
+
+## Common mistakes
+- Recording’de label patlaması: log akışı yüksekse hızlıca maliyete dönüşür.
+- Record adını belirsiz koymak: dashboard/alert’ler zamanla okunamaz hale gelir.
 
 ## References
 - `skills/cos-deploy-loki`
-- `skills/cos-relation-loki-grafana`
-- `cli/skills/agentic-troubleshoot-loki`
+- `skills/obs-loki-query-logql`
+- `skills/obs-loki-ruler-alerts`
