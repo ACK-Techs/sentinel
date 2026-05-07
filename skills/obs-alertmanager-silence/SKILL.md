@@ -1,16 +1,32 @@
 ---
 name: obs-alertmanager-silence
-description: Alertmanager silence oluşturma ve API ile programatik bastırma yaparken kullan. Kullanıcı “obs-alertmanager-silence”, “obs alertmanager silence”, “alertmanager” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Planlı bakım/known-issue sırasında Alertmanager silence oluşturmak (matcher tasarımı, süre, sahiplik) veya API ile programatik silence yönetmek gerektiğinde kullan. Amaç “gürültüyü geçici susturmak”; inhibit/routing değil.
 ---
 
 ## Purpose
-Alertmanager silence oluşturma ve API ile programatik bastırma yaparken kullan
+Bu skill’in çıktısı:
+- Doğru kapsamlı silence matcher set’i (ne bastırılır / ne bastırılmaz)
+- Süre ve sahiplik standardı (createdBy, comment/runbook, expire)
+- Doğrulama: silence’ın hedef alert’leri gerçekten susturduğunu kontrol
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Bakım senaryosunu yaz:
+  - Ne değişiyor? hangi servis/cluster? kaç dakika?
+- Matcher tasarımı:
+  - En dar kapsam: `service`, `cluster/namespace`, gerekirse `alertname`.
+  - `severity=page` gibi kritik alert’leri silence dışında bırakmayı düşün (özellikle güvenlik/availability).
+- Süre ve sahiplik:
+  - Başlangıç/bitiş; mümkünse kısa (otomatik expire).
+  - `createdBy` ve açıklayıcı comment: change ticket/PR/runbook linki.
+- Programatik (opsiyonel):
+  - API ile create/update/delete akışı (token’ı yazmadan).
+- Doğrulama:
+  - Silence listesinden etkin mi kontrol et.
+  - Hedef bir alert firing olduğunda bildirim gitmediğini doğrula (ama UI’da alert görünmeye devam eder).
+
+## Common mistakes
+- Geniş regex matcher ile “çok şeyi” susturmak: körlük yaratır.
+- Süresiz/uzun silence: unutulur, gerçek incident kaçırılır.
 
 ## References
 - `skills/cos-deploy-alertmanager`
