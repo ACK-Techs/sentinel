@@ -1,18 +1,36 @@
 ---
 name: obs-prometheus-federation
-description: Çok-küme senaryolarında Prometheus federation ile merkezi metrik toplarken kullan. Kullanıcı “obs-prometheus-federation”, “obs prometheus federation”, “prometheus” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Bir “üst Prometheus”un başka Prometheus’lardan `/federate` ile **seçili metrikleri** çekmesi gerektiğinde kullan. Özellikle “federate endpoint”, “match[] seçimi”, “label çakışması”, “hangi metrikler federate edilmeli?” gibi sorularda federation tasarımını dar kapsamda ele alır.
 ---
 
 ## Purpose
-Çok-küme senaryolarında Prometheus federation ile merkezi metrik toplarken kullan
+Bu skill’in çıktısı:
+- Üst Prometheus’ta bir `scrape_config` (metrics_path: `/federate` + `params.match[]`)
+- Label stratejisi (source cluster/region label’ı, çakışma önleme)
+- “Federate edilecek metrik seti” için net seçim kuralı (genel değil, somut)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Federation’ın gerçekten doğru çözüm olup olmadığını kontrol et:
+  - Amaç “merkezi sorgu” mu? (federation) yoksa “uzun süreli depolama” mı? (remote_write)
+  - Amaç “tüm ham seriler” mi? Federation genelde **seçili** seri içindir.
+- Üstten alta hedefleri tanımla:
+  - Her alt Prometheus için hedef URL (auth/TLS placeholder ile).
+  - Üst scrape job’ına “kaynak kimliği” label’ı ekle (örn. `cluster`).
+- `match[]` stratejisi:
+  - **Önce recording rule’ları federate et** (ör. `job:` ile başlayanlar).
+  - Ham metrikleri federate edeceksen, sadece kritik ölçümler + düşük kardinalite.
+  - `match[]` sayısını sınırlı tut; kontrol edilebilir bir allowlist yaz.
+- Label çakışması ve tutarlılık:
+  - Alt Prometheus’ta zaten `cluster` gibi label varsa overwrite riskini yaz.
+  - Üstte `honor_labels` kararını bilinçli ver (genelde kapalı tutmak daha güvenli).
+- Doğrulama:
+  - Üst Prometheus’ta federate edilen serinin geldiğini doğrula (count + örnek seri).
+  - İki kaynak karışmıyor mu: `cluster` label’ı üzerinden kontrol et.
+
+## Failure modes
+- Alt Prometheus down: üstte “gap” oluşur; alert’ler üstteyse yanlış alarm/kaçırma riski.
+- Geniş `match[]`: üst Prometheus’ta beklenmeyen TSDB büyümesi ve scrape yükü.
 
 ## References
 - `skills/cos-deploy-prometheus`
-- `skills/cos-relation-prometheus-grafana`
-- `cli/skills/agentic-troubleshoot-prometheus`
+- `skills/obs-prometheus-remote-write`
