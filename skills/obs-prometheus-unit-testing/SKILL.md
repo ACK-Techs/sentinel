@@ -1,18 +1,34 @@
 ---
 name: obs-prometheus-unit-testing
-description: promtool ile alerting/recording kural birim testini yazarken kullan. Kullanıcı “obs-prometheus-unit-testing”, “obs prometheus unit testing”, “prometheus” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Prometheus alerting/recording rule’larını canlıya almadan önce `promtool test rules` ile birim test yazmak gerektiğinde kullan. “promtool test formatı”, “eval_time”, “input_series nasıl yazılır?”, “beklenen alert/value” gibi test-yazımı sorularına odaklanır.
 ---
 
 ## Purpose
-promtool ile alerting/recording kural birim testini yazarken kullan
+Bu skill’in çıktısı:
+- `promtool test rules` için test dosyası iskeleti (input series + rule_files + test cases)
+- Bir kural için en az 2 senaryo: “tetiklenmeli” ve “tetiklenmemeli”
+- Sık hatalara karşı kontrol listesi (zaman, pencere, `for`, label set)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Test edeceğin kuralı sabitle:
+  - Kural dosyası yolu (record/alert adı)
+  - Kuralın kullandığı pencere (`rate()[5m]` gibi) ve `for:` süresi
+- Input series tasarla:
+  - Kuralın beklediği label set’iyle minimal seri üret (gereksiz label ekleme).
+  - Örnekleme aralığını belirle (genelde 1m veya 30s); pencereyi besleyecek kadar uzun veri yaz.
+- Test case yaz:
+  - `eval_time`: tam olarak hangi anda bekliyorsun?
+  - Recording için beklenen sample değeri, alerting için beklenen label+annotation (en kritik alanlar).
+  - “Negatif” case: eşik altı veya `for` süresi dolmadan önce.
+- `promtool` ile çalıştır:
+  - `promtool test rules <test-file>` komutunu ver.
+  - Fail çıktısında “expected vs got” farkını okuyup input series/eval_time’ı düzelt.
+
+## Common mistakes
+- `eval_time`’ı `for:` süresini karşılamayacak kadar erken seçmek.
+- `rate()` penceresini beslemeden anlık veriyle test etmeye çalışmak.
+- Alert label set’i ile test input label set’inin uyuşmaması (ör. `job` filtreleri).
 
 ## References
-- `skills/cos-deploy-prometheus`
-- `skills/cos-relation-prometheus-grafana`
-- `cli/skills/agentic-troubleshoot-prometheus`
+- `skills/obs-prometheus-alerting-rules`
+- `skills/obs-prometheus-recording-rules`
