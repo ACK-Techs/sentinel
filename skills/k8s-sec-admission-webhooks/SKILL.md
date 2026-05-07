@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-admission-webhooks
-description: Validating veya Mutating admission webhook tasarlamak, cluster politikasını API girişinde uygulamak veya “resource create olurken neden mutate/reject oluyor?” sorunlarını çözmek gerektiğinde kullan. Amaç: **admission zincirini güvenli ve öngörülebilir kurmaktır**.
+description: "Validating veya Mutating admission webhook tasarlamak, cluster politikasını API girişinde uygulamak veya “resource create olurken neden mutate/reject oluyor?” sorunlarını çözmek gerektiğinde kullan. Amaç: **admission zincirini güvenli ve öngörülebilir kurmaktır**."
 ---
 
 ## Purpose

@@ -1,6 +1,6 @@
 ---
 name: k8s-net-service-types
-description: ClusterIP, NodePort ve LoadBalancer servis tipleri arasında doğru seçimi yapmak veya “servise dışarıdan/cluster içinden neden erişemiyorum?” problemini çözmek gerektiğinde kullan. Amaç: **servis erişim modelini iş ihtiyacına göre seçmektir**.
+description: "ClusterIP, NodePort ve LoadBalancer servis tipleri arasında doğru seçimi yapmak veya “servise dışarıdan/cluster içinden neden erişemiyorum?” problemini çözmek gerektiğinde kullan. Amaç: **servis erişim modelini iş ihtiyacına göre seçmektir**."
 ---
 
 ## Purpose

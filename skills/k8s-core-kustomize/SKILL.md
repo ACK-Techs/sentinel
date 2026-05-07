@@ -1,6 +1,6 @@
 ---
 name: k8s-core-kustomize
-description: Kubernetes manifest’lerini base/overlay yapısıyla ortam bazlı yönetmek veya “aynı YAML’ın kopyaları drift olmuş” problemini çözmek gerektiğinde kullan. Amaç: **declarative farkları patch ile yönetmek**, şablon kopyası çoğaltmamaktır.
+description: "Kubernetes manifest’lerini base/overlay yapısıyla ortam bazlı yönetmek veya “aynı YAML’ın kopyaları drift olmuş” problemini çözmek gerektiğinde kullan. Amaç: **declarative farkları patch ile yönetmek**, şablon kopyası çoğaltmamaktır."
 ---
 
 ## Purpose

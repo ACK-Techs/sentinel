@@ -1,6 +1,6 @@
 ---
 name: k8s-net-pod-cidr
-description: Pod CIDR ve Service CIDR planlamak, ağ aralığı çakışmalarını önlemek veya “VPN/LAN ile cluster ağı çatışıyor” sorunlarını çözmek gerektiğinde kullan. Amaç: **cluster adres alanını kurulumdan önce doğru seçmektir**.
+description: "Pod CIDR ve Service CIDR planlamak, ağ aralığı çakışmalarını önlemek veya “VPN/LAN ile cluster ağı çatışıyor” sorunlarını çözmek gerektiğinde kullan. Amaç: **cluster adres alanını kurulumdan önce doğru seçmektir**."
 ---
 
 ## Purpose

@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-seccomp-apparmor
-description: Pod’larda sistem çağrısı ve process davranışını Seccomp/AppArmor ile kısıtlamak veya “hangi profil bu workload’u kırıyor?” sorusunu çözmek gerektiğinde kullan. Amaç: **runtime ayrıcalığını daraltmaktır**.
+description: "Pod’larda sistem çağrısı ve process davranışını Seccomp/AppArmor ile kısıtlamak veya “hangi profil bu workload’u kırıyor?” sorusunu çözmek gerektiğinde kullan. Amaç: **runtime ayrıcalığını daraltmaktır**."
 ---
 
 ## Purpose

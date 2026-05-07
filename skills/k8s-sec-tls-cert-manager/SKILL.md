@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-tls-cert-manager
-description: cert-manager ile sertifika yaşam döngüsü otomasyonu kurmak, issuer/clusterissuer seçmek veya “certificate pending / renew olmuyor” sorunlarını çözmek gerektiğinde kullan. Amaç: **TLS’i manuel secret kopyalamaktan çıkarmaktır**.
+description: "cert-manager ile sertifika yaşam döngüsü otomasyonu kurmak, issuer/clusterissuer seçmek veya “certificate pending / renew olmuyor” sorunlarını çözmek gerektiğinde kullan. Amaç: **TLS’i manuel secret kopyalamaktan çıkarmaktır**."
 ---
 
 ## Purpose

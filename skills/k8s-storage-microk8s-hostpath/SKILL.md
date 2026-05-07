@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-microk8s-hostpath
-description: MicroK8s’in hostpath-storage addon davranışını anlamak, default StorageClass etkisini görmek veya lab ortamında neden bu kadar “kolay” çalıştığını açıklamak gerektiğinde kullan. Amaç: **MicroK8s hostpath’in sınırlarını doğru koymaktır**.
+description: "MicroK8s’in hostpath-storage addon davranışını anlamak, default StorageClass etkisini görmek veya lab ortamında neden bu kadar “kolay” çalıştığını açıklamak gerektiğinde kullan. Amaç: **MicroK8s hostpath’in sınırlarını doğru koymaktır**."
 ---
 
 ## Purpose

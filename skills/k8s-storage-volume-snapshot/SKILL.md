@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-volume-snapshot
-description: PVC snapshot almak, geri yüklemek veya “değişiklik öncesi geri dönüş noktası” oluşturmak gerektiğinde kullan. Amaç: **snapshot kabiliyetini storage backend gerçekliğiyle birlikte kullanmaktır**.
+description: "PVC snapshot almak, geri yüklemek veya “değişiklik öncesi geri dönüş noktası” oluşturmak gerektiğinde kullan. Amaç: **snapshot kabiliyetini storage backend gerçekliğiyle birlikte kullanmaktır**."
 ---
 
 ## Purpose

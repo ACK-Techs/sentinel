@@ -1,6 +1,6 @@
 ---
 name: k8s-net-ipv6-dual-stack
-description: Kubernetes’te IPv6 veya dual-stack ağ kurmak, servis/pod CIDR planlamak veya “IPv4 çalışıyor, IPv6 neden bozuk?” sorunlarını çözmek gerektiğinde kullan. Amaç: **adresleme ve CNI/cluster uyumunu birlikte değerlendirmektir**.
+description: "Kubernetes’te IPv6 veya dual-stack ağ kurmak, servis/pod CIDR planlamak veya “IPv4 çalışıyor, IPv6 neden bozuk?” sorunlarını çözmek gerektiğinde kullan. Amaç: **adresleme ve CNI/cluster uyumunu birlikte değerlendirmektir**."
 ---
 
 ## Purpose

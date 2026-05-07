@@ -1,6 +1,6 @@
 ---
 name: k8s-core-helm-chart
-description: Helm chart yazmak, values yapısını tasarlamak veya “aynı uygulamayı farklı ortamlara parameterize ederek dağıtmak” gerektiğinde kullan. Amaç: **tekrar kullanılabilir chart üretmek**, sadece template doldurmak değildir.
+description: "Helm chart yazmak, values yapısını tasarlamak veya “aynı uygulamayı farklı ortamlara parameterize ederek dağıtmak” gerektiğinde kullan. Amaç: **tekrar kullanılabilir chart üretmek**, sadece template doldurmak değildir."
 ---
 
 ## Purpose

@@ -1,6 +1,6 @@
 ---
 name: k8s-core-kubectl-tips
-description: `kubectl` ile günlük operasyonu hızlandırmak, doğru filtreleme/çıktı alma alışkanlıkları kurmak veya debug sırasında terminal verimini artırmak gerektiğinde kullan. Amaç: **doğru komutu daha hızlı ve daha güvenli kullanmaktır**.
+description: "`kubectl` ile günlük operasyonu hızlandırmak, doğru filtreleme/çıktı alma alışkanlıkları kurmak veya debug sırasında terminal verimini artırmak gerektiğinde kullan. Amaç: **doğru komutu daha hızlı ve daha güvenli kullanmaktır**."
 ---
 
 ## Purpose

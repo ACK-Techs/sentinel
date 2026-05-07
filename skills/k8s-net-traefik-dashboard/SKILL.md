@@ -1,6 +1,6 @@
 ---
 name: k8s-net-traefik-dashboard
-description: Traefik dashboard erişimini açmak, güvenli hale getirmek veya router/service görünürlüğüyle ingress sorunlarını teşhis etmek gerektiğinde kullan. Amaç: **dashboard’u debug aracı olarak kullanmak**, herkese açık bırakmak değildir.
+description: "Traefik dashboard erişimini açmak, güvenli hale getirmek veya router/service görünürlüğüyle ingress sorunlarını teşhis etmek gerektiğinde kullan. Amaç: **dashboard’u debug aracı olarak kullanmak**, herkese açık bırakmak değildir."
 ---
 
 ## Purpose

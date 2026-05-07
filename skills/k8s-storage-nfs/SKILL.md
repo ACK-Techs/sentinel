@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-nfs
-description: NFS tabanlı paylaşımlı depolama sunmak, RWX ihtiyaçlarını karşılamak veya “aynı volume’ü birden çok pod paylaşmalı” senaryosunu yönetmek gerektiğinde kullan. Amaç: **NFS’in kullanım kolaylığı ile performans/single-point-of-failure riskini birlikte değerlendirmektir**.
+description: "NFS tabanlı paylaşımlı depolama sunmak, RWX ihtiyaçlarını karşılamak veya “aynı volume’ü birden çok pod paylaşmalı” senaryosunu yönetmek gerektiğinde kullan. Amaç: **NFS’in kullanım kolaylığı ile performans/single-point-of-failure riskini birlikte değerlendirmektir**."
 ---
 
 ## Purpose

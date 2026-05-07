@@ -1,6 +1,6 @@
 ---
 name: k8s-scale-hpa
-description: Horizontal Pod Autoscaler kurmak, CPU/memory veya custom metric’e göre pod sayısını ayarlamak ya da “HPA neden scale etmiyor/zıplıyor?” sorunlarını çözmek gerektiğinde kullan. Amaç: **ölçekleme sinyalini uygulama davranışıyla eşleştirmektir**.
+description: "Horizontal Pod Autoscaler kurmak, CPU/memory veya custom metric’e göre pod sayısını ayarlamak ya da “HPA neden scale etmiyor/zıplıyor?” sorunlarını çözmek gerektiğinde kullan. Amaç: **ölçekleme sinyalini uygulama davranışıyla eşleştirmektir**."
 ---
 
 ## Purpose

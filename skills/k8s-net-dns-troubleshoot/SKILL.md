@@ -1,6 +1,6 @@
 ---
 name: k8s-net-dns-troubleshoot
-description: Kubernetes içinde DNS çözümleme sorunlarını (NXDOMAIN, timeout, yanlış search path, `ndots` etkisi) teşhis etmek gerektiğinde kullan. Amaç: **sorunu pod config, CoreDNS veya ağ kısıtı arasında ayırmaktır**.
+description: "Kubernetes içinde DNS çözümleme sorunlarını (NXDOMAIN, timeout, yanlış search path, `ndots` etkisi) teşhis etmek gerektiğinde kullan. Amaç: **sorunu pod config, CoreDNS veya ağ kısıtı arasında ayırmaktır**."
 ---
 
 ## Purpose

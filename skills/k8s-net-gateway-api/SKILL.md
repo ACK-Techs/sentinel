@@ -1,6 +1,6 @@
 ---
 name: k8s-net-gateway-api
-description: Kubernetes Gateway API ile L4/L7 trafik yönetimi kurmak veya Ingress’in yetmediği rota/policy ihtiyaçlarını çözmek gerektiğinde kullan. Amaç: **Gateway, Listener ve Route ayrımını doğru kurmaktır**.
+description: "Kubernetes Gateway API ile L4/L7 trafik yönetimi kurmak veya Ingress’in yetmediği rota/policy ihtiyaçlarını çözmek gerektiğinde kullan. Amaç: **Gateway, Listener ve Route ayrımını doğru kurmaktır**."
 ---
 
 ## Purpose

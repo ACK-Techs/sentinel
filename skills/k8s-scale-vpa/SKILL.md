@@ -1,6 +1,6 @@
 ---
 name: k8s-scale-vpa
-description: Vertical Pod Autoscaler ile resource request/limit önerisi üretmek veya “pod sürekli OOM / fazla overprovision” sorunlarını düzeltmek gerektiğinde kullan. Amaç: **dikey kaynak ayarını gözlem verisine dayandırmaktır**.
+description: "Vertical Pod Autoscaler ile resource request/limit önerisi üretmek veya “pod sürekli OOM / fazla overprovision” sorunlarını düzeltmek gerektiğinde kullan. Amaç: **dikey kaynak ayarını gözlem verisine dayandırmaktır**."
 ---
 
 ## Purpose

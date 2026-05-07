@@ -1,6 +1,6 @@
 ---
 name: k8s-net-endpoint-slice
-description: Büyük servislerde backend endpoint ölçeklenmesini anlamak, service arkasındaki endpoint dağılımını incelemek veya “trafik bazı pod’lara gitmiyor” durumlarını çözmek gerektiğinde kullan. Amaç: **Service → EndpointSlice ilişkisinin davranışını okumaktır**.
+description: "Büyük servislerde backend endpoint ölçeklenmesini anlamak, service arkasındaki endpoint dağılımını incelemek veya “trafik bazı pod’lara gitmiyor” durumlarını çözmek gerektiğinde kullan. Amaç: **Service → EndpointSlice ilişkisinin davranışını okumaktır**."
 ---
 
 ## Purpose

@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-network-encryption-mtls
-description: Pod’lar arası trafiği mTLS ile şifrelemek, servis kimliği doğrulaması kurmak veya “hangi katmanda kimlik ve şifreleme bitecek?” kararını vermek gerektiğinde kullan. Amaç: **service-to-service güvenini operasyonel olarak sürdürülebilir hale getirmektir**.
+description: "Pod’lar arası trafiği mTLS ile şifrelemek, servis kimliği doğrulaması kurmak veya “hangi katmanda kimlik ve şifreleme bitecek?” kararını vermek gerektiğinde kullan. Amaç: **service-to-service güvenini operasyonel olarak sürdürülebilir hale getirmektir**."
 ---
 
 ## Purpose

@@ -1,6 +1,6 @@
 ---
 name: k8s-core-sidecar-pattern
-description: Ana container’a yardımcı bir container eklemek (log shipper, proxy, config reloader, auth helper) veya “bu işi sidecar mı ayrı servis mi yapmalı?” kararını vermek gerektiğinde kullan. Amaç: **aynı pod içi yakın yardımcı işlevleri doğru ayırmak**.
+description: "Ana container’a yardımcı bir container eklemek (log shipper, proxy, config reloader, auth helper) veya “bu işi sidecar mı ayrı servis mi yapmalı?” kararını vermek gerektiğinde kullan. Amaç: **aynı pod içi yakın yardımcı işlevleri doğru ayırmak**."
 ---
 
 ## Purpose

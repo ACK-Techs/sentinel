@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-backup-velero
-description: Kubernetes kaynakları ve persistent volume verisini Velero ile yedeklemek, schedule kurmak veya disaster recovery doğrulamak gerektiğinde kullan. Amaç: **backup’u restore ile birlikte düşünmektir**.
+description: "Kubernetes kaynakları ve persistent volume verisini Velero ile yedeklemek, schedule kurmak veya disaster recovery doğrulamak gerektiğinde kullan. Amaç: **backup’u restore ile birlikte düşünmektir**."
 ---
 
 ## Purpose

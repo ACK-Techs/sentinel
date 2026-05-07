@@ -1,6 +1,6 @@
 ---
 name: k8s-net-traefik-middleware
-description: Traefik üzerinde strip-prefix, headers, redirect, rate-limit gibi middleware zinciri kurmak veya “route çalışıyor ama request davranışı yanlış” sorunlarını çözmek gerektiğinde kullan. Amaç: **router ile middleware sorumluluğunu ayırmaktır**.
+description: "Traefik üzerinde strip-prefix, headers, redirect, rate-limit gibi middleware zinciri kurmak veya “route çalışıyor ama request davranışı yanlış” sorunlarını çözmek gerektiğinde kullan. Amaç: **router ile middleware sorumluluğunu ayırmaktır**."
 ---
 
 ## Purpose

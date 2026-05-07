@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-local-pv
-description: Node’a bağlı yüksek performanslı local diskleri Kubernetes’e sunmak veya “disk hızlı olsun ama pod başka node’a geçemesin” trade-off’unu yönetmek gerektiğinde kullan. Amaç: **local storage’nın performans ve taşınabilirlik dengesini kurmaktır**.
+description: "Node’a bağlı yüksek performanslı local diskleri Kubernetes’e sunmak veya “disk hızlı olsun ama pod başka node’a geçemesin” trade-off’unu yönetmek gerektiğinde kullan. Amaç: **local storage’nın performans ve taşınabilirlik dengesini kurmaktır**."
 ---
 
 ## Purpose

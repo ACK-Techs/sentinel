@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-pod-security-standards
-description: Kubernetes Pod Security Standards seviyelerini uygulamak, namespace admission etiketlerini ayarlamak veya “pod neden admission’da reddedildi?” sorusunu çözmek gerektiğinde kullan. Amaç: **baseline/restricted kurallarını pratik workload etkisiyle birlikte yönetmektir**.
+description: "Kubernetes Pod Security Standards seviyelerini uygulamak, namespace admission etiketlerini ayarlamak veya “pod neden admission’da reddedildi?” sorusunu çözmek gerektiğinde kullan. Amaç: **baseline/restricted kurallarını pratik workload etkisiyle birlikte yönetmektir**."
 ---
 
 ## Purpose

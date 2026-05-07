@@ -1,6 +1,6 @@
 ---
 name: k8s-net-ingress-controller
-description: HTTP(S) trafiğini Kubernetes Ingress ile yönlendirmek, uygun controller seçmek veya “host/path routing neden çalışmıyor?” sorunlarını çözmek gerektiğinde kullan. Amaç: **L7 giriş katmanını doğru controller mantığıyla kurmaktır**.
+description: "HTTP(S) trafiğini Kubernetes Ingress ile yönlendirmek, uygun controller seçmek veya “host/path routing neden çalışmıyor?” sorunlarını çözmek gerektiğinde kullan. Amaç: **L7 giriş katmanını doğru controller mantığıyla kurmaktır**."
 ---
 
 ## Purpose

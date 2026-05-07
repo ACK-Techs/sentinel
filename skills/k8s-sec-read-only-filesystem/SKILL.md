@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-read-only-filesystem
-description: Container root filesystem’ini read-only yapmak, yazılabilir path’leri ayırmak veya “uygulama neden dosya yazamıyor?” sorusunu çözmek gerektiğinde kullan. Amaç: **runtime saldırı yüzeyini dosya sistemi seviyesinde küçültmektir**.
+description: "Container root filesystem’ini read-only yapmak, yazılabilir path’leri ayırmak veya “uygulama neden dosya yazamıyor?” sorusunu çözmek gerektiğinde kullan. Amaç: **runtime saldırı yüzeyini dosya sistemi seviyesinde küçültmektir**."
 ---
 
 ## Purpose

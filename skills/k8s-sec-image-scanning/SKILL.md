@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-image-scanning
-description: Container image güvenlik taraması kurmak, CI kapısı eklemek veya “bu image prod’a girmeden önce hangi CVE eşiğinden geçmeli?” kararını vermek gerektiğinde kullan. Amaç: **scan sonucunu uygulanabilir policy’ye çevirmektir**.
+description: "Container image güvenlik taraması kurmak, CI kapısı eklemek veya “bu image prod’a girmeden önce hangi CVE eşiğinden geçmeli?” kararını vermek gerektiğinde kullan. Amaç: **scan sonucunu uygulanabilir policy’ye çevirmektir**."
 ---
 
 ## Purpose

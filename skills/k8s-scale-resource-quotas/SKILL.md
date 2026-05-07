@@ -1,6 +1,6 @@
 ---
 name: k8s-scale-resource-quotas
-description: Namespace bazlı kaynak tüketimini sınırlamak, “bir ekip tüm cluster CPU’sunu yiyor” sorununu önlemek veya çok kiracılı kümelerde adil kullanım politikası kurmak gerektiğinde kullan. Amaç: **kapasiteyi yönetişim kuralına dönüştürmektir**.
+description: "Namespace bazlı kaynak tüketimini sınırlamak, “bir ekip tüm cluster CPU’sunu yiyor” sorununu önlemek veya çok kiracılı kümelerde adil kullanım politikası kurmak gerektiğinde kullan. Amaç: **kapasiteyi yönetişim kuralına dönüştürmektir**."
 ---
 
 ## Purpose

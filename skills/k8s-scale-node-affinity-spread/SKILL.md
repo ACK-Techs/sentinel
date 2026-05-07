@@ -1,6 +1,6 @@
 ---
 name: k8s-scale-node-affinity-spread
-description: Pod’ları node/zone’lara dengeli yaymak, failure domain farkındalığı kurmak veya “tüm replica’lar aynı node’a yığılıyor” problemini çözmek gerektiğinde kullan. Amaç: **yerleşim tercihleri ile dağılım garantisini birlikte kurmaktır**.
+description: "Pod’ları node/zone’lara dengeli yaymak, failure domain farkındalığı kurmak veya “tüm replica’lar aynı node’a yığılıyor” problemini çözmek gerektiğinde kullan. Amaç: **yerleşim tercihleri ile dağılım garantisini birlikte kurmaktır**."
 ---
 
 ## Purpose

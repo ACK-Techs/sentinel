@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-csi-driver
-description: CSI driver kurmak, storage backend’i Kubernetes’e entegre etmek veya “PVC dynamic provision olmuyor / attach hatası var” sorunlarını çözmek gerektiğinde kullan. Amaç: **CSI bileşenlerini ve failure surface’i doğru okumaktır**.
+description: "CSI driver kurmak, storage backend’i Kubernetes’e entegre etmek veya “PVC dynamic provision olmuyor / attach hatası var” sorunlarını çözmek gerektiğinde kullan. Amaç: **CSI bileşenlerini ve failure surface’i doğru okumaktır**."
 ---
 
 ## Purpose

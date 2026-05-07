@@ -1,6 +1,6 @@
 ---
 name: k8s-scale-cluster-autoscaler
-description: Node sayısını iş yüküne göre artırıp azaltmak, pending pod’lar için kapasite açmak veya “pod scale oluyor ama node gelmiyor” sorunlarını çözmek gerektiğinde kullan. Amaç: **pod autoscaling ile node autoscaling’in sınırını birleştirmektir**.
+description: "Node sayısını iş yüküne göre artırıp azaltmak, pending pod’lar için kapasite açmak veya “pod scale oluyor ama node gelmiyor” sorunlarını çözmek gerektiğinde kullan. Amaç: **pod autoscaling ile node autoscaling’in sınırını birleştirmektir**."
 ---
 
 ## Purpose

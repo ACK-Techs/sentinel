@@ -1,6 +1,6 @@
 ---
 name: k8s-core-events-audit
-description: Kubernetes event’leri ve audit log’larını kullanarak “ne oldu?” sorusunu cevaplamak, operasyon geçmişi çıkarmak veya cluster davranışını sonradan kanıtlamak gerektiğinde kullan. Amaç: **geçici event ile kalıcı audit izini ayırmaktır**.
+description: "Kubernetes event’leri ve audit log’larını kullanarak “ne oldu?” sorusunu cevaplamak, operasyon geçmişi çıkarmak veya cluster davranışını sonradan kanıtlamak gerektiğinde kullan. Amaç: **geçici event ile kalıcı audit izini ayırmaktır**."
 ---
 
 ## Purpose

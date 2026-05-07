@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-data-migration
-description: Bir volume’den diğerine veri taşımak, storage backend değiştirmek veya “PVC değişecek ama veri kaybolmamalı” geçişini planlamak gerektiğinde kullan. Amaç: **veri geçişini kesinti ve tutarlılık açısından güvenli yürütmektir**.
+description: "Bir volume’den diğerine veri taşımak, storage backend değiştirmek veya “PVC değişecek ama veri kaybolmamalı” geçişini planlamak gerektiğinde kullan. Amaç: **veri geçişini kesinti ve tutarlılık açısından güvenli yürütmektir**."
 ---
 
 ## Purpose

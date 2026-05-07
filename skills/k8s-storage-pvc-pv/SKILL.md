@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-pvc-pv
-description: PersistentVolumeClaim/PersistentVolume ilişkisini tasarlamak, access mode/reclaim policy seçmek veya “pod storage’ya bağlanamıyor” sorununu çözmek gerektiğinde kullan. Amaç: **uygulamanın depolama ihtiyacını doğru volume modeliyle eşleştirmektir**.
+description: "PersistentVolumeClaim/PersistentVolume ilişkisini tasarlamak, access mode/reclaim policy seçmek veya “pod storage’ya bağlanamıyor” sorununu çözmek gerektiğinde kullan. Amaç: **uygulamanın depolama ihtiyacını doğru volume modeliyle eşleştirmektir**."
 ---
 
 ## Purpose

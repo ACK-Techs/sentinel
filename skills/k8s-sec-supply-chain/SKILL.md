@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-supply-chain
-description: Container image imzalama, doğrulama, SBOM ve provenance akışını kurmak veya “deploy ettiğimiz image gerçekten build ettiğimiz image mi?” sorusunu yönetmek gerektiğinde kullan. Amaç: **tedarik zinciri güvenini doğrulanabilir hale getirmektir**.
+description: "Container image imzalama, doğrulama, SBOM ve provenance akışını kurmak veya “deploy ettiğimiz image gerçekten build ettiğimiz image mi?” sorusunu yönetmek gerektiğinde kullan. Amaç: **tedarik zinciri güvenini doğrulanabilir hale getirmektir**."
 ---
 
 ## Purpose

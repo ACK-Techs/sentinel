@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-rook-ceph-intro
-description: Rook-Ceph ile k8s-native dağıtık storage’a giriş yapmak, hangi use-case’lerde uygun olduğunu anlamak veya “cluster içi depolamayı kendimiz mi işletelim?” sorusunu değerlendirmek gerektiğinde kullan. Amaç: **Rook/Ceph’in operasyon maliyetini görünür kılmaktır**.
+description: "Rook-Ceph ile k8s-native dağıtık storage’a giriş yapmak, hangi use-case’lerde uygun olduğunu anlamak veya “cluster içi depolamayı kendimiz mi işletelim?” sorusunu değerlendirmek gerektiğinde kullan. Amaç: **Rook/Ceph’in operasyon maliyetini görünür kılmaktır**."
 ---
 
 ## Purpose

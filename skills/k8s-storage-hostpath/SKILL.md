@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-hostpath
-description: HostPath volume kullanmak, risklerini değerlendirmek veya “lokal dosya sistemi pod’a nasıl bağlanır?” sorusunu cevaplamak gerektiğinde kullan. Amaç: **HostPath’i sadece uygun sınırlı senaryolarda kullanmaktır**.
+description: "HostPath volume kullanmak, risklerini değerlendirmek veya “lokal dosya sistemi pod’a nasıl bağlanır?” sorusunu cevaplamak gerektiğinde kullan. Amaç: **HostPath’i sadece uygun sınırlı senaryolarda kullanmaktır**."
 ---
 
 ## Purpose

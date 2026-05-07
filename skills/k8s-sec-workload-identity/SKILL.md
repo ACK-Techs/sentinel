@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-workload-identity
-description: Kubernetes workload’larının cloud veya harici platform kimliği almasını sağlamak, statik cloud credential’dan çıkmak veya “pod hangi kimlikle erişiyor?” sorusunu çözmek gerektiğinde kullan. Amaç: **workload kimliğini pod identity ile güvenli eşlemektir**.
+description: "Kubernetes workload’larının cloud veya harici platform kimliği almasını sağlamak, statik cloud credential’dan çıkmak veya “pod hangi kimlikle erişiyor?” sorusunu çözmek gerektiğinde kullan. Amaç: **workload kimliğini pod identity ile güvenli eşlemektir**."
 ---
 
 ## Purpose

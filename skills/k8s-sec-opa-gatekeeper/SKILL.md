@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-opa-gatekeeper
-description: OPA Gatekeeper ile policy-as-code kurmak, constraint template yazmak veya “hangi kural hangi resource’u blokladı?” sorusunu çözmek gerektiğinde kullan. Amaç: **yeniden kullanılabilir admission politikalarını şeffaf şekilde işletmektir**.
+description: "OPA Gatekeeper ile policy-as-code kurmak, constraint template yazmak veya “hangi kural hangi resource’u blokladı?” sorusunu çözmek gerektiğinde kullan. Amaç: **yeniden kullanılabilir admission politikalarını şeffaf şekilde işletmektir**."
 ---
 
 ## Purpose

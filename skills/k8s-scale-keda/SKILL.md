@@ -1,6 +1,6 @@
 ---
 name: k8s-scale-keda
-description: Event-driven autoscaling kurmak, kuyruk uzunluğu/Prometheus metric/Kafka lag gibi sinyallere göre pod sayısı ayarlamak gerektiğinde kullan. Amaç: **HPA’nın ötesindeki olay tabanlı yükü doğru sinyalle ölçeklemektir**.
+description: "Event-driven autoscaling kurmak, kuyruk uzunluğu/Prometheus metric/Kafka lag gibi sinyallere göre pod sayısı ayarlamak gerektiğinde kullan. Amaç: **HPA’nın ötesindeki olay tabanlı yükü doğru sinyalle ölçeklemektir**."
 ---
 
 ## Purpose

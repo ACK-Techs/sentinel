@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-emptydir
-description: Geçici pod ömrü kadar storage kullanmak, container’lar arasında ephemeral veri paylaşmak veya “disk mi memory mi kullanmalıyım?” kararını vermek gerektiğinde kullan. Amaç: **kalıcı olmayan depolamayı doğru sınırlar içinde kullanmaktır**.
+description: "Geçici pod ömrü kadar storage kullanmak, container’lar arasında ephemeral veri paylaşmak veya “disk mi memory mi kullanmalıyım?” kararını vermek gerektiğinde kullan. Amaç: **kalıcı olmayan depolamayı doğru sınırlar içinde kullanmaktır**."
 ---
 
 ## Purpose

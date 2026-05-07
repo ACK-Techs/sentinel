@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-resize
-description: PVC kapasitesini büyütmek, online resize desteklerini anlamak veya “diski büyüttüm ama filesystem değişmedi” sorununu çözmek gerektiğinde kullan. Amaç: **storage ve filesystem katmanlarını birlikte doğrulamaktır**.
+description: "PVC kapasitesini büyütmek, online resize desteklerini anlamak veya “diski büyüttüm ama filesystem değişmedi” sorununu çözmek gerektiğinde kullan. Amaç: **storage ve filesystem katmanlarını birlikte doğrulamaktır**."
 ---
 
 ## Purpose

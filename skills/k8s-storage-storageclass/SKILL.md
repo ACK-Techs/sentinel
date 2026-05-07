@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-storageclass
-description: StorageClass tanımlamak, dynamic provisioning davranışını belirlemek veya “PVC pending kalıyor / yanlış disk türü geliyor” sorunlarını çözmek gerektiğinde kullan. Amaç: **provisioning varsayımlarını açık hale getirmektir**.
+description: "StorageClass tanımlamak, dynamic provisioning davranışını belirlemek veya “PVC pending kalıyor / yanlış disk türü geliyor” sorunlarını çözmek gerektiğinde kullan. Amaç: **provisioning varsayımlarını açık hale getirmektir**."
 ---
 
 ## Purpose

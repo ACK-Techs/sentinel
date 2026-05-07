@@ -1,6 +1,6 @@
 ---
 name: k8s-net-networkpolicy
-description: Pod’lar arası ağ erişimini kısıtlamak, egress/ingress kuralları yazmak veya “policy ekledim, trafik niye kesildi?” sorunlarını çözmek gerektiğinde kullan. Amaç: **kime, hangi porttan, hangi yönde izin verildiğini açıkça tanımlamaktır**.
+description: "Pod’lar arası ağ erişimini kısıtlamak, egress/ingress kuralları yazmak veya “policy ekledim, trafik niye kesildi?” sorunlarını çözmek gerektiğinde kullan. Amaç: **kime, hangi porttan, hangi yönde izin verildiğini açıkça tanımlamaktır**."
 ---
 
 ## Purpose

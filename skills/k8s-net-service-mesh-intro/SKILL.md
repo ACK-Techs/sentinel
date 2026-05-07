@@ -1,6 +1,6 @@
 ---
 name: k8s-net-service-mesh-intro
-description: Service mesh ihtiyacını değerlendirmek, Istio/Linkerd gibi çözümlere giriş yapmak veya “mTLS / traffic policy / observability için mesh gerekli mi?” sorusunu cevaplamak gerektiğinde kullan. Amaç: **mesh’i problem çözümü üzerinden değerlendirmektir**, moda üzerinden değil.
+description: "Service mesh ihtiyacını değerlendirmek, Istio/Linkerd gibi çözümlere giriş yapmak veya “mTLS / traffic policy / observability için mesh gerekli mi?” sorusunu cevaplamak gerektiğinde kullan. Amaç: **mesh’i problem çözümü üzerinden değerlendirmektir**, moda üzerinden değil."
 ---
 
 ## Purpose

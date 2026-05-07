@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-secrets-management
-description: Kubernetes secret yönetimini güvenli hale getirmek, External Secrets/Vault entegrasyonu düşünmek veya “secret’lar nasıl dönecek/yenilenecek?” sorusunu cevaplamak gerektiğinde kullan. Amaç: **secret yaşam döngüsünü YAML’dan ayırmaktır**.
+description: "Kubernetes secret yönetimini güvenli hale getirmek, External Secrets/Vault entegrasyonu düşünmek veya “secret’lar nasıl dönecek/yenilenecek?” sorusunu cevaplamak gerektiğinde kullan. Amaç: **secret yaşam döngüsünü YAML’dan ayırmaktır**."
 ---
 
 ## Purpose

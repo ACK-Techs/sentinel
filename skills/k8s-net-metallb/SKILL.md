@@ -1,6 +1,6 @@
 ---
 name: k8s-net-metallb
-description: Bare-metal veya MicroK8s ortamında `LoadBalancer` servislerine dış IP vermek için MetalLB kurmak, IP pool tasarlamak veya “EXTERNAL-IP pending” sorununu çözmek gerektiğinde kullan. Amaç: **LB IP atamasını yerel ağ gerçeklerine göre kurmaktır**.
+description: "Bare-metal veya MicroK8s ortamında `LoadBalancer` servislerine dış IP vermek için MetalLB kurmak, IP pool tasarlamak veya “EXTERNAL-IP pending” sorununu çözmek gerektiğinde kullan. Amaç: **LB IP atamasını yerel ağ gerçeklerine göre kurmaktır**."
 ---
 
 ## Purpose

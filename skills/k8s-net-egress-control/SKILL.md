@@ -1,6 +1,6 @@
 ---
 name: k8s-net-egress-control
-description: Pod’ların dış dünyaya çıkışını sınırlamak, belirli endpoint’lere izin vermek veya “internet erişimini kapattım, hangi bağımlılıklar kırılır?” sorusunu yönetmek gerektiğinde kullan. Amaç: **egress’i bilinçli allow-list mantığıyla tasarlamaktır**.
+description: "Pod’ların dış dünyaya çıkışını sınırlamak, belirli endpoint’lere izin vermek veya “internet erişimini kapattım, hangi bağımlılıklar kırılır?” sorusunu yönetmek gerektiğinde kullan. Amaç: **egress’i bilinçli allow-list mantığıyla tasarlamaktır**."
 ---
 
 ## Purpose

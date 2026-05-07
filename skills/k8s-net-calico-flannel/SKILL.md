@@ -1,6 +1,6 @@
 ---
 name: k8s-net-calico-flannel
-description: Calico ve Flannel arasında CNI seçimi yapmak, özellik/farkları anlamak veya “network policy / routing / performans için hangisi uygun?” sorusunu cevaplamak gerektiğinde kullan. Amaç: **CNI seçimini gerçek gereksinime göre yapmak**.
+description: "Calico ve Flannel arasında CNI seçimi yapmak, özellik/farkları anlamak veya “network policy / routing / performans için hangisi uygun?” sorusunu cevaplamak gerektiğinde kullan. Amaç: **CNI seçimini gerçek gereksinime göre yapmak**."
 ---
 
 ## Purpose

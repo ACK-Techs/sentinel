@@ -1,6 +1,6 @@
 ---
 name: k8s-net-coredns
-description: CoreDNS davranışını anlamak, plugin zinciri veya stub zone yapılandırmak ya da “cluster DNS yavaş/yanlış çözümlüyor” sorunlarını çözmek gerektiğinde kullan. Amaç: **DNS çözüm yolunu ve Corefile etkisini netleştirmektir**.
+description: "CoreDNS davranışını anlamak, plugin zinciri veya stub zone yapılandırmak ya da “cluster DNS yavaş/yanlış çözümlüyor” sorunlarını çözmek gerektiğinde kullan. Amaç: **DNS çözüm yolunu ve Corefile etkisini netleştirmektir**."
 ---
 
 ## Purpose

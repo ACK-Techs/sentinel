@@ -1,6 +1,6 @@
 ---
 name: k8s-core-taints-tolerations
-description: Node’ları özel iş yüklerine ayırmak için taint/toleration tasarlamak veya “pod pending kalıyor / yanlış node’a gidiyor” sorunlarını çözmek gerektiğinde kullan. Amaç: **yerleşim kuralını açıkça kısıtlamak**, affinity ile karıştırmamaktır.
+description: "Node’ları özel iş yüklerine ayırmak için taint/toleration tasarlamak veya “pod pending kalıyor / yanlış node’a gidiyor” sorunlarını çözmek gerektiğinde kullan. Amaç: **yerleşim kuralını açıkça kısıtlamak**, affinity ile karıştırmamaktır."
 ---
 
 ## Purpose

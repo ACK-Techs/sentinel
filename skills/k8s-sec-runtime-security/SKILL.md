@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-runtime-security
-description: Runtime tehdit tespiti kurmak, Falco benzeri kurallarla şüpheli davranışları yakalamak veya “container çalışırken neyi alarm sayacağız?” kararını vermek gerektiğinde kullan. Amaç: **çalışma zamanı görünürlüğünü aksiyona çevirmektir**.
+description: "Runtime tehdit tespiti kurmak, Falco benzeri kurallarla şüpheli davranışları yakalamak veya “container çalışırken neyi alarm sayacağız?” kararını vermek gerektiğinde kullan. Amaç: **çalışma zamanı görünürlüğünü aksiyona çevirmektir**."
 ---
 
 ## Purpose

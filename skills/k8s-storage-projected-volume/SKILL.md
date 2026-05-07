@@ -1,6 +1,6 @@
 ---
 name: k8s-storage-projected-volume
-description: ConfigMap, Secret, DownwardAPI veya ServiceAccount token kaynaklarını tek mount altında birleştirmek gerektiğinde kullan. Amaç: **çoklu metadata/config kaynağını düzenli ve okunabilir biçimde sunmaktır**.
+description: "ConfigMap, Secret, DownwardAPI veya ServiceAccount token kaynaklarını tek mount altında birleştirmek gerektiğinde kullan. Amaç: **çoklu metadata/config kaynağını düzenli ve okunabilir biçimde sunmaktır**."
 ---
 
 ## Purpose

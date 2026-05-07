@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-audit-logging
-description: Kubernetes API audit log’u etkinleştirmek, policy seviyesini ayarlamak veya güvenlik/uyumluluk için kalıcı API iz kaydı üretmek gerektiğinde kullan. Amaç: **kim, neyi, ne zaman yaptı sorusuna güvenilir yanıt üretmektir**.
+description: "Kubernetes API audit log’u etkinleştirmek, policy seviyesini ayarlamak veya güvenlik/uyumluluk için kalıcı API iz kaydı üretmek gerektiğinde kullan. Amaç: **kim, neyi, ne zaman yaptı sorusuna güvenilir yanıt üretmektir**."
 ---
 
 ## Purpose

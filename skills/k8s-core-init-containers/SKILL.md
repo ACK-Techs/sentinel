@@ -1,6 +1,6 @@
 ---
 name: k8s-core-init-containers
-description: Uygulama başlamadan önce hazırlık işi çalıştırmak (migration, config render, dependency wait, volume prepare) veya “main container çok erken başlıyor” problemini çözmek gerektiğinde kullan. Amaç: **başlangıç önkoşullarını deterministik hale getirmek**.
+description: "Uygulama başlamadan önce hazırlık işi çalıştırmak (migration, config render, dependency wait, volume prepare) veya “main container çok erken başlıyor” problemini çözmek gerektiğinde kullan. Amaç: **başlangıç önkoşullarını deterministik hale getirmek**."
 ---
 
 ## Purpose

@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-network-policies-defense
-description: Zero-trust yaklaşımıyla default-deny ağ katmanı kurmak, namespace izolasyonu tasarlamak veya savunma amaçlı policy stratejisini kademeli uygulamak gerektiğinde kullan. Amaç: **NetworkPolicy’yi tekil kural değil savunma katmanı olarak tasarlamaktır**.
+description: "Zero-trust yaklaşımıyla default-deny ağ katmanı kurmak, namespace izolasyonu tasarlamak veya savunma amaçlı policy stratejisini kademeli uygulamak gerektiğinde kullan. Amaç: **NetworkPolicy’yi tekil kural değil savunma katmanı olarak tasarlamaktır**."
 ---
 
 ## Purpose

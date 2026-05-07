@@ -1,6 +1,6 @@
 ---
 name: k8s-core-pod-disruption-budget
-description: Gönüllü kesintiler sırasında minimum pod sayısını korumak için PodDisruptionBudget tasarlamak veya drain/upgrade sırasında uygulamanın neden kesildiğini anlamak gerektiğinde kullan. Amaç: **bakım anında hizmet sürekliliği eşiğini netleştirmek**.
+description: "Gönüllü kesintiler sırasında minimum pod sayısını korumak için PodDisruptionBudget tasarlamak veya drain/upgrade sırasında uygulamanın neden kesildiğini anlamak gerektiğinde kullan. Amaç: **bakım anında hizmet sürekliliği eşiğini netleştirmek**."
 ---
 
 ## Purpose

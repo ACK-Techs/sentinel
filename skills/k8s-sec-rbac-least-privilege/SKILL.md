@@ -1,6 +1,6 @@
 ---
 name: k8s-sec-rbac-least-privilege
-description: Kubernetes RBAC tasarımını en az ayrıcalık prensibiyle sıkılaştırmak, fazla izinleri budamak veya “şu controller gerçekten hangi verb’lere ihtiyaç duyuyor?” sorusunu cevaplamak gerektiğinde kullan. Amaç: **çalışır ama daraltılmış izin seti üretmektir**.
+description: "Kubernetes RBAC tasarımını en az ayrıcalık prensibiyle sıkılaştırmak, fazla izinleri budamak veya “şu controller gerçekten hangi verb’lere ihtiyaç duyuyor?” sorusunu cevaplamak gerektiğinde kullan. Amaç: **çalışır ama daraltılmış izin seti üretmektir**."
 ---
 
 ## Purpose

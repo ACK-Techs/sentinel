@@ -1,6 +1,6 @@
 ---
 name: k8s-net-traefik-tls
-description: Traefik ile TLS termination kurmak, sertifika secret veya cert-manager entegrasyonu yapmak ya da “HTTPS geliyor ama certificate/redirect bozuk” problemini çözmek gerektiğinde kullan. Amaç: **sertifika yaşam döngüsü ile routing’i birlikte doğrulamaktır**.
+description: "Traefik ile TLS termination kurmak, sertifika secret veya cert-manager entegrasyonu yapmak ya da “HTTPS geliyor ama certificate/redirect bozuk” problemini çözmek gerektiğinde kullan. Amaç: **sertifika yaşam döngüsü ile routing’i birlikte doğrulamaktır**."
 ---
 
 ## Purpose
