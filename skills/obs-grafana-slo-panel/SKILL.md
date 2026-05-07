@@ -1,16 +1,32 @@
 ---
 name: obs-grafana-slo-panel
-description: Grafana'da SLO/SLI paneli ve error budget görselleştirmesini tasarlarken kullan. Kullanıcı “obs-grafana-slo-panel”, “obs grafana slo panel”, “grafana” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Grafana’da SLO/SLI ve error budget görünümünü tasarlamak (SLO hedefi, budget kalan, burn rate) gerektiğinde kullan. “SLO panel nasıl olmalı?”, “error budget grafiği”, “burn rate göstergesi” gibi SRE odaklı dashboard tasarımına odaklanır.
 ---
 
 ## Purpose
-Grafana'da SLO/SLI paneli ve error budget görselleştirmesini tasarlarken kullan
+Bu skill’in çıktısı:
+- SLO panel iskeleti: hedef, mevcut SLI, error budget kalan ve burn rate
+- Panel türü seçimi: stat + time series + (opsiyonel) table
+- Anti-pattern: sadece “% uptime” göstermek (budget ve burn rate olmadan)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- SLO’yu sabitle:
+  - Hedef: ör. 99.9% / 30 gün.
+  - SLI tanımı: başarı oranı mı (2xx), latency mi (p95 < X)?
+- Error budget’i hesaplayacağın pencereyi seç:
+  - Rolling 30 gün vs takvim ayı (ekip standardı).
+- Panel seti:
+  - Stat: “şu an SLI” ve “budget kalan”.
+  - Time series: SLI trend + budget burn (günlük).
+  - Burn rate: kısa pencere (1h/6h) ve uzun pencere (3d/30d) birlikte.
+- Drilldown:
+  - Burn artınca nereye gidilecek? (logs/traces linkleri, en kötü endpoint tablosu)
+- Doğrulama:
+  - Bir incident penceresinde panel “geriye dönük” doğru davranıyor mu?
+
+## Common mistakes
+- SLI penceresi ile SLO penceresini karıştırmak (farklı rollup’lar yanlış yorum üretir).
+- Burn rate yerine sadece “son değer” göstermek.
 
 ## References
 - `skills/cos-deploy-grafana`
