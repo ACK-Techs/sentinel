@@ -1,17 +1,32 @@
 ---
 name: obs-grafana-heatmap-panel
-description: Grafana heatmap panel ile histogram dağılımı ve latency band görselleştirmesini yaparken kullan. Kullanıcı “obs-grafana-heatmap-panel”, “obs grafana heatmap panel”, “grafana” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Prometheus histogram metriklerini Grafana heatmap panel ile doğru görselleştirmek (bucket dağılımı, latency band, renk/scale ayarı) gerektiğinde kullan. “Heatmap doğru değil”, “bucket’lar ters”, “p95/p99 çizgisi ile birlikte göster” gibi histogram‑odaklı panel tasarımına odaklanır.
 ---
 
 ## Purpose
-Grafana heatmap panel ile histogram dağılımı ve latency band görselleştirmesini yaparken kullan
+Bu skill’in çıktısı:
+- Heatmap için doğru PromQL kalıbı (bucket rate + le boyutunu koru)
+- Panel ayarları: bucket axis, color scale, unit (ms/s), log scale kararı
+- Doğrulama: heatmap ile p95/p99 çizgisinin aynı hikâyeyi anlatması
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Ön koşul:
+  - Histogram metrik ailesi var mı? (`_bucket`, `_sum`, `_count`)
+- PromQL’i doğru yaz:
+  - Heatmap için bucket’ları rate’e çevir: `sum by (le, ...) (rate(<metric>_bucket[5m]))`
+  - `le` boyutunu düşürme; heatmap bucket eksenidir.
+- Panel ayarı:
+  - Unit: latency ise ms/s doğru seç.
+  - Color scale: düşük trafik/gürültü için log scale gerekebilir.
+  - Zaman penceresi ve step: çok ince step → gürültü, çok kalın → detay kaybı.
+- Yan yana doğrulama:
+  - Aynı panelde (veya komşu panelde) p95/p99 çizgisi göster.
+  - Heatmap’te band yükseliyorsa p95/p99 da yükselmeli.
+
+## Common mistakes
+- `le`’yi aggregate edip kaybetmek: heatmap düz çizgiye dönüşür.
+- Raw bucket sayımını kullanmak: rate yerine kümülatif bucket’ı çizmek yanıltır.
 
 ## References
 - `skills/cos-deploy-grafana`
-- `cli/skills/agentic-troubleshoot-grafana`
+- `skills/obs-prometheus-histogram-summary`
