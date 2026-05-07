@@ -1,17 +1,33 @@
 ---
 name: obs-tempo-troubleshoot-ingest
-description: Tempo'ya trace gelmiyor durumunda ingestion sorunlarını teşhis ederken kullan. Kullanıcı “obs-tempo-troubleshoot-ingest”, “obs tempo troubleshoot ingest”, “tempo” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: “Tempo’ya trace gelmiyor” semptomunda ingestion zincirini (SDK → OTLP exporter → Collector → Tempo distributor/ingester → storage) adım adım izole etmek için kullan. Protokol uyumsuzluğu, sampling ve tenant header gibi en sık kök nedenleri hızlı ayırır.
 ---
 
 ## Purpose
-Tempo'ya trace gelmiyor durumunda ingestion sorunlarını teşhis ederken kullan
+Bu skill’in çıktısı:
+- Semptom → olası neden → doğrulama adımı şeklinde kısa teşhis akışı
+- Canary trace testi (tek request) ve Tempo’da arama adımı
+- En sık 3 kök neden: sampling, yanlış endpoint/protokol, tenant header/ingress
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- 0) “Trace üretiliyor mu?”
+  - Uygulama SDK’sında tracer aktif mi, sampler `always_off` değil mi?
+- 1) Export katmanı:
+  - SDK OTLP exporter doğru endpoint’e gidiyor mu? (HTTP vs gRPC karışıklığı)
+  - Collector kullanıyorsan: receiver gerçekten dinliyor mu?
+- 2) Collector pipeline:
+  - Batch/memory limiter yüzünden drop oluyor mu?
+  - Tail sampling varsa: kurallar her şeyi elemiş olabilir.
+- 3) Tempo receiver/distributor:
+  - Tempo doğru protokolleri dinliyor mu? (OTLP/Jaeger/Zipkin)
+  - Ingress/proxy gRPC’yi bozuyor mu?
+- 4) Tenant (varsa):
+  - Ingest ve query aynı tenant header’ı kullanıyor mu?
+- 5) Storage:
+  - Tempo “kabul ediyor” gibi ama blok yazamıyorsa storage izin/erişim sorunu olabilir.
+- Canary kapanış:
+  - Bilinçli canary request üret → Tempo’da service.name + kısa zaman penceresiyle ara.
 
 ## References
-- `skills/target-app-fastapi-otel-bootstrap`
-- `skills/target-app-observability-lib`
+- `skills/obs-tempo-distributor-config`
+- `skills/obs-tempo-sampling-strategy`
