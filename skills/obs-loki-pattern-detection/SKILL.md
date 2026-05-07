@@ -1,18 +1,35 @@
 ---
 name: obs-loki-pattern-detection
-description: Loki pattern sorguları ile log anomalisi ve hata kümeleme analizi yaparken kullan. Kullanıcı “obs-loki-pattern-detection”, “obs loki pattern detection”, “loki” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Loki’de “hangi hata mesajları kümeleniyor / en çok hangi pattern’ler var?” gibi tekrar eden log şablonlarını çıkarmak veya anomaliye giden yeni pattern’i tespit etmek gerektiğinde kullan. Regex ile tek tek aramak yerine pattern odaklı analiz üretir.
 ---
 
 ## Purpose
-Loki pattern sorguları ile log anomalisi ve hata kümeleme analizi yaparken kullan
+Bu skill’in çıktısı:
+- İncelenecek kapsam için pattern odaklı sorgu(lar) ve beklenen çıktı yorumu
+- “Top N pattern” yaklaşımıyla gürültüyü azaltma (aynı hatanın varyantlarını tekleştirme)
+- Yanıltıcı kümeleri engellemek için normalizasyon önerisi (ID/path gibi dinamik parçalar)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Kapsamı daralt:
+  - Stream selector: `{app="...", namespace="..."}` gibi
+  - Zaman aralığı: “incident penceresi” (örn. son 30–120 dk)
+- “Pattern” çıkarma hedefini seç:
+  - Hata kümeleri: `level=error` veya “panic/exception”
+  - Yeni pattern: baseline dönemle karşılaştırma (önceki gün/hafta)
+- Normalizasyon kuralı yaz (en kritik kısım):
+  - Dinamik ID, UUID, request id, path param’ları pattern’i bozar; bunları line içinde maskelenebilir hale getir.
+  - Eğer log JSON ise, önce parse edip sabit field’ları kullan.
+- Çıktıyı yorumla:
+  - En üst pattern’ler hangi bileşene işaret ediyor?
+  - Aynı pattern farklı label’larda mı çoğalıyor? (deployment/zone)
+- Doğrulama:
+  - Seçilen top pattern için LogQL ile örnek satırlar çek; gerçekten aynı kök sebep mi?
+
+## Common mistakes
+- Dinamik alanları normalize etmeden pattern çıkarmak: “her satır ayrı pattern” olur.
+- Label set’i çok geniş: pattern analizi gürültüye boğulur.
 
 ## References
 - `skills/cos-deploy-loki`
-- `skills/cos-relation-loki-grafana`
-- `cli/skills/agentic-troubleshoot-loki`
+- `skills/obs-loki-query-logql`
+- `skills/obs-loki-structured-metadata`
