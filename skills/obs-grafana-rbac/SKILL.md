@@ -1,17 +1,33 @@
 ---
 name: obs-grafana-rbac
-description: Grafana RBAC ile rol, team ve folder izin yönetimini yaparken kullan. Kullanıcı “obs-grafana-rbac”, “obs grafana rbac”, “grafana” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Grafana’da ekip bazlı erişim modeli kurmak (teams, folder permissions, service account yetkileri) veya “kim neyi görebilir/düzenleyebilir” sorusunu netleştirmek gerektiğinde kullan. Least‑privilege ve pratik izin hiyerarşisine odaklanır.
 ---
 
 ## Purpose
-Grafana RBAC ile rol, team ve folder izin yönetimini yaparken kullan
+Bu skill’in çıktısı:
+- RBAC taslağı: team → folder → permission matrisi (View/Edit/Admin)
+- Service account yetki modeli (otomasyon için minimum kapsam)
+- Doğrulama: örnek kullanıcılarla erişim testi senaryosu
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Varlıkları say:
+  - Kaç ekip var? Kaç “ortak” dashboard var? (platform/infra vs product)
+- Klasör stratejisi:
+  - Folder’ları ownership’e göre ayır (team klasörü + shared klasör).
+- Permission matrisi:
+  - Default: çoğu kullanıcı View.
+  - Dashboard sahipleri Edit.
+  - Admin yetkisi minimum; özellikle datasource ve users yönetimi ayrı.
+- Service account:
+  - Provisioning/API otomasyonu için ayrı SA; sadece gereken folder/datasource kapsamı.
+  - Token rotasyonu ve sızıntı önlemi.
+- Uyum testi:
+  - 2–3 örnek persona ile test: “görebilir mi?”, “edit edebilir mi?”, “datasource görebilir mi?”
+
+## Common mistakes
+- Herkese Editor vermek: drift ve incident sırasında yanlış değişiklik.
+- Tek bir paylaşımlı folder’da her şeyi toplamak: izin yönetimi imkânsızlaşır.
 
 ## References
 - `skills/cos-deploy-grafana`
-- `cli/skills/agentic-troubleshoot-grafana`
+- `skills/obs-grafana-api-http`
