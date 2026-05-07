@@ -1,17 +1,37 @@
 ---
 name: obs-grafana-image-renderer
-description: Grafana image renderer kurulumu ve dashboard ekran görüntüsü alma özelliğini kurarken kullan. Kullanıcı “obs-grafana-image-renderer”, “obs grafana image renderer”, “grafana” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Grafana’da panel/dashboard görüntüsü render etmek (alert notification’da screenshot, rapor çıktısı) için image renderer kurmak veya “render timeout/blank image” sorunlarını çözmek gerektiğinde kullan. Kaynak tüketimi (CPU/RAM) ve izolasyon (renderer ayrı servis) odaklıdır.
 ---
 
 ## Purpose
-Grafana image renderer kurulumu ve dashboard ekran görüntüsü alma özelliğini kurarken kullan
+Bu skill’in çıktısı:
+- Kurulum topolojisi kararı: embedded plugin vs ayrı renderer servisi
+- Kaynak ve stabilite checklist’i (timeout, concurrency, memory)
+- Doğrulama: örnek panel render isteği ve beklenen çıktı
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- İhtiyacı netleştir:
+  - Nerede kullanılacak? (alert bildirimleri, scheduled report, API render)
+  - Render edilen paneller ağır mı? (çok seri / büyük heatmap)
+- Topoloji:
+  - Ayrı renderer servisi tercih et (Grafana’yı headless browser yükünden izole).
+- Kaynak planı:
+  - Concurrency sınırı + render timeout belirle.
+  - RAM/CPU limitlerini panel ağırlığına göre ayarla.
+- Ağ ve güvenlik:
+  - Renderer’ın Grafana’ya erişimi kısıtlı olmalı (internal).
+  - Auth/URL parametrelerinde token sızıntısını engelle.
+- “Boş/timeout” teşhisi:
+  - Panel query çok mu ağır? (time range/step)
+  - Renderer kapasitesi yetiyor mu? (concurrency)
+  - DNS/TLS/reverse proxy sorunları?
+- Doğrulama:
+  - Tek bir panel için render isteği at, görsel düzgün mü?
+
+## Common mistakes
+- Renderer’ı Grafana ile aynı pod/container’da koşturmak: CPU/RAM pikleri Grafana’yı da düşürür.
+- Çok geniş time range ile render: timeout ve boş görsel.
 
 ## References
 - `skills/cos-deploy-grafana`
-- `cli/skills/agentic-troubleshoot-grafana`
+- `skills/obs-grafana-plugin-install`
