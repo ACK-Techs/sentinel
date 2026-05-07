@@ -1,16 +1,34 @@
 ---
 name: obs-grafana-provisioning
-description: YAML dosyaları ile dashboard/datasource/alert otomatik yüklemeyi kurarken kullan. Kullanıcı “obs-grafana-provisioning”, “obs grafana provisioning”, “grafana” gibi ifadelerle Prometheus/Loki/Tempo/Grafana/Alertmanager/OTel yapılandırması, sorgu, kural yazımı veya troubleshooting istediğinde bu skill’e başvur.
+description: Grafana’da dashboard/datasource/alert nesnelerini YAML provisioning ile otomatik yüklemek, GitOps benzeri yönetmek veya “provisioned ama görünmüyor/güncellenmiyor” sorununu çözmek gerektiğinde kullan. Dosya yerleşimi ve drift/override davranışına odaklanır.
 ---
 
 ## Purpose
-YAML dosyaları ile dashboard/datasource/alert otomatik yüklemeyi kurarken kullan
+Bu skill’in çıktısı:
+- Provisioning için klasör yerleşimi ve yükleme sırası (datasource → dashboard → alert)
+- “Değişiklik neden görünmedi?” teşhis checklist’i (path, folder, overwrite, cache)
+- Güvenli secret yönetimi notu (datasource credential)
 
 ## Workflow
-- Hedef bileşeni ve çalışma modunu belirle (COS/Juju charm vs bare vs k8s-operator).
-- İstenen çıktıyı seç: YAML config/manifest, API çağrısı örneği, PromQL/LogQL/TraceQL, kural dosyası, veya checklist.
-- Güvenlik/izolasyon: secret (token, kubeconfig) sızdırma; header/auth bilgilerini maskele.
-- Doğrulama adımı ekle: ilgili API endpoint/health, örnek sorgu, veya “beklenen sinyal” kontrolü.
+- Hedef nesneleri belirle:
+  - Datasource’lar (Prometheus/Loki/Tempo), dashboard JSON’ları, alert rule set’leri.
+- Yerleşim planı:
+  - Provisioning dosyaları (YAML) ve dashboard JSON dizinleri ayrı.
+  - Datasource’ları önce yükle (dashboard’lar datasource’a bağlı).
+- Drift/override kuralları:
+  - Provisioned kaynaklar UI’da edit edilirse ne olur? (genelde drift çıkar)
+  - “Source of truth” Git mi UI mı? birini seç.
+- Secret yönetimi:
+  - Datasource token/password’larını repo’ya koyma; secret mount/ENV ile çöz.
+- Doğrulama:
+  - Grafana restart sonrası datasource ve dashboard’lar görünüyor mu?
+  - Dashboard panelleri “datasource not found” demiyor mu?
+- “Güncellenmiyor” teşhisi:
+  - Yanlış path, folder UID, overwrite ayarı, caching.
+
+## Common mistakes
+- Datasource provision etmeden dashboard provision etmek: paneller kırılır.
+- UI’dan elle düzenleyip Git’teki sürümle yarışmak: drift ve sürprizler.
 
 ## References
 - `skills/cos-deploy-grafana`
