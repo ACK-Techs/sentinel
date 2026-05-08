@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import sys
 
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
@@ -30,7 +31,7 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--mode",
         choices=sorted(INSTALLERS),
-        required=True,
+        default=None,
         help="Kurulum hedefi.",
     )
     parser.add_argument(
@@ -54,13 +55,14 @@ def _installer_for(mode: str) -> type[BaseInstaller]:
 
 def run(args: argparse.Namespace) -> int:
     console = Console()
+    mode = args.mode or _select_mode(console)
     context = InstallContext(
-        mode=args.mode,
+        mode=mode,
         dry_run=args.dry_run,
         skip_preflight=args.skip_preflight,
         console=console,
     )
-    installer = _installer_for(args.mode)(context)
+    installer = _installer_for(mode)(context)
 
     steps = []
     if not args.skip_preflight:
@@ -74,7 +76,7 @@ def run(args: argparse.Namespace) -> int:
     )
 
     console.print(
-        f"[bold]Sentinel install[/bold] mode={args.mode} "
+        f"[bold]Sentinel install[/bold] mode={mode} "
         f"dry_run={str(args.dry_run).lower()} "
         f"skip_preflight={str(args.skip_preflight).lower()}"
     )
@@ -99,3 +101,23 @@ def run(args: argparse.Namespace) -> int:
 
     console.print("[green]Install akisi tamamlandi.[/green]")
     return 0
+
+
+def _select_mode(console: Console) -> str:
+    if not sys.stdin.isatty():
+        raise InstallError("Install mode gerekli: --mode {cos,compose,k8s}")
+
+    modes = sorted(INSTALLERS)
+    console.print("Kurulum modu secin:")
+    for index, mode in enumerate(modes, start=1):
+        console.print(f"  {index}. {mode}")
+
+    while True:
+        value = input("mode [compose]: ").strip() or "compose"
+        if value in INSTALLERS:
+            return value
+        if value.isdigit():
+            choice = int(value)
+            if 1 <= choice <= len(modes):
+                return modes[choice - 1]
+        console.print("[red]Gecersiz mode.[/red] cos, compose veya k8s girin.")

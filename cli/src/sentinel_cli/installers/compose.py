@@ -9,6 +9,7 @@ from importlib import resources
 from pathlib import Path
 
 from sentinel_cli.cli.errors import EXIT_TOOL, UserFacingError
+from sentinel_cli.discovery import discover_and_write_config
 from sentinel_cli.installers.base import BaseInstaller
 
 
@@ -44,8 +45,12 @@ class ComposeInstaller(BaseInstaller):
     def wire(self) -> None:
         target = Path.cwd() / self.target_dir
         self.context.console.print(f"Compose bundle: [bold]{target}[/bold]")
-        self.context.console.print("Grafana: http://127.0.0.1:3000")
-        self.context.console.print("Gateway: http://127.0.0.1:8091")
+        endpoints, config_path = discover_and_write_config("compose", cwd=Path.cwd())
+        self.context.console.print(f"Grafana: {endpoints.grafana_url}")
+        self.context.console.print(f"Gateway: {endpoints.gateway_url}")
+        self.context.console.print(f"Sentinel config: [bold]{config_path}[/bold]")
+        for warning in endpoints.warnings:
+            self.context.console.print(f"[yellow]Discovery warning:[/yellow] {warning}")
 
     def verify(self) -> None:
         target = Path.cwd() / self.target_dir
