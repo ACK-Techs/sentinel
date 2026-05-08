@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-from typing import type
 
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
