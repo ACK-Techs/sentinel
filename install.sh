@@ -86,6 +86,9 @@ install_sentinel_cli() {
   if [[ -z "$GIT_FALLBACK_URL" ]]; then
     GIT_FALLBACK_URL="https://github.com/<user>/sentinel-coming.git"
   fi
+  if [[ "$GIT_FALLBACK_URL" == git@*:* ]]; then
+    GIT_FALLBACK_URL="ssh://${GIT_FALLBACK_URL/:/\/}"
+  fi
   pipx install --force "git+${GIT_FALLBACK_URL}#subdirectory=cli"
 }
 
