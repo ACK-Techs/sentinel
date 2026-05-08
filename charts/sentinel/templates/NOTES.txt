@@ -1,0 +1,16 @@
+Sentinel stack has been installed into namespace {{ .Release.Namespace }}.
+
+Check services:
+  kubectl get svc -n {{ .Release.Namespace }}
+
+Check pods:
+  kubectl get pods -n {{ .Release.Namespace }}
+
+Port-forward Grafana:
+  kubectl port-forward -n {{ .Release.Namespace }} svc/{{ .Release.Name }}-kube-prometheus-stack-grafana 3000:80
+
+Port-forward Sentinel gateway:
+  kubectl port-forward -n {{ .Release.Namespace }} svc/{{ include "sentinel.fullname" . }}-gateway 8091:{{ .Values.gateway.service.port }}
+
+Then point Sentinel CLI discovery at this cluster:
+  sentinel install --mode k8s --skip-preflight
