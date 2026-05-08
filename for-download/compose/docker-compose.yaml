@@ -105,7 +105,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "wget -q --header='Authorization: Bearer ${SENTINEL_OBSERVABILITY_GATEWAY_TOKEN:-lab-gateway-token}' --spider http://127.0.0.1:8091/health || exit 1",
+          "wget -q -O /dev/null --header='Authorization: Bearer ${SENTINEL_OBSERVABILITY_GATEWAY_TOKEN:-lab-gateway-token}' http://127.0.0.1:8091/health || exit 1",
         ]
       interval: 15s
       timeout: 5s

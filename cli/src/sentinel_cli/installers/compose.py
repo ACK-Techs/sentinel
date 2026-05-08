@@ -89,10 +89,15 @@ class ComposeInstaller(BaseInstaller):
             shutil.copy2(item, destination)
 
     def _run(self, command: list[str], *, cwd: Path) -> None:
+        env = os.environ.copy()
+        token = env.get("SENTINEL_OBSERVABILITY_GATEWAY_TOKEN")
+        if not token or token == "<set>":
+            env["SENTINEL_OBSERVABILITY_GATEWAY_TOKEN"] = "lab-gateway-token"
+
         result = subprocess.run(
             command,
             cwd=cwd,
-            env=os.environ.copy(),
+            env=env,
             check=False,
             capture_output=True,
             text=True,
