@@ -25,6 +25,7 @@ Bu sınıf skill’lerde değişiklik sonrası küçük bir repl oturumuyla ger�
 - Index schema alanlarini stabil tut: topic, last_seen, confidence, source_refs. Surum artisiminda backward-compatible okuyucu sagla.
 
 ## Referanslar
+- `references/memory-index-schema-v1.md`
 - `README.md`
 - `documantations/INTEGRATION_SENTINEL_CLI_FROM_CLI_CLAUDE.md`
 - `cli/skills/agentic-session-persistence/SKILL.md`

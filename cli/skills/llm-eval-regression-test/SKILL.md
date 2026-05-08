@@ -27,6 +27,7 @@ description: LLM veya agent davranışını sayılaştırılmış metriklerle de
 - Regresyon testini golden cevap string eslesmesine sikistirma; semantik eslesme + kritik alan asserti birlestir. Yeni bug icin once test ekle.
 
 ## Referanslar
+- `references/regression-test-protocol.md`
 - `cli/skills/agentic-testing-integration-mock-llm/SKILL.md`
 - `cli/skills/agentic-testing-unit/SKILL.md`
 - `cli/documantations/TESTING_GRAFANA.md`

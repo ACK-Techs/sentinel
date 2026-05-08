@@ -27,6 +27,7 @@ description: LLM veya agent davranışını sayılaştırılmış metriklerle de
 - RAGAS metriği kullanirken retrieval docs idlerini preserve et; aksi halde context_precision anlamsizlasir. Kucuk veri setlerinde bootstrap CI ver.
 
 ## Referanslar
+- `references/ragas-evaluation-recipe.md`
 - `cli/skills/agentic-testing-integration-mock-llm/SKILL.md`
 - `cli/skills/agentic-testing-unit/SKILL.md`
 - `cli/documantations/TESTING_GRAFANA.md`
