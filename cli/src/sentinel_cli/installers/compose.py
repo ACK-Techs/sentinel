@@ -1,19 +1,100 @@
-"""Docker Compose installer stub."""
+"""Docker Compose installer."""
 
 from __future__ import annotations
 
+import os
+import shutil
+import subprocess
+from importlib import resources
+from pathlib import Path
+
+from sentinel_cli.cli.errors import EXIT_TOOL, UserFacingError
 from sentinel_cli.installers.base import BaseInstaller
 
 
 class ComposeInstaller(BaseInstaller):
+    target_dir = Path("sentinel-compose")
+
     def preflight(self) -> None:
-        self._todo("preflight")
+        if self.context.dry_run:
+            self.context.console.print("[yellow]DRY-RUN[/yellow] docker compose version")
+            return
+
+        if shutil.which("docker") is None:
+            raise UserFacingError(
+                "Docker bulunamadi. Compose kurulumu icin docker CLI gerekli.",
+                EXIT_TOOL,
+            )
+
+        self._run(["docker", "compose", "version"], cwd=Path.cwd())
 
     def install(self) -> None:
-        self._todo("install")
+        target = Path.cwd() / self.target_dir
+        self._copy_assets(target)
+
+        command = ["docker", "compose", "up", "-d"]
+        if self.context.dry_run:
+            self.context.console.print(
+                f"[yellow]DRY-RUN[/yellow] cd {target} && {' '.join(command)}"
+            )
+            return
+
+        self._run(command, cwd=target)
 
     def wire(self) -> None:
-        self._todo("wire")
+        target = Path.cwd() / self.target_dir
+        self.context.console.print(f"Compose bundle: [bold]{target}[/bold]")
+        self.context.console.print("Grafana: http://127.0.0.1:3000")
+        self.context.console.print("Gateway: http://127.0.0.1:8091")
 
     def verify(self) -> None:
-        self._todo("verify")
+        target = Path.cwd() / self.target_dir
+        command = ["docker", "compose", "ps"]
+        if self.context.dry_run:
+            self.context.console.print(
+                f"[yellow]DRY-RUN[/yellow] cd {target} && {' '.join(command)}"
+            )
+            return
+
+        self._run(command, cwd=target)
+
+    def _copy_assets(self, target: Path) -> None:
+        if self.context.dry_run:
+            self.context.console.print(
+                f"[yellow]DRY-RUN[/yellow] copy packaged compose assets to {target}"
+            )
+            return
+
+        target.mkdir(parents=True, exist_ok=True)
+        source = resources.files("sentinel_cli.assets.compose")
+        for item in source.iterdir():
+            if item.name == "__init__.py":
+                continue
+
+            destination = target / item.name
+            if item.is_dir():
+                shutil.copytree(item, destination, dirs_exist_ok=True)
+                continue
+            shutil.copy2(item, destination)
+
+    def _run(self, command: list[str], *, cwd: Path) -> None:
+        result = subprocess.run(
+            command,
+            cwd=cwd,
+            env=os.environ.copy(),
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0:
+            output = result.stdout.strip()
+            if output:
+                self.context.console.print(output)
+            return
+
+        detail = "\n".join(part for part in (result.stdout.strip(), result.stderr.strip()) if part)
+        raise UserFacingError(
+            f"Compose komutu basarisiz oldu: {' '.join(command)}",
+            EXIT_TOOL,
+            detail=detail or None,
+        )
