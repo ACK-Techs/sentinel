@@ -2,9 +2,11 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TESTPYPI_PACKAGE="${SENTINEL_TESTPYPI_PACKAGE:-sentinel-cli}"
-GIT_FALLBACK_URL="${SENTINEL_GIT_URL:-https://github.com/<user>/sentinel-coming.git}"
+GIT_FALLBACK_URL="${SENTINEL_GIT_URL:-}"
 INSTALL_MODE="${SENTINEL_INSTALL_MODE:-}"
+export PATH="$HOME/.local/bin:$PATH"
 
 log() {
   printf '[sentinel-install] %s\n' "$*"
@@ -78,6 +80,12 @@ install_sentinel_cli() {
   fi
 
   log "TestPyPI kurulumu basarisiz; git+https fallback deneniyor"
+  if [[ -z "$GIT_FALLBACK_URL" ]] && command -v git >/dev/null 2>&1; then
+    GIT_FALLBACK_URL="$(git -C "$SCRIPT_DIR" remote get-url origin 2>/dev/null || true)"
+  fi
+  if [[ -z "$GIT_FALLBACK_URL" ]]; then
+    GIT_FALLBACK_URL="https://github.com/<user>/sentinel-coming.git"
+  fi
   pipx install --force "git+${GIT_FALLBACK_URL}#subdirectory=cli"
 }
 

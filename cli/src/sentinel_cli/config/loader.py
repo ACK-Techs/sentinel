@@ -337,6 +337,10 @@ def load_config(
     effective_path = config_path or cli_overrides and cli_overrides.config_path
     if effective_path is None and source_env.get("SENTINEL_CONFIG"):
         effective_path = Path(source_env["SENTINEL_CONFIG"])
+    if effective_path is None:
+        user_config = Path.home() / ".sentinel" / "config.yaml"
+        if user_config.exists():
+            effective_path = user_config
 
     defaults = AppConfig().model_dump(mode="python")
     file_data = _load_yaml_config(effective_path)
