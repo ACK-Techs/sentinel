@@ -1,0 +1,10 @@
+tests/
+*.md
+.venv/
+.git
+__pycache__/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/

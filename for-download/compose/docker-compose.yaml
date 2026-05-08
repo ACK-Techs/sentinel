@@ -85,7 +85,7 @@ services:
       - sentinel-internal
 
   sentinel-gateway:
-    image: "${SENTINEL_GATEWAY_IMAGE:-ghcr.io/<user>/sentinel-gateway:latest}"
+    image: "${SENTINEL_GATEWAY_IMAGE:-ghcr.io/caglarkc/sentinel-gateway:latest}"
     ports:
       - "${SENTINEL_GATEWAY_PORT:-8091}:8091"
     environment:

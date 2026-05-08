@@ -157,3 +157,19 @@ Tum hata yanitlari su modeli kullanir:
 cd sentinel-coming/observability-gateway
 python -m pytest -q
 ```
+
+## Docker
+
+```bash
+docker pull ghcr.io/caglarkc/sentinel-gateway:latest
+```
+
+Runtime environment variables used by the compose image:
+
+| Variable | Purpose |
+|----------|---------|
+| `SENTINEL_OBSERVABILITY_GATEWAY_TOKEN` | Bearer token required by gateway endpoints. |
+| `SENTINEL_OBSERVABILITY_PROMETHEUS__BASE_URL` | Prometheus base URL. |
+| `SENTINEL_OBSERVABILITY_LOKI__BASE_URL` | Loki base URL. |
+| `SENTINEL_OBSERVABILITY_TEMPO__BASE_URL` | Tempo base URL. |
+| `SENTINEL_OBSERVABILITY_HTTP__TIMEOUT_SEC` | Backend HTTP timeout in seconds. |
