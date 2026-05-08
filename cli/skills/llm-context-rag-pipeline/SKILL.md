@@ -27,6 +27,7 @@ description: Bağlam inşası, geri çağırma ve enjeksiyon kararları alınır
 - RAG hattinda retrieval ve generationi tek adimda test etme; once retrieval recall sonra answer faithfulness olc. Kaynak idlerini cevapla birlikte don.
 
 ## Referanslar
+- `references/rag-pipeline-contract.md`
 - `cli/skills/agentic-llm-context-window-strategy/SKILL.md`
 - `cli/skills/agentic-agent-history-compaction/SKILL.md`
 - `documantations/INTEGRATION_SENTINEL_CLI_FROM_CLI_CLAUDE.md`
