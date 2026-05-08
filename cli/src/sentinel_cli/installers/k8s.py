@@ -37,6 +37,7 @@ class K8sInstaller(BaseInstaller):
     def install(self) -> None:
         chart_dir = Path.cwd() / self.target_dir
         self._copy_chart(chart_dir)
+        gateway_token = os.environ.get("SENTINEL_OBSERVABILITY_GATEWAY_TOKEN", "lab-gateway-token")
 
         dependency_command = ["helm", "dependency", "update", str(chart_dir)]
         install_command = [
@@ -51,11 +52,19 @@ class K8sInstaller(BaseInstaller):
             "--wait",
             "--timeout",
             "10m",
+            "--set-string",
+            f"gateway.token={gateway_token}",
         ]
 
         if self.context.dry_run:
             self.context.console.print(f"[yellow]DRY-RUN[/yellow] {' '.join(dependency_command)}")
-            self.context.console.print(f"[yellow]DRY-RUN[/yellow] {' '.join(install_command)}")
+            redacted_install_command = [
+                "gateway.token=***" if item.startswith("gateway.token=") else item
+                for item in install_command
+            ]
+            self.context.console.print(
+                f"[yellow]DRY-RUN[/yellow] {' '.join(redacted_install_command)}"
+            )
             return
 
         self._run(dependency_command, cwd=Path.cwd())
