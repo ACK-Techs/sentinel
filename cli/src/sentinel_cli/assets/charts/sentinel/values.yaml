@@ -4,12 +4,15 @@ global:
 kube-prometheus-stack:
   enabled: true
   fullnameOverride: kps
+  defaultRules:
+    create: false
   prometheus:
     prometheusSpec: {}
   grafana:
     enabled: true
     fullnameOverride: grafana
     adminPassword: admin
+    defaultDashboardsEnabled: false
     sidecar:
       datasources:
         enabled: true
