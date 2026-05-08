@@ -27,6 +27,7 @@ description: Bağlam inşası, geri çağırma ve enjeksiyon kararları alınır
 - Reranker kullanirken ilk retrieval havuzunu cok dar tutma; rerankerin secim gucu icin yeterli aday ver. Cross-encoder latency butcesini izlemeyi unutma.
 
 ## Referanslar
+- `references/reranking-contract.md`
 - `cli/skills/agentic-llm-context-window-strategy/SKILL.md`
 - `cli/skills/agentic-agent-history-compaction/SKILL.md`
 - `documantations/INTEGRATION_SENTINEL_CLI_FROM_CLI_CLAUDE.md`
