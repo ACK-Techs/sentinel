@@ -25,6 +25,7 @@ Bu sınıf skill’lerde değişiklik sonrası küçük bir repl oturumuyla ger�
 - Migration scripti once dry-run raporu uretmeli sonra yazmali. Yarida kalirsa tekrar calisabilir olmasi icin checkpoint kullan.
 
 ## Referanslar
+- `references/migration-runbook.md`
 - `README.md`
 - `documantations/INTEGRATION_SENTINEL_CLI_FROM_CLI_CLAUDE.md`
 - `cli/skills/agentic-session-persistence/SKILL.md`
