@@ -58,13 +58,14 @@ Sentinel CLI `sentinel install --mode k8s` runs this chart and then discovers se
 The chart keeps service names aligned with `discovery.py` expectations:
 
 - Prometheus: `sentinel-kube-prometheus-stack-prometheus:9090`
-- Loki: `sentinel-loki:3100`
-- Tempo: `sentinel-tempo:3200`
+- Prometheus service DNS used by gateway: `kps-prometheus:9090`
+- Loki: `loki:3100`
+- Tempo: `tempo:3200`
 - Gateway: `sentinel-gateway:8091`
 
 For local access:
 
 ```bash
-kubectl port-forward -n sentinel svc/sentinel-kube-prometheus-stack-grafana 3000:80
+kubectl port-forward -n sentinel svc/grafana 3000:80
 kubectl port-forward -n sentinel svc/sentinel-gateway 8091:8091
 ```

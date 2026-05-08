@@ -1,0 +1,31 @@
+{{- if and .Values.kube-prometheus-stack.enabled .Values.kube-prometheus-stack.grafana.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sentinel-grafana-datasources
+  labels:
+    grafana_datasource: "1"
+    {{- include "sentinel.labels" . | nindent 4 }}
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Loki
+        type: loki
+        uid: loki
+        access: proxy
+        url: http://loki:3100
+        editable: true
+      - name: Tempo
+        type: tempo
+        uid: tempo
+        access: proxy
+        url: http://tempo:3200
+        editable: true
+        jsonData:
+          httpMethod: GET
+          tracesToLogsV2:
+            datasourceUid: loki
+          serviceMap:
+            datasourceUid: prometheus
+{{- end }}

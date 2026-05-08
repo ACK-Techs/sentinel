@@ -10,7 +10,7 @@ dependencies:
     repository: https://prometheus-community.github.io/helm-charts
     condition: kube-prometheus-stack.enabled
   - name: loki
-    version: 7.0.0
+    version: 6.55.0
     repository: https://grafana.github.io/helm-charts
     condition: loki.enabled
   - name: tempo

@@ -3,31 +3,23 @@ global:
 
 kube-prometheus-stack:
   enabled: true
+  fullnameOverride: kps
+  prometheus:
+    prometheusSpec: {}
   grafana:
     enabled: true
+    fullnameOverride: grafana
     adminPassword: admin
-    additionalDataSources:
-      - name: Loki
-        uid: loki
-        type: loki
-        access: proxy
-        url: http://{{ .Release.Name }}-loki:3100
-        editable: true
-      - name: Tempo
-        uid: tempo
-        type: tempo
-        access: proxy
-        url: http://{{ .Release.Name }}-tempo:3200
-        editable: true
-        jsonData:
-          httpMethod: GET
-          tracesToLogsV2:
-            datasourceUid: loki
-          serviceMap:
-            datasourceUid: prometheus
+    sidecar:
+      datasources:
+        enabled: true
+        label: grafana_datasource
+        labelValue: "1"
+        searchNamespace: ALL
 
 loki:
   enabled: true
+  fullnameOverride: loki
   deploymentMode: SingleBinary
   loki:
     auth_enabled: false
@@ -58,6 +50,7 @@ loki:
 
 tempo:
   enabled: true
+  fullnameOverride: tempo
   tempo:
     reportingEnabled: false
   persistence:
@@ -82,11 +75,11 @@ gateway:
           name: sentinel-gateway-secret
           key: token
     SENTINEL_OBSERVABILITY_PROMETHEUS__BASE_URL:
-      value: "http://{{ .Release.Name }}-kube-prometheus-stack-prometheus:9090"
+      value: "http://kps-prometheus:9090"
     SENTINEL_OBSERVABILITY_LOKI__BASE_URL:
-      value: "http://{{ .Release.Name }}-loki:3100"
+      value: "http://loki:3100"
     SENTINEL_OBSERVABILITY_TEMPO__BASE_URL:
-      value: "http://{{ .Release.Name }}-tempo:3200"
+      value: "http://tempo:3200"
     SENTINEL_OBSERVABILITY_HTTP__TIMEOUT_SEC:
       value: "10"
   resources:
