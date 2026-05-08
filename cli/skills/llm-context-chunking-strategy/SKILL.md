@@ -27,6 +27,7 @@ description: Bağlam inşası, geri çağırma ve enjeksiyon kararları alınır
 - Chunk boyutu dokuman turune gore degismeli: kodda daha kucuk, duz metinde daha buyuk. Overlap orani recall ile maliyet arasinda denge kurar.
 
 ## Referanslar
+- `references/chunking-strategy-matrix.md`
 - `cli/skills/agentic-llm-context-window-strategy/SKILL.md`
 - `cli/skills/agentic-agent-history-compaction/SKILL.md`
 - `documantations/INTEGRATION_SENTINEL_CLI_FROM_CLI_CLAUDE.md`

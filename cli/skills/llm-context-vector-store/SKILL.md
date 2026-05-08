@@ -27,6 +27,7 @@ description: Bağlam inşası, geri çağırma ve enjeksiyon kararları alınır
 - Vector store seciminde sadece hiz degil silme, TTL ve metadata filtre kabiliyetini de degerlendir. Embedding modeli degisince yeniden index planla.
 
 ## Referanslar
+- `references/vector-store-selection-playbook.md`
 - `cli/skills/agentic-llm-context-window-strategy/SKILL.md`
 - `cli/skills/agentic-agent-history-compaction/SKILL.md`
 - `documantations/INTEGRATION_SENTINEL_CLI_FROM_CLI_CLAUDE.md`
