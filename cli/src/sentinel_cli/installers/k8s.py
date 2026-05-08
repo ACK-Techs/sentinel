@@ -94,7 +94,7 @@ class K8sInstaller(BaseInstaller):
         if target.exists():
             shutil.rmtree(target)
 
-        source = resources.files("sentinel_cli.assets.charts.sentinel")
+        source = resources.files("sentinel_cli.assets").joinpath("charts", "sentinel")
         shutil.copytree(source, target)
 
     def _run(self, command: list[str], *, cwd: Path) -> None:
