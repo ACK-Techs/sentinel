@@ -30,7 +30,7 @@ services:
       - ./loki-config.yaml:/etc/loki/loki-config.yaml:ro
       - loki-data:/loki
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3100/ready"]
+      test: ["CMD", "/usr/bin/loki", "-version"]
       interval: 15s
       timeout: 5s
       retries: 10
@@ -49,7 +49,7 @@ services:
       - ./tempo-config.yaml:/etc/tempo/tempo-config.yaml:ro
       - tempo-data:/var/tempo
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:3200/ready"]
+      test: ["CMD", "/tempo", "-version"]
       interval: 15s
       timeout: 5s
       retries: 10
