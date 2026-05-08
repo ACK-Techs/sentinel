@@ -73,8 +73,7 @@ install_sentinel_cli() {
   log "sentinel-cli TestPyPI uzerinden kuruluyor"
   if pipx install --force \
     "$TESTPYPI_PACKAGE" \
-    --pip-args="--extra-index-url https://pypi.org/simple/" \
-    --index-url https://test.pypi.org/simple/; then
+    --pip-args="--index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/"; then
     return 0
   fi
 
