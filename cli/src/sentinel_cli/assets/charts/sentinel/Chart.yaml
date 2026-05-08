@@ -1,0 +1,19 @@
+apiVersion: v2
+name: sentinel
+description: Sentinel observability stack for Kubernetes
+type: application
+version: 0.1.0
+appVersion: 0.1.0
+dependencies:
+  - name: kube-prometheus-stack
+    version: 82.14.0
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: kube-prometheus-stack.enabled
+  - name: loki
+    version: 7.0.0
+    repository: https://grafana.github.io/helm-charts
+    condition: loki.enabled
+  - name: tempo
+    version: 1.24.1
+    repository: https://grafana.github.io/helm-charts
+    condition: tempo.enabled

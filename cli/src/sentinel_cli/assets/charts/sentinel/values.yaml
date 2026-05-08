@@ -1,0 +1,109 @@
+global:
+  imageTag: 0.1.0
+
+kube-prometheus-stack:
+  enabled: true
+  grafana:
+    enabled: true
+    adminPassword: admin
+    additionalDataSources:
+      - name: Loki
+        uid: loki
+        type: loki
+        access: proxy
+        url: http://{{ .Release.Name }}-loki:3100
+        editable: true
+      - name: Tempo
+        uid: tempo
+        type: tempo
+        access: proxy
+        url: http://{{ .Release.Name }}-tempo:3200
+        editable: true
+        jsonData:
+          httpMethod: GET
+          tracesToLogsV2:
+            datasourceUid: loki
+          serviceMap:
+            datasourceUid: prometheus
+
+loki:
+  enabled: true
+  deploymentMode: SingleBinary
+  loki:
+    auth_enabled: false
+    commonConfig:
+      replication_factor: 1
+    schemaConfig:
+      configs:
+        - from: "2024-01-01"
+          store: tsdb
+          object_store: filesystem
+          schema: v13
+          index:
+            prefix: index_
+            period: 24h
+    storage:
+      type: filesystem
+  singleBinary:
+    replicas: 1
+    persistence:
+      enabled: true
+      size: 10Gi
+  read:
+    replicas: 0
+  write:
+    replicas: 0
+  backend:
+    replicas: 0
+
+tempo:
+  enabled: true
+  tempo:
+    reportingEnabled: false
+  persistence:
+    enabled: true
+    size: 10Gi
+
+gateway:
+  enabled: true
+  token: ""
+  existingSecret: ""
+  image:
+    repository: ghcr.io/caglarkc/sentinel-gateway
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8091
+  env:
+    SENTINEL_OBSERVABILITY_GATEWAY_TOKEN:
+      valueFrom:
+        secretKeyRef:
+          name: sentinel-gateway-secret
+          key: token
+    SENTINEL_OBSERVABILITY_PROMETHEUS__BASE_URL:
+      value: "http://{{ .Release.Name }}-kube-prometheus-stack-prometheus:9090"
+    SENTINEL_OBSERVABILITY_LOKI__BASE_URL:
+      value: "http://{{ .Release.Name }}-loki:3100"
+    SENTINEL_OBSERVABILITY_TEMPO__BASE_URL:
+      value: "http://{{ .Release.Name }}-tempo:3200"
+    SENTINEL_OBSERVABILITY_HTTP__TIMEOUT_SEC:
+      value: "10"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
