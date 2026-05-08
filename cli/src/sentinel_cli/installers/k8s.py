@@ -14,6 +14,12 @@ class K8sInstaller(BaseInstaller):
         self._todo("install")
 
     def wire(self) -> None:
+        if self.context.dry_run:
+            self.context.console.print(
+                "[yellow]DRY-RUN[/yellow] discover Kubernetes endpoints and write ~/.sentinel/config.yaml"
+            )
+            return
+
         endpoints, config_path = discover_and_write_config("k8s")
         self.context.console.print(f"Grafana: {endpoints.grafana_url}")
         self.context.console.print(f"Gateway: {endpoints.gateway_url}")

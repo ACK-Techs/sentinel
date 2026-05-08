@@ -71,15 +71,15 @@ ensure_pipx() {
 
 install_sentinel_cli() {
   log "sentinel-cli TestPyPI uzerinden kuruluyor"
-  if pipx install \
-    --index-url https://test.pypi.org/simple/ \
+  if pipx install --force \
+    "$TESTPYPI_PACKAGE" \
     --pip-args="--extra-index-url https://pypi.org/simple/" \
-    "$TESTPYPI_PACKAGE"; then
+    --index-url https://test.pypi.org/simple/; then
     return 0
   fi
 
   log "TestPyPI kurulumu basarisiz; git+https fallback deneniyor"
-  pipx install "git+${GIT_FALLBACK_URL}#subdirectory=cli"
+  pipx install --force "git+${GIT_FALLBACK_URL}#subdirectory=cli"
 }
 
 run_sentinel_install() {

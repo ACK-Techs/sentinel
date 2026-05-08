@@ -45,6 +45,12 @@ class ComposeInstaller(BaseInstaller):
     def wire(self) -> None:
         target = Path.cwd() / self.target_dir
         self.context.console.print(f"Compose bundle: [bold]{target}[/bold]")
+        if self.context.dry_run:
+            self.context.console.print(
+                "[yellow]DRY-RUN[/yellow] discover endpoints and write ~/.sentinel/config.yaml"
+            )
+            return
+
         endpoints, config_path = discover_and_write_config("compose", cwd=Path.cwd())
         self.context.console.print(f"Grafana: {endpoints.grafana_url}")
         self.context.console.print(f"Gateway: {endpoints.gateway_url}")
