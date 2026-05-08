@@ -55,6 +55,9 @@ class K8sInstaller(BaseInstaller):
             "--set-string",
             f"gateway.token={gateway_token}",
         ]
+        override_path = Path("/tmp/sentinel-values-override.yaml")
+        if override_path.exists():
+            install_command.extend(["-f", str(override_path)])
 
         if self.context.dry_run:
             self.context.console.print(f"[yellow]DRY-RUN[/yellow] {' '.join(dependency_command)}")

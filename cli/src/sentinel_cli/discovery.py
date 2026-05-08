@@ -68,6 +68,7 @@ def write_user_config(
     gateway_url = endpoints.gateway_url
 
     update = app_config.model_dump(mode="json")
+    update["installation"]["mode"] = endpoints.mode
     if grafana_url:
         update["grafana"]["enabled"] = True
         update["grafana"]["base_url"] = grafana_url

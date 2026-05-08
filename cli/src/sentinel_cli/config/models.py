@@ -15,6 +15,7 @@ ApprovalMode = Literal["interactive", "auto", "deny"]
 HookPhase = Literal["pre_tool", "post_tool", "post_turn", "pre_memory", "post_memory"]
 HookErrorMode = Literal["warn", "block"]
 MemoryPolicy = Literal["project", "user"]
+InstallMode = Literal["cos", "compose", "k8s"]
 
 
 class ExperimentalSettings(BaseModel):
@@ -23,6 +24,14 @@ class ExperimentalSettings(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     mcp_stdio_client: bool = False
+
+
+class InstallationSettings(BaseModel):
+    """Last discovered local installation mode."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    mode: InstallMode | None = None
 
 
 class RetryPolicySettings(BaseModel):
@@ -307,6 +316,7 @@ class AppConfig(BaseModel):
     )
     magic_docs: MagicDocsSettings = Field(default_factory=MagicDocsSettings)
     away: AwaySettings = Field(default_factory=AwaySettings)
+    installation: InstallationSettings = Field(default_factory=InstallationSettings)
     experimental: ExperimentalSettings = Field(default_factory=ExperimentalSettings)
 
     def sanitized_summary(self) -> dict[str, object]:
@@ -348,6 +358,7 @@ class AppConfig(BaseModel):
             "semantic_compaction": self.semantic_compaction.model_dump(),
             "magic_docs": self.magic_docs.model_dump(),
             "away": self.away.model_dump(),
+            "installation": self.installation.model_dump(),
             "experimental": self.experimental.model_dump(),
             "list_merge_strategy": "replace",
         }
