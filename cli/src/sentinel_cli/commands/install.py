@@ -64,9 +64,9 @@ def run(args: argparse.Namespace) -> int:
     )
     installer = _installer_for(mode)(context)
 
-    steps = []
-    if not args.skip_preflight:
-        steps.append(("preflight", installer.preflight))
+    steps = [("preflight", installer.preflight)]
+    if args.skip_preflight:
+        steps = [("preflight", lambda: console.print("[yellow]preflight skipped[/yellow]"))]
     steps.extend(
         [
             ("install", installer.install),
