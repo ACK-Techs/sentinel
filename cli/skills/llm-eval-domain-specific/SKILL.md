@@ -23,6 +23,9 @@ description: LLM veya agent davranışını sayılaştırılmış metriklerle de
 - Sadece iyi sonuç örneklerini raporlamak.
 - Tool-call başarısını yalnızca "çağırdı/çağırmadı" düzeyinde ölçmek.
 
+## Skill-spesifik kararlar
+- Domain-specific evalde Sentinel incident ve runbook senaryolarini kullan. Genel benchmarkta iyi olan model alan jargonunda zayif kalabilir.
+
 ## Referanslar
 - `cli/skills/agentic-testing-integration-mock-llm/SKILL.md`
 - `cli/skills/agentic-testing-unit/SKILL.md`

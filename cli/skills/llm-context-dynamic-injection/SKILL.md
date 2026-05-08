@@ -23,6 +23,9 @@ description: Bağlam inşası, geri çağırma ve enjeksiyon kararları alınır
 - History compaction kalitesi düşerse agent yanlış özgüvenle cevap verir.
 - Hybrid search kullanırken keyword sinyalini tamamen kapatma.
 
+## Skill-spesifik kararlar
+- Dynamic injectionda her veri kaynagina tazelik (freshness) suresi tanimla. Eski telemetriyi yeniymis gibi sunmamak icin timestamp zorunlu olsun.
+
 ## Referanslar
 - `cli/skills/agentic-llm-context-window-strategy/SKILL.md`
 - `cli/skills/agentic-agent-history-compaction/SKILL.md`

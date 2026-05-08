@@ -23,6 +23,9 @@ description: Bağlam inşası, geri çağırma ve enjeksiyon kararları alınır
 - History compaction kalitesi düşerse agent yanlış özgüvenle cevap verir.
 - Hybrid search kullanırken keyword sinyalini tamamen kapatma.
 
+## Skill-spesifik kararlar
+- Konusma gecmisi yonetiminde "acik issue" ve "cozuldu" durum etiketleri kullan. Eski turdan tasinan varsayimlari belirli aralikta yeniden dogrulat.
+
 ## Referanslar
 - `cli/skills/agentic-llm-context-window-strategy/SKILL.md`
 - `cli/skills/agentic-agent-history-compaction/SKILL.md`

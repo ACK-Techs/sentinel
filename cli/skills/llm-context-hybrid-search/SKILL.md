@@ -23,6 +23,9 @@ description: Bağlam inşası, geri çağırma ve enjeksiyon kararları alınır
 - History compaction kalitesi düşerse agent yanlış özgüvenle cevap verir.
 - Hybrid search kullanırken keyword sinyalini tamamen kapatma.
 
+## Skill-spesifik kararlar
+- Hybrid searchte keyword sinyali incident adlari ve kod sembollerinde kritik olur. Vektor ve BM25 agirliklarini domaine gore calibrate et.
+
 ## Referanslar
 - `cli/skills/agentic-llm-context-window-strategy/SKILL.md`
 - `cli/skills/agentic-agent-history-compaction/SKILL.md`

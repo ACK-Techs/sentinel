@@ -23,6 +23,9 @@ description: Prompt tasarımıyla model davranışı güvenilir ve ölçülebili
 - Tool açıklamaları modelin doğru aracı seçmesini artırıyor mu?
 - Uzun konuşmada ilk tur hedefi kayboluyor mu?
 
+## Skill-spesifik kararlar
+- System promptu policy, style ve output contract bolumlerine ayir; her bolumun cakisinca hangi bolumun kazanacagini yaz. Uzun policy listesinde "non-negotiable" maddeleri en basa koy.
+
 ## Referanslar
 - `cli/documantations/ARCHITECTURE_AGENTIC_CLI.md`
 - `cli/documantations/archive/PROMPT_INJECTION_GUARDRAILS_PHASE2A.md`

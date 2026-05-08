@@ -23,6 +23,9 @@ Bu skill, `llm-local-lm-studio` başlığında yerel LLM çalıştırmayı "kuru
 - Modelin "token/s" hızını ölçmeden üretim benzeri kullanıma geçmek.
 - Güvenlik sınırı olmadan LAN endpoint’i açık bırakmak.
 
+## Skill-spesifik kararlar
+- LM Studio server modunda OpenAI uyumlu endpoint acarken modelin context limiti ve max output token degerini UI tarafindan sabitle. Model degisiminde endpoint ayni kalsa da davranis farki olacagi icin profile notu tut.
+
 ## Referanslar
 - `cli/documantations/LLM_PROVIDERS.md`
 - `cli/documantations/IMPLEMENTATION_PLAN_PHASE2.md`

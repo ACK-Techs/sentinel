@@ -18,6 +18,9 @@ description: CLI deneyimini üretim kalitesine taşımak için etkileşim, çık
 - `stdin` ile gelen veri interactive prompt akışını doğru bypass ediyor mu?
 - Erişilebilirlik seçenekleri (`--no-color`, sade tablo) terminale göre uyarlanıyor mu?
 
+## Skill-spesifik kararlar
+- Multi-workspace modunda aktif workspace’i promptta gorunur kil. Workspace gecisinde profile, memory ve cache alanlarini ayri tut.
+
 ## Referanslar
 - `cli/skills/agentic-cli-entrypoint/SKILL.md`
 - `cli/skills/agentic-cli-user-errors/SKILL.md`

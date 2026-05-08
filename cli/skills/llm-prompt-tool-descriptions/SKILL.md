@@ -23,6 +23,9 @@ description: Prompt tasarımıyla model davranışı güvenilir ve ölçülebili
 - Tool açıklamaları modelin doğru aracı seçmesini artırıyor mu?
 - Uzun konuşmada ilk tur hedefi kayboluyor mu?
 
+## Skill-spesifik kararlar
+- Tool description metni, ne zaman KULLANMAMASI gerektigini de icermeli. Zorunlu alanlar ve birim tipleri (ms, bytes, iso datetime) acikca yazilmali.
+
 ## Referanslar
 - `cli/documantations/ARCHITECTURE_AGENTIC_CLI.md`
 - `cli/documantations/archive/PROMPT_INJECTION_GUARDRAILS_PHASE2A.md`

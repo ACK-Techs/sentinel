@@ -18,6 +18,9 @@ description: MCP tabanlı araç, kaynak ve taşıma katmanlarını Sentinel ile 
 - Uzun yaşayan SSE bağlantılarında heartbeat ve reconnect zorunlu.
 - Sunucu tarafı hata mesajları kullanıcıya sızan secret içermemeli.
 
+## Skill-spesifik kararlar
+- Sampling taleplerinde server tarafi policy ve maliyet siniri koy. Kullanici onayi gerektiren durumlari istemciye acik sinyal et.
+
 ## Referanslar
 - `cli/skills/agentic-mcp-client-config/SKILL.md`
 - `cli/skills/agentic-mcp-tool-mapping/SKILL.md`

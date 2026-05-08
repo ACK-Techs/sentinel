@@ -21,6 +21,9 @@ description: Sentinel bellek katmanında extract, dreaming, redaksiyon ve politi
 ## İşletim notu
 Bu sınıf skill’lerde değişiklik sonrası küçük bir repl oturumuyla gerçek extract dosyası üzerinden doğrulama yapılmalı.
 
+## Skill-spesifik kararlar
+- Memory searchte tam metin + metadata filtreyi birlestir. Sonuclari tarih, guven ve proje iliskisine gore sirala.
+
 ## Referanslar
 - `README.md`
 - `documantations/INTEGRATION_SENTINEL_CLI_FROM_CLI_CLAUDE.md`

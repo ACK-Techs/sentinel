@@ -23,6 +23,9 @@ description: Prompt tasarımıyla model davranışı güvenilir ve ölçülebili
 - Tool açıklamaları modelin doğru aracı seçmesini artırıyor mu?
 - Uzun konuşmada ilk tur hedefi kayboluyor mu?
 
+## Skill-spesifik kararlar
+- ReAct akisini Thought/Action/Observation olarak net ayrimla; Observation alani disinda yeni varsayim eklemeyi yasakla. Araç cevabi gelmeden ikinci Action uretilmesini engelle.
+
 ## Referanslar
 - `cli/documantations/ARCHITECTURE_AGENTIC_CLI.md`
 - `cli/documantations/archive/PROMPT_INJECTION_GUARDRAILS_PHASE2A.md`

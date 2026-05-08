@@ -22,6 +22,9 @@ description: Agent çalışma zamanı güvenliğini artırmak, saldırı yüzeyi
 - Audit log üretip bütünlük (tamper) sağlamama.
 - Container sandbox var diye uygulama seviyesinde doğrulamayı atlama.
 
+## Skill-spesifik kararlar
+- Input validationda uzunluk, karakter seti ve schema kontrollerini katmanli yap. Komut satiri argumanlarini shell-safe normalize et.
+
 ## Referanslar
 - `cli/skills/agentic-threat-model/SKILL.md`
 - `cli/skills/agentic-sandbox-hardening-reference/SKILL.md`

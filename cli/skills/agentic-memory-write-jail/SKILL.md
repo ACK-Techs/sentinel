@@ -21,6 +21,9 @@ description: Sentinel bellek katmanında extract, dreaming, redaksiyon ve politi
 ## İşletim notu
 Bu sınıf skill’lerde değişiklik sonrası küçük bir repl oturumuyla gerçek extract dosyası üzerinden doğrulama yapılmalı.
 
+## Skill-spesifik kararlar
+- Write jail acikken write_file araci kok disina cikmamali. Symlink ve path traversal kontrollerini explicit test et.
+
 ## Referanslar
 - `README.md`
 - `documantations/INTEGRATION_SENTINEL_CLI_FROM_CLI_CLAUDE.md`

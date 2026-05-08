@@ -23,6 +23,9 @@ description: LLM veya agent davranışını sayılaştırılmış metriklerle de
 - Sadece iyi sonuç örneklerini raporlamak.
 - Tool-call başarısını yalnızca "çağırdı/çağırmadı" düzeyinde ölçmek.
 
+## Skill-spesifik kararlar
+- Tool-call accuracy olcumunde dogru tool + dogru arguman + dogru siralama ucunu birden olc. Kismen dogru cagriyi ayri kategoriye koy.
+
 ## Referanslar
 - `cli/skills/agentic-testing-integration-mock-llm/SKILL.md`
 - `cli/skills/agentic-testing-unit/SKILL.md`

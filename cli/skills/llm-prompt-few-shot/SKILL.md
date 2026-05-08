@@ -23,6 +23,9 @@ description: Prompt tasarımıyla model davranışı güvenilir ve ölçülebili
 - Tool açıklamaları modelin doğru aracı seçmesini artırıyor mu?
 - Uzun konuşmada ilk tur hedefi kayboluyor mu?
 
+## Skill-spesifik kararlar
+- Few-shot orneklerini domain dagilimina gore sec; sadece mutlu yol ornegi verme. Kotu ornek + dogruya cevirme ornegi eklemek arac cagri hatalarini azaltir.
+
 ## Referanslar
 - `cli/documantations/ARCHITECTURE_AGENTIC_CLI.md`
 - `cli/documantations/archive/PROMPT_INJECTION_GUARDRAILS_PHASE2A.md`

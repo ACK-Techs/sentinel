@@ -23,6 +23,9 @@ Bu skill, `llm-local-air-gap-deploy` başlığında yerel LLM çalıştırmayı 
 - Modelin "token/s" hızını ölçmeden üretim benzeri kullanıma geçmek.
 - Güvenlik sınırı olmadan LAN endpoint’i açık bırakmak.
 
+## Skill-spesifik kararlar
+- Air-gap kurulumda model artefaktini checksum ile tasit, offline wheel/dependency mirror hazirla ve ilk acilista internet cagrisini fail-fast test et. Lisans dosyalarini paketlemeden dagitim yapma.
+
 ## Referanslar
 - `cli/documantations/LLM_PROVIDERS.md`
 - `cli/documantations/IMPLEMENTATION_PLAN_PHASE2.md`

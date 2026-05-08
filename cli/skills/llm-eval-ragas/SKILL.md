@@ -23,6 +23,9 @@ description: LLM veya agent davranışını sayılaştırılmış metriklerle de
 - Sadece iyi sonuç örneklerini raporlamak.
 - Tool-call başarısını yalnızca "çağırdı/çağırmadı" düzeyinde ölçmek.
 
+## Skill-spesifik kararlar
+- RAGAS metriği kullanirken retrieval docs idlerini preserve et; aksi halde context_precision anlamsizlasir. Kucuk veri setlerinde bootstrap CI ver.
+
 ## Referanslar
 - `cli/skills/agentic-testing-integration-mock-llm/SKILL.md`
 - `cli/skills/agentic-testing-unit/SKILL.md`

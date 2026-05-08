@@ -23,6 +23,9 @@ Bu skill, `llm-local-gemma` başlığında yerel LLM çalıştırmayı "kurulum 
 - Modelin "token/s" hızını ölçmeden üretim benzeri kullanıma geçmek.
 - Güvenlik sınırı olmadan LAN endpoint’i açık bırakmak.
 
+## Skill-spesifik kararlar
+- Gemma ailesinde talimat takibi ve guvenlik filtre davranisi model boyutuna gore degisir; promptu model boyutuna gore ayir. Ollama profile adinda gemma surumunu acik yaz.
+
 ## Referanslar
 - `cli/documantations/LLM_PROVIDERS.md`
 - `cli/documantations/IMPLEMENTATION_PLAN_PHASE2.md`

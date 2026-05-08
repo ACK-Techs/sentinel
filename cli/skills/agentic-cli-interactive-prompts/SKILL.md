@@ -18,6 +18,9 @@ description: CLI deneyimini üretim kalitesine taşımak için etkileşim, çık
 - `stdin` ile gelen veri interactive prompt akışını doğru bypass ediyor mu?
 - Erişilebilirlik seçenekleri (`--no-color`, sade tablo) terminale göre uyarlanıyor mu?
 
+## Skill-spesifik kararlar
+- Interactive prompts icin varsayilan cevaplari guvenli sec. --yes ve --non-interactive bayraklarinda soru atlama davranisi deterministic olsun.
+
 ## Referanslar
 - `cli/skills/agentic-cli-entrypoint/SKILL.md`
 - `cli/skills/agentic-cli-user-errors/SKILL.md`

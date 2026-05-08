@@ -23,6 +23,9 @@ description: LLM veya agent davranışını sayılaştırılmış metriklerle de
 - Sadece iyi sonuç örneklerini raporlamak.
 - Tool-call başarısını yalnızca "çağırdı/çağırmadı" düzeyinde ölçmek.
 
+## Skill-spesifik kararlar
+- Latency-cost degerlendirmesinde p50 ile p95i birlikte izle. Maliyet raporunda input/output token dagilimini ayri ver.
+
 ## Referanslar
 - `cli/skills/agentic-testing-integration-mock-llm/SKILL.md`
 - `cli/skills/agentic-testing-unit/SKILL.md`

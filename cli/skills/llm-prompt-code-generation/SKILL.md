@@ -23,6 +23,9 @@ description: Prompt tasarımıyla model davranışı güvenilir ve ölçülebili
 - Tool açıklamaları modelin doğru aracı seçmesini artırıyor mu?
 - Uzun konuşmada ilk tur hedefi kayboluyor mu?
 
+## Skill-spesifik kararlar
+- Kod uretim promptu hedef runtime, paket yoneticisi ve test komutunu mutlaka icersin. Guvensiz API veya shell kullanimi icin explicit yasak listesi ekle.
+
 ## Referanslar
 - `cli/documantations/ARCHITECTURE_AGENTIC_CLI.md`
 - `cli/documantations/archive/PROMPT_INJECTION_GUARDRAILS_PHASE2A.md`

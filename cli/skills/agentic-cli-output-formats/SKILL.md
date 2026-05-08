@@ -18,6 +18,9 @@ description: CLI deneyimini üretim kalitesine taşımak için etkileşim, çık
 - `stdin` ile gelen veri interactive prompt akışını doğru bypass ediyor mu?
 - Erişilebilirlik seçenekleri (`--no-color`, sade tablo) terminale göre uyarlanıyor mu?
 
+## Skill-spesifik kararlar
+- Output formats katmaninda tek veri modeli uretip table/json’u ayni kaynaktan render et. JSON modunda insan metni karistirma.
+
 ## Referanslar
 - `cli/skills/agentic-cli-entrypoint/SKILL.md`
 - `cli/skills/agentic-cli-user-errors/SKILL.md`

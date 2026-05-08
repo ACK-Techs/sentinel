@@ -22,6 +22,9 @@ description: Agent çalışma zamanı güvenliğini artırmak, saldırı yüzeyi
 - Audit log üretip bütünlük (tamper) sağlamama.
 - Container sandbox var diye uygulama seviyesinde doğrulamayı atlama.
 
+## Skill-spesifik kararlar
+- Jailbreak direncinde role confusion ve authority spoofing kaliplarini algila. Supheli durumda read-only moda otomatik dusme politikasi koy.
+
 ## Referanslar
 - `cli/skills/agentic-threat-model/SKILL.md`
 - `cli/skills/agentic-sandbox-hardening-reference/SKILL.md`

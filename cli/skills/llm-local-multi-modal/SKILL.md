@@ -23,6 +23,9 @@ Bu skill, `llm-local-multi-modal` başlığında yerel LLM çalıştırmayı "ku
 - Modelin "token/s" hızını ölçmeden üretim benzeri kullanıma geçmek.
 - Güvenlik sınırı olmadan LAN endpoint’i açık bırakmak.
 
+## Skill-spesifik kararlar
+- Gorsel girisli yerel modellerde goruntu on-isleme boyutu ve formatini standartlastir. Metin+gorsel istemde token maliyeti hizla artacagi icin max image count limiti koy.
+
 ## Referanslar
 - `cli/documantations/LLM_PROVIDERS.md`
 - `cli/documantations/IMPLEMENTATION_PLAN_PHASE2.md`

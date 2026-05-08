@@ -23,6 +23,9 @@ description: LLM veya agent davranışını sayılaştırılmış metriklerle de
 - Sadece iyi sonuç örneklerini raporlamak.
 - Tool-call başarısını yalnızca "çağırdı/çağırmadı" düzeyinde ölçmek.
 
+## Skill-spesifik kararlar
+- A/B testte trafik bolusturmesini sabit tohumla yap ve zaman etkisini dengele. Karari sadece ortalama skorla degil risk metrikleriyle ver.
+
 ## Referanslar
 - `cli/skills/agentic-testing-integration-mock-llm/SKILL.md`
 - `cli/skills/agentic-testing-unit/SKILL.md`

@@ -22,6 +22,9 @@ description: Agent çalışma zamanı güvenliğini artırmak, saldırı yüzeyi
 - Audit log üretip bütünlük (tamper) sağlamama.
 - Container sandbox var diye uygulama seviyesinde doğrulamayı atlama.
 
+## Skill-spesifik kararlar
+- Self rate limit, model ve tool cagri hizini ayri kontrol etmeli. Burst durumunda kuyruğa alma ve graceful degradation uygulansin.
+
 ## Referanslar
 - `cli/skills/agentic-threat-model/SKILL.md`
 - `cli/skills/agentic-sandbox-hardening-reference/SKILL.md`
