@@ -7,9 +7,10 @@ WORKDIR /build
 
 RUN python -m pip install --upgrade pip build
 
-COPY pyproject.toml README.md ./
+COPY pyproject.toml ./
 COPY src ./src
 
+RUN printf '# sentinel-observability-gateway\n' > README.md
 RUN python -m build --wheel
 
 FROM python:3.12-slim AS runtime
