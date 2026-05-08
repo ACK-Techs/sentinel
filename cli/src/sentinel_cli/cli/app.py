@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 
 from sentinel_cli import __version__
 from sentinel_cli.agent import AgentLoop
+from sentinel_cli.commands import install as install_command
 from sentinel_cli.cli.errors import (
     EXIT_INTERRUPTED,
     EXIT_LLM,
@@ -75,6 +76,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     doctor_parser = subparsers.add_parser("doctor", help="Profil ve bagimlilik kontrolu ozetini goster.")
     _add_common_flags(doctor_parser)
+
+    install_parser = subparsers.add_parser("install", help="Sentinel kurulum akislarini calistir.")
+    _add_common_flags(install_parser)
+    install_command.configure_parser(install_parser)
 
     obs_parser = subparsers.add_parser("obs", help="Observability gateway komutlari.")
     _add_common_flags(obs_parser)
@@ -316,6 +321,9 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "doctor":
             config, profile, _ = _load_runtime(args)
             return _doctor(config, profile)
+
+        if args.command == "install":
+            return install_command.run(args)
 
         if args.command == "obs":
             return _obs(args)

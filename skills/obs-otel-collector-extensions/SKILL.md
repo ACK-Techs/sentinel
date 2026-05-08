@@ -33,4 +33,3 @@ Bu skill’in çıktısı:
 
 ## References
 - `skills/obs-otel-collector-pipeline`
- 

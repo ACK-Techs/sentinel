@@ -42,6 +42,7 @@ mcp = [
 
 [project.scripts]
 sentinel-cli = "sentinel_cli.__main__:main"
+sentinel = "sentinel_cli.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/sentinel_cli"]
