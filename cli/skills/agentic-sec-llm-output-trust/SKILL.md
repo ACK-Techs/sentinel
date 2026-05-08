@@ -26,6 +26,7 @@ description: Agent çalışma zamanı güvenliğini artırmak, saldırı yüzeyi
 - LLM output trust modelinde "onerilen komut" ile "calistirilan komut"u ayir. Kritik eylemlerde ikinci dogrulama veya human approval iste.
 
 ## Referanslar
+- `references/output-trust-policy.md`
 - `cli/skills/agentic-threat-model/SKILL.md`
 - `cli/skills/agentic-sandbox-hardening-reference/SKILL.md`
 - `cli/skills/agentic-secrets-handling/SKILL.md`
