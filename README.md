@@ -1,289 +1,443 @@
-# sentinel-coming
+# Sentinel Coming
 
-**Sentinel**, MicroK8s + Juju + COS Lite altyapısı üzerinde çalışan, LLM destekli bir gözlemlenebilirlik (observability) ve altyapı yönetim projesidir. Bu repo; ana CLI aracını, altyapı kurulum scriptlerini, skill dokümantasyonlarını ve bağımsız agentic ürünleri bir arada barındıran bir monorepo olarak yapılandırılmıştır.
+Sentinel Coming is a portfolio-grade observability and infrastructure automation project built around an agentic Python CLI, a read-only observability gateway, and a realistic multi-service test platform. It is designed for local labs and Kubernetes/COS-style environments where operators need a safer way to inspect metrics, logs, traces, configuration, and deployment state from one terminal workflow.
 
----
+The core product is `sentinel-cli`: a Python command-line assistant that can run one-off prompts, start a REPL, inspect configuration, run health checks, install local observability stacks, and query a gateway-backed telemetry layer. The gateway keeps Prometheus, Loki, and Tempo access behind one read-only HTTP API so the CLI does not need to know every backend URL directly.
 
-## Repo Yapısı
+## Problem and Goals
 
+Modern observability stacks are powerful but operationally fragmented. A developer or platform engineer often has to switch between Grafana, Prometheus, Loki, Tempo, shell commands, Kubernetes tooling, and runbooks just to understand whether a service is healthy.
+
+This project explores a practical answer to that workflow:
+
+- Provide a single CLI surface for agent-assisted infrastructure and observability work.
+- Keep telemetry access read-only by default through a gateway service.
+- Support local and cloud LLM providers through a layered configuration model.
+- Preserve useful debugging context through sessions, trajectories, memory extraction, and controlled documentation updates.
+- Validate the workflow against a realistic target platform with services, databases, Redis Streams, load generation, chaos profiles, Kubernetes manifests, and smoke scripts.
+
+## Key Features
+
+- Agentic CLI with `run`, `repl`, `config`, `doctor`, `obs`, `install`, and `version` commands.
+- LLM provider support for OpenAI-compatible APIs and Anthropic, including local OpenAI-compatible endpoints such as Ollama.
+- Optional MCP client integration via the `mcp` extra.
+- Layered configuration from defaults, YAML files, environment variables, and CLI flags.
+- Tool execution controls for bash, filesystem access, approval modes, timeouts, output limits, and read-only bash mode.
+- Session persistence, trajectory recording, context-window policy, and optional turn-end memory processing.
+- Read-only FastAPI observability gateway for Prometheus metrics, Loki log queries, and Tempo trace search/detail calls.
+- Gateway-backed CLI observability commands: `obs metric`, `obs logs`, and `obs traces`.
+- Docker Compose installer assets and Kubernetes Helm chart assets for the Sentinel observability stack.
+- Test platform with gateway, orders, payments, inventory, worker services, Postgres, Redis, OpenTelemetry Collector, Locust load scenarios, chaos profiles, and Kubernetes manifests.
+- CI for the CLI package using GitHub Actions, Ruff, and Pytest.
+- Gateway image workflow for multi-architecture GHCR builds.
+
+## Architecture
+
+```text
+User
+  |
+  v
+sentinel-cli
+  |-- LLM provider adapters
+  |-- tool registry: bash, filesystem, MCP, observability tools
+  |-- session, trajectory, hooks, memory, and config layers
+  |
+  v
+observability-gateway
+  |-- Prometheus: instant metric queries
+  |-- Loki: query_range log retrieval
+  |-- Tempo: trace search and trace detail retrieval
+  |
+  v
+Target platform and observability backends
 ```
+
+The repository also includes deployment paths for different environments:
+
+- `for-download/compose/` contains a Docker Compose observability stack with Prometheus, Loki, Tempo, Grafana, and the Sentinel gateway image.
+- `charts/sentinel/` contains a Helm chart that installs kube-prometheus-stack, Loki, Tempo, Grafana, and `sentinel-gateway` into an existing Kubernetes cluster.
+- `test-platform/` contains a realistic target application tree used to generate metrics, logs, and traces for the Sentinel workflow.
+- `skills/` and `cli/skills/` contain structured operational and agentic guidance files used as project knowledge and implementation references.
+
+## Tech Stack
+
+- Python 3.11+ for the CLI, gateway, and test services.
+- FastAPI and Uvicorn for HTTP services.
+- Pydantic and pydantic-settings for typed configuration and request/response models.
+- HTTPX for outbound API and backend calls.
+- PyYAML and python-dotenv for configuration files and environment loading.
+- Rich for CLI output and progress rendering.
+- Pytest and Ruff for test and lint workflows.
+- Docker Compose for local observability and target-platform runs.
+- Helm and Kubernetes manifests for cluster deployment paths.
+- Prometheus, Loki, Tempo, Grafana, OpenTelemetry Collector, Postgres, Redis, and Locust in the supporting lab platform.
+
+## Repository Layout
+
+```text
 sentinel-coming/
-├── cli/                  → Ana ürün: Sentinel CLI
-├── observability-gateway/→ CLI icin Grafana'siz observability read-only gateway
-├── agentic/              → ⚠️ Bağımsız 3 harici ürün (bkz. aşağıdaki not)
-│   ├── Pywen-dev/
-│   ├── codex-main/
-│   └── cli-claude/
-├── skills/               → COS / Juju kurulum skill kılavuzları (Faz 1)
-├── cli/skills/           → CLI agent skill dokümanları (Faz 2+, 65+ skill)
-├── documantations/       → Mimari, implementasyon planları, faz dokümanları
-├── scripts/              → Operasyonel yardımcı scriptler
-├── for-download/         → Hazır deployment paketleri ve kurulum scriptleri
-└── .github/workflows/    → CI/CD (GitHub Actions)
+|-- cli/                         # Sentinel CLI Python package
+|-- observability-gateway/       # Read-only FastAPI gateway for telemetry backends
+|-- test-platform/               # Multi-service target app, load, chaos, and smoke scripts
+|-- charts/sentinel/             # Helm chart for Kubernetes observability stack
+|-- for-download/                # Compose bundle and operational setup scripts
+|-- scripts/                     # MicroK8s/COS helper scripts and repo automation
+|-- skills/                      # COS/Juju/MicroK8s operational skill documents
+|-- documantations/              # Project and phase documentation
+|-- .github/workflows/           # CLI CI and gateway image workflows
+`-- agentic/                     # External/reference agent projects, not the main product
 ```
 
----
+Important note: `agentic/` contains independent reference projects. The main Sentinel implementation is in `cli/`, `observability-gateway/`, `test-platform/`, `charts/`, `for-download/`, `scripts/`, `skills/`, and `documantations/`.
 
-## Bileşenler
+## Main Modules
 
-### `/cli` — Sentinel CLI *(Ana Ürün)*
+### `cli/`
 
-Python tabanlı, agentic mimariye sahip terminal aracı. Doğal dil komutlarıyla altyapı gözlemleme ve yönetim işlemleri yapılmasını sağlar.
+`cli/` is the main user-facing package. Its source code lives under `cli/src/sentinel_cli/`.
 
-**Teknoloji:** Python 3.11+, pydantic, httpx, PyYAML, rich
+Key areas:
 
-**Temel özellikler:**
-- `run`, `repl`, `config`, `doctor`, `version` komutları
-- Çoklu LLM sağlayıcı desteği: Anthropic (Claude), OpenAI-compatible, yerel modeller (Ollama)
-- MCP (Model Context Protocol) entegrasyonu
-- Bash ve dosya sistemi araçları; onay/izin iş akışları
-- Katmanlı konfigürasyon sistemi (YAML profilleri + env override)
-- Oturum kalıcılığı ve trajectory kaydı (debugging için)
-- Grafana entegrasyon kontrolleri
-- **Proje bellek sistemi** (memory extract, dreaming, magic docs)
-- **Gizli bilgi redaksiyonu** (tüm bellek yazımlarında otomatik)
-- **Tur sonu pipeline** (hook'lar, away özeti, arka plan thread desteği)
+- `cli/app.py`: argparse command surface and runtime wiring.
+- `agent/`: agent loop, context compaction, and turn-end processing.
+- `llm/`: provider factory, Anthropic adapter, OpenAI-compatible adapter, streaming, retries, and shared types.
+- `tools/`: bash, filesystem, MCP, approval, registry, and observability tools.
+- `observability/`: gateway and Grafana connection checks.
+- `config/`: Pydantic configuration models and layered loader.
+- `memory/`: extraction, dreaming, magic docs, memory path handling, and redaction-aware persistence.
+- `session/`: session store and trajectory recording.
+- `installers/`: Docker Compose, Kubernetes Helm, and COS discovery/install backends.
+- `assets/`: packaged Compose and Helm chart assets used by the install command.
 
-**CI:** GitHub Actions → Python 3.12, ruff lint, pytest
+### `observability-gateway/`
 
----
+`observability-gateway/` is a standalone FastAPI service. It exposes a small read-only API and adapts requests to Prometheus, Loki, and Tempo.
 
-#### Proje Bellek Sistemi
+Endpoints:
 
-Her başarılı tur sonunda agent döngüsü bir **tur sonu pipeline** çalıştırır. Bu pipeline sırasıyla şunları yapar:
+- `GET /health`
+- `GET /api/v1/status`
+- `POST /api/v1/metrics/query`
+- `POST /api/v1/logs/query_range`
+- `POST /api/v1/traces/search`
+- `GET /api/v1/traces/{trace_id}`
 
-1. **`post_turn` hook'u** çalıştırır.
-2. **Bellek çıkarma (extract):** Tur mesajlarının özeti `.sentinel/memory/extract.jsonl` veya `~/.sentinel/projects/<hash>/memory/extract.jsonl` dosyasına eklenir.
-3. **Away özeti:** `repl` oturumlarında son kullanıcı + asistan mesajından tek satırlık özet üretilir.
-4. **Magic Docs güncelleme:** `# MAGIC DOC` başlıklı Markdown dosyalarındaki `<!-- SENTINEL_MAGIC_DOC:BEGIN -->` ... `<!-- SENTINEL_MAGIC_DOC:END -->` bloğu güncel özetle değiştirilir (varsayılan kökler: `skills/`, `documantations/`).
-5. **Dreaming:** Süre (min 24 saat) + oturum sayısı (min 5) eşiği sağlandığında LLM ile `index.md` güncellenir; dosya kilidi ile paralel çalışma önlenir.
+The gateway supports bearer-token protection through `SENTINEL_OBSERVABILITY_GATEWAY_TOKEN` when that token is configured. Backend errors are returned through a structured model that avoids leaking secrets.
 
-Tüm bellek yazımları **redaksiyon filtresi**nden geçer; email, API token, Bearer header, export ifadeleri, parola atamaları, kubeconfig kimlik bilgileri, AWS AKIA anahtarları, JWT ve PEM blokları otomatik olarak temizlenir.
+### `test-platform/`
 
-**Bellek politikası:**
-- `policy: project` → `<proje_dizini>/.sentinel/memory/`
-- `policy: user` → `~/.sentinel/projects/<cwd_hash>/memory/`
-- `enforce_write_jail: true` → dosya yazma aracı yalnızca bellek köküne izin verir
-- `allow_non_interactive: false` → `--bare` / pipe modunda bellek yazımları kapalı
+`test-platform/` provides a target application for realistic observability tests:
 
-**Konfigürasyon (sentinel.yaml):**
-```yaml
-memory:
-  enabled: false            # bellek sistemini etkinleştirir
-  directory: null           # null ise policy ile belirlenir
-  policy: project           # "project" | "user"
-  extract_on_turn_end: true
-  allow_non_interactive: false
-  enforce_write_jail: false
+- `gateway`: public API facade.
+- `orders`: coordinates payments and inventory, writes to Postgres, and emits Redis Stream events.
+- `payments`: payment simulation with Redis idempotency.
+- `inventory`: stock reads/reservations with Redis cache-through behavior.
+- `worker`: Redis Streams consumer group processor.
+- `load/`: Locust scenarios including steady, diurnal, flash crowd, and gradual degradation.
+- `chaos/profiles/`: healthy, slow database, cache stampede, downstream outage, memory leak, and cascading profiles.
+- `k8s/`: namespace, services, deployments/stateful resources, OpenTelemetry Collector config, and network policy manifests.
 
-dream:
-  enabled: false
-  min_hours_between: 24
-  min_sessions: 5
-  lock_stale_sec: 3600
+### `charts/sentinel/`
 
-turn_pipeline:
-  enabled: true
-  run_in_background: false  # true ise arka plan thread'inde çalışır
+The Helm chart installs Prometheus, Loki, Grafana, Tempo, and the Sentinel gateway into an existing Kubernetes cluster. The chart uses upstream dependencies from the Prometheus Community and Grafana Helm repositories and keeps service names aligned with the CLI discovery code.
 
-semantic_compaction:
-  inject_trim_notice: true
-  persist_session_memory_path: true
+### `for-download/`
 
-magic_docs:
-  enabled: false
-  title_marker: MAGIC DOC
-  begin_marker: "<!-- SENTINEL_MAGIC_DOC:BEGIN -->"
-  end_marker: "<!-- SENTINEL_MAGIC_DOC:END -->"
-  roots:
-    - skills
-    - documantations
-  max_files: 32
+This folder contains deployment-oriented assets:
 
-away:
-  enabled: true
-  max_chars: 200
-```
+- `compose/docker-compose.yaml`: local observability stack.
+- `compose/.env.example`: ports and gateway token defaults for the compose stack.
+- `prepare-env.sh`: MicroK8s, MetalLB, and Juju preparation helper.
+- `my-product-bundle.yaml`: COS Lite bundle including Prometheus, Loki, Alertmanager, Grafana, Traefik, Catalogue, Tempo, and OpenTelemetry Collector.
+- `faz1-telemetry.sh` and `faz4-5.sh`: operational scripts for telemetry setup and post-deployment checks.
 
-**Ortam değişkenleri ile hızlı etkinleştirme:**
-```bash
-SENTINEL_MEMORY_ENABLED=1
-SENTINEL_DREAM_ENABLED=1
-SENTINEL_DREAM_MIN_HOURS=24
-SENTINEL_DREAM_MIN_SESSIONS=5
-SENTINEL_MEMORY_DIR=~/.sentinel/my-project/memory
-```
+## Setup
 
----
-
-#### Araç Güvenliği İyileştirmeleri
-
-**Bash read-only modu:** `tools.bash_read_only: true` ile bash aracı yalnızca güvenli okuma komutlarına (`ls`, `cat`, `head`, `tail`, `grep`, `find`, `pwd`, `echo`, `wc`, `stat`, `sort`, `uniq`, `git`) izin verir; yönlendirme, pipe, komut substitution ve arka plan çalıştırma engellenir.
-
-**Memory write jail:** `memory.enforce_write_jail: true` ile `write_file` aracı yalnızca bellek kök dizinine yazabilir; bu dizin dışındaki tüm yazma girişimleri reddedilir.
-
-**Yeni hook fazları:** `pre_memory` ve `post_memory` hook fazları eklendi. Bellek extract/dream işlemleri öncesi ve sonrası özel komutlar çalıştırılabilir.
-
-```yaml
-hooks:
-  enabled: true
-  # phase: pre_tool | post_tool | post_turn | pre_memory | post_memory
-  commands:
-    - phase: pre_memory
-      command: ["echo", "bellek yazılıyor"]
-      on_error: warn
-```
-
----
-
-### `/observability-gateway` — Sentinel Observability Gateway
-
-FastAPI tabanli bagimsiz bir Python servisi. Sentinel CLI icin Prometheus, Loki ve Tempo'ya yonelik tek bir read-only HTTP giris noktasi saglar. Grafana veri kaynagi veya Grafana API bagimliligi olmadan calisir.
-
-**Teknoloji:** Python 3.11+, FastAPI, httpx, pydantic, pydantic-settings, PyYAML
-
-**Temel ozellikler:**
-- `GET /health` ve `GET /api/v1/status` ile servis ve backend durumu ozeti
-- Prometheus icin anlik metric sorgusu adapter'i
-- Loki icin `query_range` log sorgu adapter'i
-- Tempo icin trace arama ve trace detay alma adapter'i
-- Secret-safe hata modeli ve backend bagimsiz yanit sekli
-- Ortak timeout ve retry ayarlari
-
----
-
-### `/skills` — COS/Juju Kurulum Skill'leri *(Faz 1)*
-
-MicroK8s, Juju ve COS Lite bileşenlerini adım adım kurmak için hazırlanmış modüler kılavuzlar. Her skill; ön koşulları, uygulama adımlarını ve başarı kriterlerini tanımlar.
-
-Kapsadığı alanlar: MicroK8s kurulumu, addon aktivasyonu, Juju bootstrap, COS charm deploy (Prometheus, Grafana, Loki, Alertmanager, Traefik), relation tanımları, ingress konfigürasyonu.
-
----
-
-### `/cli/skills` — CLI Agent Skill Dokümanları *(Faz 2+)*
-
-Sentinel CLI'nin agent döngüsüne entegre edilmiş 65+ SKILL.md dosyası. Her biri belirli bir agentic davranışı veya teknik konuyu kapsar:
-
-- LLM provider kontratları (Anthropic, OpenAI-compatible, streaming, retry)
-- Araç sistemi (bash, dosya okuma/yazma, web fetch)
-- Konfigürasyon katmanları ve profiller
-- MCP client/tool mapping
-- Test ve entegrasyon kalıpları
-- Gözlemlenebilirlik sorun giderme (Loki, Prometheus, Grafana, Traefik, Alertmanager)
-- Güvenlik: sandbox hardening, prompt injection guardrail'leri, secrets yönetimi
-
----
-
-### `/documantations` — Proje Dokümantasyonu
-
-| Dosya | İçerik |
-|---|---|
-| `PROJECT_ROOT.md` | Monorepo vizyonu, fazlar (0–5), COS Lite mimari özeti, AI otomasyon kuralları |
-| `ARCHITECTURE_COS.md` | MicroK8s → Kubernetes → Juju → COS bileşenleri arası ilişki haritası |
-| `IMPLEMENTATION_PLAN*.md` | Faz bazlı uygulama adımları, hata kurtarma yolları |
-| `cli/documantations/OBSERVABILITY_GATEWAY_AND_AGENT_PLAN.md` | Gateway ile tamamlanan son entegrasyon ve agent/CLI icin sonraki adim |
-| `PHASE*_SKILL_AND_DOC_INDEX.md` | Her faza ait skill ve doküman kataloğu |
-| `ENV_FLAGS_PHASE*.md` | Faz bazlı environment değişkenleri ve feature flag'ler |
-| `GRAFANA_AI_PLATFORM_RESEARCH.md` | Grafana LLM Platform araştırması |
-| `INTEGRATION_SENTINEL_CLI_FROM_CLI_CLAUDE.md` | cli-claude'dan Sentinel'e taşınan bellek/güvenlik davranışları referans haritası |
-
----
-
-### `/scripts` — Operasyonel Scriptler
-
-- **`cos-microk8s-start.sh`** — MicroK8s'i güvenli şekilde başlatır; Kubernetes API, node hazırlığı ve Juju agent stabilizasyonunu bekler. Erken hook çalışmasını önlemek için 45 saniyelik stabilizasyon gecikmesi içerir.
-- **`cos-microk8s-heal.sh`** — Host IP değişince Juju kubeconfig drift'ini ve `kubelet.crt` SAN uyumsuzluğunu onarır; gerekirse MicroK8s'i yeniden başlatır.
-- **`auto-push-watch.sh`** — Repo değişikliklerini izleyerek otomatik commit + push yapar.
-
----
-
-### `/for-download` — Hazır Kurulum Paketleri
-
-Doğrudan kullanıma hazır deployment template ve scriptleri:
-
-- **`prepare-env.sh`** — MicroK8s, MetalLB ve Juju'yu otomatik kurar; host IP'ye göre MetalLB IP aralığını hesaplar.
-  Ayrıca Juju classic snap altındaki `microk8s` kubeconfig kopyalarını da güncel tutar.
-- **`my-product-bundle.yaml`** — Prometheus, Loki, Alertmanager, Grafana, Traefik, Catalogue, Tempo ve OpenTelemetry Collector içeren tam COS Lite Kubernetes bundle'ı.
-- **`faz1-telemetry.sh`** — Mevcut COS'a Tempo ve OTEL Collector ekler; metrics/logs/traces pipeline'larını kurar.
-- **`faz4-5.sh`** — Deploy sonrası doğrulama: Traefik endpoint'leri, Grafana credential'ları ve OTLP Gateway IP'sini getirir.
-
----
-
-## Altyapı Mimarisi
-
-```
-Host OS
-└── MicroK8s (snap)
-    └── Kubernetes
-        ├── DNS, hostpath-storage, MetalLB
-        └── Juju (OLM)
-            └── cos model
-                ├── Prometheus   ← metrics
-                ├── Loki         ← logs
-                ├── Tempo        ← traces
-                ├── Alertmanager ← alerting
-                ├── Grafana      ← visualization
-                ├── Traefik      ← ingress
-                ├── Catalogue    ← service discovery
-                └── OTEL Collector ← telemetry gateway
-```
-
-**Juju**, tüm charm'ların yaşam döngüsünü yöneten evrensel bir Operator Lifecycle Manager olarak görev yapar. Bileşenler arası bağlantılar Juju relation'ları üzerinden kurulur (`grafana-source`, `metrics-endpoint`, `ingress`, vb.).
-
----
-
-## LLM Sağlayıcılar
-
-| Sağlayıcı | Model |
-|---|---|
-| Anthropic | Claude (Opus, Sonnet, Haiku) |
-| OpenAI-compatible | GPT-4, GPT-3.5, Ollama (yerel) |
-| Google | Gemini (varsayılan cloud profili: gemini-2.5-flash) |
-| Yerel | Gemma (Ollama, yerel profil: gemma4:latest) |
-
----
-
-## Geliştirme
+Clone the repository and create a virtual environment:
 
 ```bash
-# CLI kurulumu
+cd sentinel-coming
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+```
+
+Install the CLI for local development:
+
+```bash
 cd cli
-pip install -e ".[dev]"
+python -m pip install -e ".[dev]"
+python -m sentinel_cli --help
+```
 
-# Linting
-ruff check src/
+Install the CLI with optional MCP support:
 
-# Test
-pytest
+```bash
+cd cli
+python -m pip install -e ".[dev,mcp]"
+python -m sentinel_cli doctor --profile local
+```
 
-# Wheel build
+Install and run the observability gateway locally:
+
+```bash
+cd observability-gateway
+python -m pip install -e ".[dev]"
+sentinel-observability-gateway
+```
+
+Alternative gateway startup:
+
+```bash
+cd observability-gateway
+uvicorn observability_gateway.main:app --host 0.0.0.0 --port 8091
+```
+
+## Configuration
+
+The CLI keeps committed templates separate from local secrets:
+
+- `cli/config/sentinel.example.yaml`: committed YAML template.
+- `cli/.env.example`: committed environment template.
+- `cli/config/sentinel.yaml`: local runtime config, ignored by Git.
+- `cli/.env`: local secrets and overrides, ignored by Git.
+
+Create local configuration:
+
+```bash
+cd cli
+cp config/sentinel.example.yaml config/sentinel.yaml
+cp .env.example .env
+```
+
+Common CLI environment variables from `cli/.env.example`:
+
+- `SENTINEL_CONFIG`
+- `SENTINEL_PROFILE`
+- `SENTINEL_MODEL`
+- `SENTINEL_OPENAI_BASE_URL`
+- `SENTINEL_API_KEY`
+- `SENTINEL_LOCAL_BASE_URL`
+- `SENTINEL_LOCAL_MODEL`
+- `ANTHROPIC_API_KEY`
+- `SENTINEL_ANTHROPIC_MODEL`
+- `SENTINEL_HTTP_CONNECT_TIMEOUT_SEC`
+- `SENTINEL_HTTP_TIMEOUT_SEC`
+- `SENTINEL_CONTEXT_WINDOW_TOKENS`
+- `SENTINEL_LOG_LEVEL`
+- `SENTINEL_MAX_TURNS`
+- `SENTINEL_AUTO_APPROVE`
+- `SENTINEL_SESSION_DIR`
+- `SENTINEL_TRAJECTORY_DIR`
+- `SENTINEL_EXPERIMENTAL_MCP`
+
+Gateway-related CLI settings are configured under `observability_gateway` in `sentinel.yaml`:
+
+```yaml
+observability_gateway:
+  enabled: true
+  base_url: http://127.0.0.1:8091
+  timeout_sec: 10
+  token_env: SENTINEL_OBSERVABILITY_GATEWAY_TOKEN
+```
+
+Gateway service environment variables documented in `observability-gateway/README.md` include:
+
+- `SENTINEL_OBSERVABILITY_CONFIG_PATH`
+- `SENTINEL_OBSERVABILITY_GATEWAY_TOKEN`
+- `SENTINEL_OBSERVABILITY_PROMETHEUS__BASE_URL`
+- `SENTINEL_OBSERVABILITY_PROMETHEUS__TOKEN_ENV`
+- `SENTINEL_OBSERVABILITY_LOKI__BASE_URL`
+- `SENTINEL_OBSERVABILITY_TEMPO__BASE_URL`
+- `SENTINEL_OBSERVABILITY_HTTP__TIMEOUT_SEC`
+- `SENTINEL_OBSERVABILITY_HTTP__RETRY__MAX_ATTEMPTS`
+
+The compose package in `for-download/compose/.env.example` also defines ports for Prometheus, Loki, Tempo, Grafana, and the Sentinel gateway.
+
+## Usage
+
+Run a one-off agent prompt:
+
+```bash
+cd cli
+source .venv/bin/activate
+python -m sentinel_cli run "Summarize the current observability gateway status"
+```
+
+Start an interactive REPL:
+
+```bash
+cd cli
+source .venv/bin/activate
+python -m sentinel_cli repl
+```
+
+Inspect effective configuration:
+
+```bash
+cd cli
+python -m sentinel_cli config
+```
+
+Run diagnostics:
+
+```bash
+cd cli
+python -m sentinel_cli doctor --profile local
+```
+
+Query telemetry through the gateway:
+
+```bash
+cd cli
+python -m sentinel_cli obs metric 'up'
+python -m sentinel_cli obs logs --service gateway
+python -m sentinel_cli obs traces --service orders
+```
+
+Run a Compose install flow:
+
+```bash
+cd cli
+python -m sentinel_cli install --mode compose
+```
+
+Run a Kubernetes Helm install flow:
+
+```bash
+cd cli
+python -m sentinel_cli install --mode k8s
+```
+
+The `cos` install backend currently includes discovery/config wiring, while its preflight, install, and verify steps are marked as TODO in code. Use the scripts under `scripts/` and `for-download/` for the existing MicroK8s/Juju/COS operational path.
+
+## Local Target Platform
+
+The test platform can be started with Docker Compose:
+
+```bash
+cd test-platform
+docker compose up --build
+```
+
+The `test-platform/README.md` documents the local database environment variables and health checks:
+
+```bash
+export ORDERS_DB_URL=postgresql+asyncpg://sentinel:sentinel@localhost:5432/orders_db
+export PAYMENTS_DB_URL=postgresql+asyncpg://sentinel:sentinel@localhost:5432/payments_db
+export INVENTORY_DB_URL=postgresql+asyncpg://sentinel:sentinel@localhost:5432/inventory_db
+export PAYMENTS_REDIS_URL=redis://localhost:6379/1
+python scripts/seed_db.py
+curl http://localhost:8080/health
+curl http://localhost:8081/health
+curl http://localhost:8082/health
+curl http://localhost:8083/health
+```
+
+Run a ground-truth scenario:
+
+```bash
+cd test-platform
+python scripts/scenario_runner.py run <scenario.yaml>
+```
+
+Run the COS smoke workflow when a compatible MicroK8s/Juju/COS lab is already available:
+
+```bash
+cd test-platform
+./scripts/run_cos_stack_check.sh
+```
+
+Run the local stack smoke workflow:
+
+```bash
+cd test-platform
+./scripts/run_local_stack_check.sh
+```
+
+These smoke scripts expect the repository-level `.venv` and required local infrastructure commands to exist. They write run artifacts under `test-platform/runs/...`.
+
+## Testing and Quality
+
+CLI lint and tests:
+
+```bash
+cd cli
+python -m ruff check .
+python -m pytest -q
+```
+
+Gateway tests:
+
+```bash
+cd observability-gateway
+python -m pytest -q
+```
+
+Build a CLI wheel:
+
+```bash
+cd cli
 python -m build
 ```
 
-**Konfigürasyon:**
+Build a gateway wheel:
+
 ```bash
-cp cli/config/sentinel.example.yaml cli/config/sentinel.yaml
-# sentinel.yaml dosyasını düzenle (API key env, LLM ayarları, memory vb.)
+cd observability-gateway
+python -m build
 ```
 
----
+The GitHub Actions workflow `.github/workflows/cli-ci.yml` runs the CLI package on Python 3.12 with editable dev installation, Ruff, and Pytest. The `.github/workflows/gateway-image.yml` workflow builds and pushes the gateway image to GHCR for `gateway-v*` tags or manual dispatch.
 
----
+## Deployment Options
 
-> ⚠️ **`/agentic` Klasörü Hakkında Önemli Not**
->
-> `agentic/` dizini altındaki **3 klasörün her biri bağımsız bir üründür** ve bu projeyle doğrudan ilgisi yoktur:
->
-> | Klasör | Ürün | Teknoloji |
-> |---|---|---|
-> | `agentic/Pywen-dev/` | **Pywen** — Çok modelli Python araştırma agent framework'ü (Qwen3, Claude, Codex, Gemini destekli) | Python 3.10–3.12, openai, anthropic, tree-sitter, textual |
-> | `agentic/codex-main/` | **Codex CLI** — OpenAI'nin kaynak kodlu TypeScript/Rust coding agent'ı | TypeScript, Rust, Bazel, React/Ink |
-> | `agentic/cli-claude/` | **Claude Code** — Anthropic'in TypeScript tabanlı kod asistanı | TypeScript, Node.js |
->
-> Bu ürünler; ihtiyaç duyulduğunda referans alınmak, belirli bileşenler ödünç alınarak Sentinel'e entegre edilmek üzere burada saklanmaktadır. Özellikle `cli-claude/` içindeki bellek (auto-dream, extract memories, magic docs, away summary) ve güvenlik (tool isolation, hook pipeline) davranışları Sentinel CLI'ye Python'da yeniden yazılarak aktarılmıştır. Sentinel'in ana geliştirme akışından bağımsız olarak değerlendirilmelidir.
+Docker image for the gateway:
 
----
+```bash
+docker pull ghcr.io/caglarkc/sentinel-gateway:latest
+```
 
-## Lisans
+Helm chart:
 
-MIT License — © 2026 Ali Çağlar Koçer
+```bash
+helm dependency update ./charts/sentinel
+helm upgrade --install sentinel ./charts/sentinel \
+  --create-namespace -n sentinel \
+  --set gateway.token=<token>
+```
+
+Local/lab Compose stack assets are available under `for-download/compose/` and packaged into the CLI install assets.
+
+## Security and Reliability Notes
+
+- The observability gateway is intentionally read-only; it does not implement alert management, dashboard management, backend write operations, or a Grafana datasource proxy.
+- Gateway bearer authentication is enabled when `SENTINEL_OBSERVABILITY_GATEWAY_TOKEN` is configured.
+- Gateway backend errors use a structured response model with retryability metadata and secret-safe messages.
+- CLI configuration templates keep secrets in environment variables instead of committed config files.
+- `.gitignore` excludes `.env`, local Sentinel sessions, credentials, key material, build artifacts, caches, logs, and local run outputs.
+- CLI tools include approval modes, shell and file write timeouts, output limits, optional read-only bash behavior, and an optional memory write jail.
+- Memory writes pass through redaction logic for common secret patterns before persistence.
+- The gateway Dockerfile runs the service as a non-root `sentinel` user.
+- The Helm chart sets non-root pod security context, disables privilege escalation, drops Linux capabilities, and uses a read-only root filesystem for the gateway container.
+
+## Current Limitations
+
+- The project is marked `Pre-Alpha` in the CLI package metadata.
+- The `cos` installer backend is not a full installer yet; code marks preflight, install, and verify as TODO.
+- Production hardening such as TLS termination, process supervision, and secret rotation is documented as outside the current gateway README scope.
+- No screenshots or UI assets were found in the main Sentinel project tree during README preparation.
+- `agentic/` contains external/reference projects and should not be presented as the shipped Sentinel product.
+
+## Future Improvements
+
+- Complete the COS installer backend so MicroK8s/Juju/COS setup can be driven consistently from the CLI.
+- Add a production deployment guide covering TLS, ingress, secret rotation, and process supervision.
+- Expand end-to-end tests around the gateway-backed agent `run` and `repl` workflows.
+- Add example scenario files for `scenario_runner.py` in a discoverable location.
+- Publish architecture diagrams and generated screenshots or conceptual visuals for portfolio presentation.
+- Add a concise public quickstart that separates local demo, Kubernetes demo, and COS lab paths.
+
+## License
+
+MIT License - Copyright (c) 2026 Ali Caglar Kocer
