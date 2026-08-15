@@ -1,5 +1,0 @@
-{
-  "tests/unit/test_obs_gateway.py::test_obs_metric_command_uses_gateway_client": true,
-  "tests/unit/test_obs_gateway.py::test_obs_logs_command_sends_service_to_gateway": true,
-  "tests/unit/test_obs_gateway.py::test_obs_traces_command_builds_service_search": true
-}
