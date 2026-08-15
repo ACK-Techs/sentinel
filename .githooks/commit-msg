@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+set -eu
+
+node .orchestrator/bin/git-checkpoint.mjs validate-message "$1"

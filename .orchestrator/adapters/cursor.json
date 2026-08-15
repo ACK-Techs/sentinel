@@ -1,0 +1,31 @@
+{
+  "id": "cursor",
+  "displayName": "Cursor",
+  "canonicalSkill": ".agents/skills/orchestrate-sentinel/SKILL.md",
+  "roleProfiles": ".orchestrator/roles",
+  "nativeCapabilities": {
+    "subagents": "foreground/background Task delegation with isolated context",
+    "customAgents": ".cursor/agents/*.md, with compatibility loading for Claude and Codex agent locations",
+    "worktrees": "managed isolated checkouts for parallel/background work",
+    "approvals": "run modes and command/tool approval policies are surface configuration",
+    "resume": "subagent IDs and agent sessions can be resumed when supported"
+  },
+  "dispatchGuidance": [
+    "Load .cursor/rules/orchestrator.mdc, then use the run item and matching role profile.",
+    "Use foreground subagents for dependent work and background subagents for independent workstreams.",
+    "Use native worktrees for parallel writers; apply results only after review and verification.",
+    "Keep platform command syntax outside the vendor-neutral run file.",
+    "Do not treat agentic/ as product source; product work stays in cli/, observability-gateway/, test-platform/, charts/, for-download/, scripts/, skills/, and documantations/.",
+    "If Task or worktree support is unavailable, use the rendered prompt in a separate Cursor session."
+  ],
+  "limitations": [
+    "Subagent model availability can be changed by plan or admin restrictions.",
+    "Parallel contexts increase token use.",
+    "Headless write mode and approvals differ from interactive mode."
+  ],
+  "officialSources": [
+    "https://cursor.com/docs/subagents.md",
+    "https://cursor.com/docs/skills.md",
+    "https://cursor.com/docs/configuration/worktrees.md"
+  ]
+}

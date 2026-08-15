@@ -1,0 +1,46 @@
+{
+  "id": "replace-item-id",
+  "title": "Replace item title",
+  "kind": "implement",
+  "domains": ["cli"],
+  "objective": "Define the concrete outcome.",
+  "responsibility": "Define decisions allowed and explicit stop boundaries.",
+  "inputs": [
+    {
+      "type": "path",
+      "value": "README.md",
+      "description": "Product layout and current limitations"
+    }
+  ],
+  "outputs": ["Concrete code, contract, test, or report artifact"],
+  "acceptanceCriteria": ["A directly verifiable completion criterion"],
+  "capabilities": ["replace-capability"],
+  "relations": {
+    "dependsOn": [],
+    "reviews": [],
+    "verifies": [],
+    "revises": [],
+    "integrates": []
+  },
+  "risk": {
+    "level": "medium",
+    "reasons": [],
+    "approvalBoundaries": []
+  },
+  "execution": {
+    "mode": "delegate",
+    "isolation": "platform-default",
+    "readOnly": false,
+    "independent": false,
+    "writeScopes": ["replace/write/scope"],
+    "preferredPlatforms": ["codex", "cursor", "claude-code"],
+    "owner": null
+  },
+  "status": "draft",
+  "attempt": 0,
+  "resultRef": null,
+  "extensions": {
+    "role": "code-implementer",
+    "phase": "phase-cli-runtime"
+  }
+}

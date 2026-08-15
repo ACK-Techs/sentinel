@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-08-15T09:16:09.364Z",
+  "sourceRoots": [
+    "cli",
+    "observability-gateway",
+    "test-platform",
+    "charts",
+    "for-download",
+    "scripts",
+    "skills",
+    "documantations",
+    ".github",
+    "README.md",
+    "INSTALL.md"
+  ]
+}

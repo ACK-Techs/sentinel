@@ -1,0 +1,30 @@
+{
+  "id": "claude-code",
+  "displayName": "Claude Code",
+  "canonicalSkill": ".agents/skills/orchestrate-sentinel/SKILL.md",
+  "roleProfiles": ".orchestrator/roles",
+  "nativeCapabilities": {
+    "subagents": "custom project agents under .claude/agents with foreground/background execution",
+    "agentTeams": "experimental shared task list and peer messaging, disabled by default",
+    "worktrees": "session and subagent worktree isolation",
+    "approvals": "permission modes and allow/deny rules; background requests surface to the lead in supported versions",
+    "resume": "sessions and some subagents can resume; experimental teams have resumption limitations"
+  },
+  "dispatchGuidance": [
+    "Use CLAUDE.md as the bridge to the canonical skill; PM and implementer work must still be recorded in the portable run graph.",
+    "Use ordinary subagents for focused work that only needs to report to the manager.",
+    "Use worktree isolation for parallel writers and keep each worker's file ownership disjoint.",
+    "Use command hooks only for deterministic enforcement; do not require platform hooks for the portable core.",
+    "If native agents or teams are unavailable, use the rendered prompt in a separate Claude Code session."
+  ],
+  "limitations": [
+    "Agent teams are experimental, disabled by default, and have resumption/task-state limitations.",
+    "Parallel same-file edits can overwrite one another without worktree/file ownership isolation.",
+    "Claude Code project skill discovery is .claude/skills; CLAUDE.md bridges to the canonical .agents skill."
+  ],
+  "officialSources": [
+    "https://code.claude.com/docs/en/sub-agents",
+    "https://code.claude.com/docs/en/worktrees",
+    "https://code.claude.com/docs/en/hooks-guide"
+  ]
+}

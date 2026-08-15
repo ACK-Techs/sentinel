@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.0.0",
+  "runId": "replace-run-id",
+  "title": "Replace title",
+  "goal": "Replace goal",
+  "createdAt": "2026-08-15T00:00:00.000Z",
+  "updatedAt": "2026-08-15T00:00:00.000Z",
+  "revision": 0,
+  "context": {
+    "requiredPaths": [
+      "AGENTS.md",
+      "README.md",
+      "INSTALL.md",
+      ".orchestrator/SYSTEM.md",
+      ".orchestrator/roles/pm-manager.md"
+    ],
+    "optionalPaths": [],
+    "catalogSnapshot": null,
+    "assumptions": [],
+    "extensions": {
+      "targetModule": null,
+      "installPath": null,
+      "architectureDecisions": []
+    }
+  },
+  "constraints": [
+    "Kapsam süre uğruna daraltılmaz.",
+    "observability-gateway read-only kalır.",
+    "agentic/ referans ağaçtır; ürün kodu değildir.",
+    "Write item atomik Conventional Commit ile kaydedilir; mesaj type(scope): summary biçimindedir. Mesaj uygunsa git push serbesttir; force-push yasaktır."
+  ],
+  "policy": {
+    "requiresIntegration": true,
+    "extensions": {
+      "requiresContractFirst": true,
+      "requiresDocumentationSync": true,
+      "requiresGatewayReadOnly": true
+    }
+  },
+  "decisions": [],
+  "items": [],
+  "extensions": {
+    "pmOwner": "pm-manager",
+    "architectureOwner": "architecture-manager"
+  }
+}

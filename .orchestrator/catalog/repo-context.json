@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-08-15T09:33:01.642Z",
+  "repository": {
+    "root": ".",
+    "name": "sentinel-coming",
+    "commit": "a94030aa281383defc712960560886bd282ba2fb",
+    "roots": {
+      "cli": {
+        "exists": true,
+        "mtimeMs": 1786771070150.0823
+      },
+      "observability-gateway": {
+        "exists": true,
+        "mtimeMs": 1782882134286.992
+      },
+      "test-platform": {
+        "exists": true,
+        "mtimeMs": 1782882134305.191
+      },
+      "charts": {
+        "exists": true,
+        "mtimeMs": 1782882134061.295
+      },
+      "for-download": {
+        "exists": true,
+        "mtimeMs": 1782882134075.8857
+      },
+      "scripts": {
+        "exists": true,
+        "mtimeMs": 1782882134287.2388
+      },
+      "skills": {
+        "exists": true,
+        "mtimeMs": 1782882134302.1907
+      },
+      "documantations": {
+        "exists": true,
+        "mtimeMs": 1782882134075.5186
+      },
+      ".github": {
+        "exists": true,
+        "mtimeMs": 1782882133832.1482
+      },
+      "README.md": {
+        "exists": true,
+        "mtimeMs": 1782882133832.1667
+      },
+      "INSTALL.md": {
+        "exists": true,
+        "mtimeMs": 1786784852215.642
+      }
+    }
+  },
+  "skills": [
+    {
+      "name": "orchestrate-sentinel",
+      "description": "Manage and execute Sentinel CLI, observability-gateway, test-platform, installer, chart, and docs work through the repository's central .orchestrator run graph. Use for project planning, PM decomposition, architecture/contracts, implementation, review, verification, integration, resuming prior work, or coordinating Codex/Cursor/Claude agents. Enforces gateway read-only, install-path separation, evidence contracts, risk gates, and Git checkpoints.",
+      "path": ".agents/skills/orchestrate-sentinel/SKILL.md",
+      "fingerprint": "5b9f47bbac60894b11d64b54be30fae4c3765a33ada1f235e638cd43a4d90c63"
+    }
+  ],
+  "capabilities": [
+    "orchestrate-sentinel"
+  ],
+  "maps": {
+    "semantic": [],
+    "dependency": null
+  },
+  "mapHealth": {
+    "stale": false,
+    "note": "Source roots catalog snapshot ile doğrudan izlenir."
+  },
+  "adapters": [
+    {
+      "id": "claude-code",
+      "path": ".orchestrator/adapters/claude-code.json",
+      "capabilities": {
+        "subagents": "custom project agents under .claude/agents with foreground/background execution",
+        "agentTeams": "experimental shared task list and peer messaging, disabled by default",
+        "worktrees": "session and subagent worktree isolation",
+        "approvals": "permission modes and allow/deny rules; background requests surface to the lead in supported versions",
+        "resume": "sessions and some subagents can resume; experimental teams have resumption limitations"
+      }
+    },
+    {
+      "id": "codex",
+      "path": ".orchestrator/adapters/codex.json",
+      "capabilities": {
+        "subagents": "available in current local releases when requested or required by AGENTS.md/skills",
+        "customAgents": ".codex/agents/*.toml",
+        "worktrees": "native in the ChatGPT desktop app; availability differs by surface",
+        "approvals": "sandbox and approval policy are inherited by subagents",
+        "resume": "agent threads and app tasks are inspectable; persisted run files remain the portable source of truth"
+      }
+    },
+    {
+      "id": "cursor",
+      "path": ".orchestrator/adapters/cursor.json",
+      "capabilities": {
+        "subagents": "foreground/background Task delegation with isolated context",
+        "customAgents": ".cursor/agents/*.md, with compatibility loading for Claude and Codex agent locations",
+        "worktrees": "managed isolated checkouts for parallel/background work",
+        "approvals": "run modes and command/tool approval policies are surface configuration",
+        "resume": "subagent IDs and agent sessions can be resumed when supported"
+      }
+    }
+  ],
+  "snapshot": "ffd45c404bbfdbf00ae28e077c560c7298fce05a46630a933138fb94c8c6f888"
+}

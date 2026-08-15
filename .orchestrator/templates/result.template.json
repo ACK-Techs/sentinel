@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0.0",
+  "runId": "replace-run-id",
+  "itemId": "replace-item-id",
+  "agent": {
+    "platform": "codex",
+    "identity": "replace-agent-identity",
+    "sessionRef": null
+  },
+  "outcome": "blocked",
+  "summary": "Replace with evidence-backed result summary.",
+  "artifacts": [],
+  "acceptance": [
+    {
+      "criterion": "Copy the exact work-item acceptance criterion",
+      "status": "not_verified",
+      "evidence": "State exactly what was or was not verified."
+    }
+  ],
+  "checks": [],
+  "risks": [],
+  "followUps": [],
+  "completedAt": "2026-08-15T00:00:00.000Z"
+}

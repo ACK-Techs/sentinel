@@ -1,0 +1,6 @@
+---
+description: Central project orchestration for Sentinel CLI, gateway, and lab platform work
+alwaysApply: true
+---
+
+Use `.agents/skills/orchestrate-sentinel/SKILL.md` and `.orchestrator/SYSTEM.md` for non-trivial work. The active run graph is the source of truth. Do not reduce approved scope, bypass independent gates, treat `agentic/` as product source, or expand the observability gateway beyond read-only without explicit approval.

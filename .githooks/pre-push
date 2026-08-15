@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+set -eu
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+zero="0000000000000000000000000000000000000000"
+
+while read -r _local_ref local_sha _remote_ref remote_sha; do
+  if [ -z "${local_sha:-}" ] || [ "$local_sha" = "$zero" ]; then
+    continue
+  fi
+  node .orchestrator/bin/git-checkpoint.mjs validate-range "$remote_sha" "$local_sha"
+done

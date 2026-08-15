@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sentinel Orchestrator"
+  short_description: "Plan, implement, review, and verify Sentinel work"
+  default_prompt: "Use $orchestrate-sentinel to plan and execute the next verified project work graph."

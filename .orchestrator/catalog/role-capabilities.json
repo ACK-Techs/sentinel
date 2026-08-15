@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "1.0.0",
+  "roles": {
+    "pm-manager": {
+      "file": ".orchestrator/roles/pm-manager.md",
+      "defaultKinds": ["pm-planning", "scope", "acceptance", "comparison"]
+    },
+    "architecture-manager": {
+      "file": ".orchestrator/roles/architecture-manager.md",
+      "defaultKinds": ["specification", "contract", "architecture-review"]
+    },
+    "code-implementer": {
+      "file": ".orchestrator/roles/code-implementer.md",
+      "defaultKinds": [
+        "implement",
+        "cli-agent",
+        "llm-provider",
+        "tool-execution",
+        "observability-gateway",
+        "installer",
+        "helm-chart",
+        "test-platform",
+        "ci-workflow"
+      ]
+    },
+    "independent-reviewer": {
+      "file": ".orchestrator/roles/independent-reviewer.md",
+      "defaultKinds": ["review", "architecture-review"]
+    },
+    "verifier": {
+      "file": ".orchestrator/roles/verifier.md",
+      "defaultKinds": ["verify", "test"]
+    },
+    "security-data-reviewer": {
+      "file": ".orchestrator/roles/security-data-reviewer.md",
+      "defaultKinds": [
+        "security-review",
+        "security-verify",
+        "secret-handling",
+        "approval-policy",
+        "memory-persistence"
+      ]
+    },
+    "integration-manager": {
+      "file": ".orchestrator/roles/integration-manager.md",
+      "defaultKinds": ["integration", "release-acceptance", "git-checkpoint"]
+    }
+  },
+  "phaseCapabilities": {
+    "phase-cli-runtime": [
+      "cli-commands",
+      "agent-loop",
+      "llm-adapters",
+      "tool-registry",
+      "session-trajectory",
+      "memory-redaction",
+      "config-layering"
+    ],
+    "phase-observability-gateway": [
+      "prometheus-query",
+      "loki-query",
+      "tempo-search",
+      "gateway-auth",
+      "secret-safe-errors"
+    ],
+    "phase-test-platform": [
+      "orders-payments-inventory",
+      "redis-streams",
+      "otel-export",
+      "locust-load",
+      "chaos-profiles",
+      "smoke-scripts"
+    ],
+    "phase-installers": [
+      "compose-install",
+      "helm-install",
+      "cos-discovery"
+    ],
+    "phase-charts": [
+      "helm-values",
+      "gateway-deployment",
+      "pod-security"
+    ],
+    "phase-ops-lab": [
+      "microk8s",
+      "juju-cos",
+      "for-download-scripts"
+    ],
+    "phase-skills-docs": [
+      "operational-skills",
+      "install-guide",
+      "architecture-docs"
+    ],
+    "phase-security": [
+      "token-handling",
+      "prompt-injection",
+      "tool-approval",
+      "redaction"
+    ],
+    "phase-ci": [
+      "cli-ci",
+      "gateway-image",
+      "ruff-pytest"
+    ]
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "schemaVersion": "1.0.0",
+  "systemName": "sentinel-orchestrator",
+  "paths": {
+    "entrypoints": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      ".agents/skills/orchestrate-sentinel/SKILL.md"
+    ],
+    "skillRoots": [
+      ".agents/skills",
+      ".agent/skills",
+      ".cursor/skills",
+      ".claude/skills",
+      ".codex/skills"
+    ],
+    "sourceRoots": [
+      "cli",
+      "observability-gateway",
+      "test-platform",
+      "charts",
+      "for-download",
+      "scripts",
+      "skills",
+      "documantations",
+      ".github",
+      "README.md",
+      "INSTALL.md"
+    ],
+    "requiredContext": [
+      "AGENTS.md",
+      "README.md",
+      "INSTALL.md",
+      ".orchestrator/PROJECT-STATE.md",
+      ".orchestrator/ARCHITECTURE.md",
+      ".orchestrator/SYSTEM.md",
+      ".orchestrator/COMMIT_CONVENTION.md",
+      ".orchestrator/roles/pm-manager.md"
+    ],
+    "runs": ".orchestrator/runs",
+    "catalog": ".orchestrator/catalog/repo-context.json",
+    "adapters": ".orchestrator/adapters"
+  },
+  "lifecycle": {
+    "statuses": ["draft", "ready", "active", "blocked", "done", "failed", "cancelled"],
+    "terminalStatuses": ["done", "failed", "cancelled"],
+    "transitions": {
+      "draft": ["ready", "cancelled"],
+      "ready": ["active", "blocked", "cancelled"],
+      "active": ["done", "blocked", "failed", "cancelled"],
+      "blocked": ["ready", "cancelled"],
+      "done": [],
+      "failed": [],
+      "cancelled": []
+    }
+  },
+  "riskPolicy": {
+    "levels": ["low", "medium", "high", "critical"],
+    "independentGateKinds": [
+      "implement",
+      "contract",
+      "cli-agent",
+      "llm-provider",
+      "tool-execution",
+      "observability-gateway",
+      "installer",
+      "helm-chart",
+      "test-platform",
+      "security",
+      "secret-handling",
+      "approval-policy",
+      "memory-persistence",
+      "ci-workflow",
+      "deployment",
+      "image-publish"
+    ],
+    "requireIndependentReviewAt": ["high", "critical"],
+    "requireVerificationAt": ["high", "critical"],
+    "requireHumanDecisionFor": [
+      "production-write",
+      "destructive-operation",
+      "secret-access",
+      "paid-provider-enable",
+      "gateway-write-expansion",
+      "cluster-mutation",
+      "image-publish",
+      "force-tool-auto-approve",
+      "cos-installer-claim"
+    ],
+    "forceQualityGateKinds": [
+      "contract",
+      "cli-agent",
+      "llm-provider",
+      "tool-execution",
+      "observability-gateway",
+      "installer",
+      "helm-chart",
+      "security",
+      "secret-handling",
+      "approval-policy",
+      "memory-persistence",
+      "deployment",
+      "ci-workflow",
+      "image-publish"
+    ]
+  },
+  "authorityPolicy": {
+    "managerHasDelegatedProjectAuthority": true,
+    "managerMayApproveBoundaries": false,
+    "platformApprovalsRemainExternal": true
+  },
+  "parallelPolicy": {
+    "defaultMaxWriters": 3,
+    "serializeUnknownWriteScope": true,
+    "readOnlyItemsMayShareBatch": true,
+    "preferWorktreeForParallelWriters": true,
+    "serializeGitPush": true
+  },
+  "historyPolicy": {
+    "format": "jsonl",
+    "appendOnly": true,
+    "storeRawPrompts": false,
+    "redactKeyFragments": [
+      "authorization",
+      "cookie",
+      "password",
+      "secret",
+      "token",
+      "apiKey",
+      "apikey",
+      "privateKey",
+      "personalData",
+      "sessionId"
+    ],
+    "commitGeneratedRunsByDefault": false
+  },
+  "repoGuardrails": {
+    "protectedPrefixes": [".git"],
+    "doNotTouch": [
+      "agentic"
+    ],
+    "controlledWritePaths": [
+      ".orchestrator/config.json",
+      ".orchestrator/contracts",
+      ".orchestrator/COMMIT_CONVENTION.md"
+    ],
+    "commitRequiresExplicitRequest": false,
+    "projectLevelCommitAuthorization": true,
+    "commitAfterValidatedWriteItemWhenApproved": true,
+    "commitMessageConvention": "conventional-commits",
+    "commitMessageFormat": "type(scope): summary",
+    "commitWorkItemIdInBodyOrFooter": false,
+    "pushRequiresExplicitRequest": false,
+    "projectLevelPushAuthorization": true,
+    "pushAcceptedIntegrationOnly": false,
+    "pushByUpperManagerOnly": false,
+    "defaultRemote": "origin",
+    "defaultTargetBranch": "main",
+    "syncRemoteBeforePush": true,
+    "atomicCommitsRequired": true,
+    "forcePushAllowed": false
+  }
+}
