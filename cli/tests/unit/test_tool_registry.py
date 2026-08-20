@@ -109,3 +109,30 @@ def test_registry_parses_observability_tool_args() -> None:
     assert parsed.tool.name == "obs_logs_query"
     assert parsed.arguments.service == "gateway"
     assert parsed.arguments.limit == 5
+
+def test_bash_requires_approval() -> None:
+    config = AppConfig()
+    config.tools.auto_approve = False
+    config.tools.approval_mode = "prompt"
+
+    registry = ToolRegistry(
+        config=config,
+        hook_manager=HookManager(config.hooks),
+        prompt_input=lambda _: "n",
+    )
+
+    result = registry.execute_tool_call(
+        ToolCall(
+            id="1",
+            name="bash",
+            arguments_json=json.dumps({
+                "command": "echo SAFE_TEST"
+            }),
+        ),
+        cwd=".",
+        session_id="test-session",
+        interactive=True,
+    )
+
+    assert result.ok is False
+    assert result.code == "APPROVAL_DENIED"
